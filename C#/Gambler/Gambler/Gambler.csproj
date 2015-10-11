@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\FunctionController.cs" />
     <Compile Include="Controller\GamblerController.cs" />
     <Compile Include="Model\Bet.cs" />
     <Compile Include="Model\Gambler.cs" />
@@ -58,11 +59,17 @@
     <Compile Include="Model\SampleClient.cs" />
     <Compile Include="Model\SampleServer.cs" />
     <Compile Include="Model\ServiceMode.cs" />
-    <Compile Include="View\Gambler.cs">
+    <Compile Include="View\AddMoney.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\Gambler.Designer.cs">
-      <DependentUpon>Gambler.cs</DependentUpon>
+    <Compile Include="View\AddMoney.Designer.cs">
+      <DependentUpon>AddMoney.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\GamblerView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\GamblerView.Designer.cs">
+      <DependentUpon>GamblerView.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,8 +82,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="View\Gambler.resx">
-      <DependentUpon>Gambler.cs</DependentUpon>
+    <EmbeddedResource Include="View\AddMoney.resx">
+      <DependentUpon>AddMoney.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\GamblerView.resx">
+      <DependentUpon>GamblerView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

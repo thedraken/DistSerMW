@@ -13,7 +13,7 @@ namespace Gambler.Controller
             gmblr = new Model.Gambler();
         }
         private Model.Gambler gmblr;
-        public void addMoney(double amountToAdd)
+        public void fillWallet(double amountToAdd)
         {
             if (amountToAdd > 0)
                 gmblr.addMoney(amountToAdd);
@@ -21,6 +21,10 @@ namespace Gambler.Controller
         public double getMoney()
         {
             return this.gmblr.money;
+        }
+        public Guid getID()
+        {
+            return this.gmblr.iD;
         }
     }
 }
