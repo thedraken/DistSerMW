@@ -11,3 +11,7 @@ C:\Users\Draken\Google Drive\Univeristy\Semester 5\Distributed Systems and Middl
 C:\Users\Draken\Google Drive\Univeristy\Semester 5\Distributed Systems and Middleware\Project\JSON-RPC-NET\JSON-RPC-NET\JSON-RPC-Sample\JSON-RPC-Samlple-Server\bin\Debug\JSON-RPC-Server.XML
 C:\Users\Draken\Google Drive\Univeristy\Semester 5\Distributed Systems and Middleware\Project\JSON-RPC-NET\JSON-RPC-NET\JSON-RPC-Sample\JSON-RPC-Samlple-Server\obj\Debug\JSON-RPC-Server.exe
 C:\Users\Draken\Google Drive\Univeristy\Semester 5\Distributed Systems and Middleware\Project\JSON-RPC-NET\JSON-RPC-NET\JSON-RPC-Sample\JSON-RPC-Samlple-Server\obj\Debug\JSON-RPC-Server.pdb
+C:\Users\Draken\Google Drive\Univeristy\Semester 5\Distributed Systems and Middleware\Project\GitHub\DistSerMW\C#\JSON-RPC-Samlple-Server\bin\Debug\JSON-RPC-Server.exe.config
+C:\Users\Draken\Google Drive\Univeristy\Semester 5\Distributed Systems and Middleware\Project\GitHub\DistSerMW\C#\JSON-RPC-Samlple-Server\bin\Debug\JSON-RPC-Server.XML
+C:\Users\Draken\Google Drive\Univeristy\Semester 5\Distributed Systems and Middleware\Project\GitHub\DistSerMW\C#\JSON-RPC-Samlple-Server\obj\Debug\JSON-RPC-Server.exe
+C:\Users\Draken\Google Drive\Univeristy\Semester 5\Distributed Systems and Middleware\Project\GitHub\DistSerMW\C#\JSON-RPC-Samlple-Server\obj\Debug\JSON-RPC-Server.pdb
