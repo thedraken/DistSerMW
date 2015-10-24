@@ -74,8 +74,10 @@
             // 
             // AddMoney
             // 
+            this.AcceptButton = this.bttnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.bttnCancel;
             this.ClientSize = new System.Drawing.Size(210, 72);
             this.Controls.Add(this.bttnCancel);
             this.Controls.Add(this.bttnOK);
@@ -83,6 +85,7 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "AddMoney";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add Money";
             this.ResumeLayout(false);
             this.PerformLayout();

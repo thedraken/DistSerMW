@@ -1,8 +1,0 @@
-c:\users\student\documents\visual studio 2015\Projects\JSON-RPC-Server\JSON-RPC-Server\bin\Debug\JSON-RPC-Server.exe.config
-c:\users\student\documents\visual studio 2015\Projects\JSON-RPC-Server\JSON-RPC-Server\bin\Debug\JSON-RPC-Server.exe
-c:\users\student\documents\visual studio 2015\Projects\JSON-RPC-Server\JSON-RPC-Server\bin\Debug\JSON-RPC-Server.pdb
-c:\users\student\documents\visual studio 2015\Projects\JSON-RPC-Server\JSON-RPC-Server\bin\Debug\AustinHarris.JsonRpc.dll
-c:\users\student\documents\visual studio 2015\Projects\JSON-RPC-Server\JSON-RPC-Server\obj\Debug\JSON-RPC-Server.csprojResolveAssemblyReference.cache
-c:\users\student\documents\visual studio 2015\Projects\JSON-RPC-Server\JSON-RPC-Server\obj\Debug\JSON-RPC-Server.exe
-c:\users\student\documents\visual studio 2015\Projects\JSON-RPC-Server\JSON-RPC-Server\obj\Debug\JSON-RPC-Server.pdb
-c:\users\student\documents\visual studio 2015\Projects\JSON-RPC-Server\JSON-RPC-Server\bin\Debug\Newtonsoft.Json.dll

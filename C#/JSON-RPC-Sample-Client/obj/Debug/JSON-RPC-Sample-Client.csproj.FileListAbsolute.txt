@@ -1,8 +1,0 @@
-C:\Users\student\Documents\Visual Studio 2015\Projects\JSON-RPC-Sample\JSON-RPC-Sample-Client\bin\Debug\JSON-RPC-Sample-Client.exe.config
-C:\Users\student\Documents\Visual Studio 2015\Projects\JSON-RPC-Sample\JSON-RPC-Sample-Client\bin\Debug\JSON-RPC-Sample-Client.exe
-C:\Users\student\Documents\Visual Studio 2015\Projects\JSON-RPC-Sample\JSON-RPC-Sample-Client\bin\Debug\JSON-RPC-Sample-Client.pdb
-C:\Users\student\Documents\Visual Studio 2015\Projects\JSON-RPC-Sample\JSON-RPC-Sample-Client\bin\Debug\AustinHarris.JsonRpc.dll
-C:\Users\student\Documents\Visual Studio 2015\Projects\JSON-RPC-Sample\JSON-RPC-Sample-Client\bin\Debug\Newtonsoft.Json.dll
-C:\Users\student\Documents\Visual Studio 2015\Projects\JSON-RPC-Sample\JSON-RPC-Sample-Client\obj\Debug\JSON-RPC-Sample-Client.csprojResolveAssemblyReference.cache
-C:\Users\student\Documents\Visual Studio 2015\Projects\JSON-RPC-Sample\JSON-RPC-Sample-Client\obj\Debug\JSON-RPC-Sample-Client.exe
-C:\Users\student\Documents\Visual Studio 2015\Projects\JSON-RPC-Sample\JSON-RPC-Sample-Client\obj\Debug\JSON-RPC-Sample-Client.pdb

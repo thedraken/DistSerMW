@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Gambler.Model
 {
-    class Gambler
+    public class Gambler : Connectee
     {
-        public Gambler()
+        public Gambler(string name, IPAddress address, int portNo) : base(address, portNo)
         {
             money = 0;
-            iD = Guid.NewGuid();
+            iD = name;
         }
-        public Guid iD { get; private set; }
+        
         public double money { get; private set; }
         public void addMoney(double amountToAdd)
         {
             this.money += amountToAdd;
         }
-
+        
     }
 }

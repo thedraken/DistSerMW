@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Gambler.Model
 {
-    class Bet
+    public class Bet
     {
-        public Bet(int bookieID, int matchID, int teamID, double stake, int odds) {
+        public Bet(string bookieID, int matchID, int teamID, double stake, int odds) {
             this.bookieID = bookieID;
             this.matchID = matchID;
             this.teamID = teamID;
@@ -16,7 +16,7 @@ namespace Gambler.Model
             this.odds = odds;
         }
         public double stake{get; private set;}
-        public int bookieID { get; private set; }
+        public string bookieID { get; private set; }
         public int matchID { get; private set; }
         public int teamID { get; private set; }
         public int odds { get; private set; }
