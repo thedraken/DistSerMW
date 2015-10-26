@@ -9,18 +9,18 @@ namespace Gambler.Model
 {
     public abstract class Connectee
     {
+        public Connectee(IPAddress address, int portNo, string name) : this(address, portNo)
+        {   
+            this.iD = name;
+        }
         public Connectee(IPAddress address, int portNo)
         {
             this.address = address;
             this.portNo = portNo;
         }
 
-        public void setID(string id)
-        {
-            this.iD = id;
-        }
         public IPAddress address { get; private set; }
         public int portNo { get; private set; }
-        public string iD { get; private set; }
+        public string iD { get; protected set; }
     }
 }

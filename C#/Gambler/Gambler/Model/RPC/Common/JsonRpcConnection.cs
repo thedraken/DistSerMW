@@ -123,9 +123,12 @@ namespace Gambler.Model.RPC.Common
                 Trace.TraceInformation("sending request: " + requestString);
                 // attempting to send the request via the writer to
                 // the JSON-RPC server might throw an IOException
-                writer.Write(requestString);
-                // flush the stream to make sure the request is sent via the socket
-                writer.Flush();
+                if (writer != null)
+                {
+                    writer.Write(requestString);
+                    // flush the stream to make sure the request is sent via the socket
+                    writer.Flush();
+                }
 
                 // try to receive a response via the reader
                 response = (JsonResponse)jsonSerializer.Deserialize(reader, typeof(JsonResponse));

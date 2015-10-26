@@ -52,12 +52,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\BookieController.cs" />
     <Compile Include="Controller\FunctionController.cs" />
     <Compile Include="Controller\GamblerController.cs" />
     <Compile Include="Model\Bet.cs" />
     <Compile Include="Model\Bookie.cs" />
     <Compile Include="Model\Connectee.cs" />
     <Compile Include="Model\Gambler.cs" />
+    <Compile Include="Model\Match.cs" />
     <Compile Include="Model\RPC\BookieConnection.cs" />
     <Compile Include="Model\RPC\Common\JsonRpcConnection.cs" />
     <Compile Include="Model\RPC\Common\PlaceBetResult.cs" />
@@ -69,6 +71,9 @@
     </Compile>
     <Compile Include="View\AddMoney.Designer.cs">
       <DependentUpon>AddMoney.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\BaseConnectForm.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\ConnectToBookie.cs">
       <SubType>Form</SubType>
@@ -101,6 +106,9 @@
     </Compile>
     <EmbeddedResource Include="View\AddMoney.resx">
       <DependentUpon>AddMoney.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\ConnectToBookie.resx">
+      <DependentUpon>ConnectToBookie.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\GamblerView.resx">
       <DependentUpon>GamblerView.cs</DependentUpon>

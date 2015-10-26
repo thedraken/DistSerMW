@@ -34,19 +34,21 @@
             this.walletToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fillToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tblLytPnl = new System.Windows.Forms.TableLayoutPanel();
+            this.statusStrp = new System.Windows.Forms.StatusStrip();
+            this.tlstrpPrgssBr = new System.Windows.Forms.ToolStripProgressBar();
+            this.tlstrpStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtbxGmblrFnds = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtbxGmblrID = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.dtgrdvwBets = new System.Windows.Forms.DataGridView();
-            this.gtgrdvwBookies = new System.Windows.Forms.DataGridView();
+            this.dtgrdvwBookies = new System.Windows.Forms.DataGridView();
             this.BookieID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IPAddress = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Port = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.dtgrdvwBets = new System.Windows.Forms.DataGridView();
             this.BetBookieID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BetID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TeamAID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -56,17 +58,17 @@
             this.Limit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BetPlaced = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.PlaceBet = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.tlstrpPrgssBr = new System.Windows.Forms.ToolStripProgressBar();
-            this.tlstrpStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.bttnRefresh = new System.Windows.Forms.Button();
+            this.tlstrpUpdateLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.mnStrp.SuspendLayout();
             this.tblLytPnl.SuspendLayout();
+            this.statusStrp.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtgrdvwBookies)).BeginInit();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgrdvwBets)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gtgrdvwBookies)).BeginInit();
-            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // mnStrp
@@ -91,7 +93,7 @@
             // connectToolStripMenuItem
             // 
             this.connectToolStripMenuItem.Name = "connectToolStripMenuItem";
-            this.connectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.connectToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.connectToolStripMenuItem.Text = "Connect...";
             this.connectToolStripMenuItem.Click += new System.EventHandler(this.connectToolStripMenuItem_Click);
             // 
@@ -115,7 +117,7 @@
             this.tblLytPnl.ColumnCount = 1;
             this.tblLytPnl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tblLytPnl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tblLytPnl.Controls.Add(this.statusStrip1, 0, 3);
+            this.tblLytPnl.Controls.Add(this.statusStrp, 0, 3);
             this.tblLytPnl.Controls.Add(this.groupBox1, 0, 0);
             this.tblLytPnl.Controls.Add(this.groupBox2, 0, 1);
             this.tblLytPnl.Controls.Add(this.groupBox3, 0, 2);
@@ -131,8 +133,32 @@
             this.tblLytPnl.Size = new System.Drawing.Size(976, 494);
             this.tblLytPnl.TabIndex = 1;
             // 
+            // statusStrp
+            // 
+            this.statusStrp.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tlstrpPrgssBr,
+            this.tlstrpStatusLabel,
+            this.tlstrpUpdateLabel});
+            this.statusStrp.Location = new System.Drawing.Point(0, 473);
+            this.statusStrp.Name = "statusStrp";
+            this.statusStrp.Size = new System.Drawing.Size(976, 21);
+            this.statusStrp.TabIndex = 5;
+            this.statusStrp.Text = "statusStrip1";
+            // 
+            // tlstrpPrgssBr
+            // 
+            this.tlstrpPrgssBr.Name = "tlstrpPrgssBr";
+            this.tlstrpPrgssBr.Size = new System.Drawing.Size(100, 15);
+            // 
+            // tlstrpStatusLabel
+            // 
+            this.tlstrpStatusLabel.Name = "tlstrpStatusLabel";
+            this.tlstrpStatusLabel.Size = new System.Drawing.Size(74, 16);
+            this.tlstrpStatusLabel.Text = "Status: None";
+            // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.bttnRefresh);
             this.groupBox1.Controls.Add(this.txtbxGmblrFnds);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.txtbxGmblrID);
@@ -181,7 +207,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.gtgrdvwBookies);
+            this.groupBox2.Controls.Add(this.dtgrdvwBookies);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(3, 80);
             this.groupBox2.Name = "groupBox2";
@@ -189,6 +215,40 @@
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Connected Bookies";
+            // 
+            // dtgrdvwBookies
+            // 
+            this.dtgrdvwBookies.AllowUserToAddRows = false;
+            this.dtgrdvwBookies.AllowUserToDeleteRows = false;
+            this.dtgrdvwBookies.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtgrdvwBookies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.BookieID,
+            this.IPAddress,
+            this.Port});
+            this.dtgrdvwBookies.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dtgrdvwBookies.Location = new System.Drawing.Point(3, 16);
+            this.dtgrdvwBookies.Name = "dtgrdvwBookies";
+            this.dtgrdvwBookies.ReadOnly = true;
+            this.dtgrdvwBookies.Size = new System.Drawing.Size(964, 156);
+            this.dtgrdvwBookies.TabIndex = 0;
+            // 
+            // BookieID
+            // 
+            this.BookieID.HeaderText = "Bookie ID";
+            this.BookieID.Name = "BookieID";
+            this.BookieID.ReadOnly = true;
+            // 
+            // IPAddress
+            // 
+            this.IPAddress.HeaderText = "IP Address";
+            this.IPAddress.Name = "IPAddress";
+            this.IPAddress.ReadOnly = true;
+            // 
+            // Port
+            // 
+            this.Port.HeaderText = "Port";
+            this.Port.Name = "Port";
+            this.Port.ReadOnly = true;
             // 
             // groupBox3
             // 
@@ -199,7 +259,7 @@
             this.groupBox3.Size = new System.Drawing.Size(970, 209);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Open bets";
+            this.groupBox3.Text = "Open Matches";
             // 
             // dtgrdvwBets
             // 
@@ -222,40 +282,6 @@
             this.dtgrdvwBets.ReadOnly = true;
             this.dtgrdvwBets.Size = new System.Drawing.Size(964, 190);
             this.dtgrdvwBets.TabIndex = 3;
-            // 
-            // gtgrdvwBookies
-            // 
-            this.gtgrdvwBookies.AllowUserToAddRows = false;
-            this.gtgrdvwBookies.AllowUserToDeleteRows = false;
-            this.gtgrdvwBookies.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gtgrdvwBookies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.BookieID,
-            this.IPAddress,
-            this.Port});
-            this.gtgrdvwBookies.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gtgrdvwBookies.Location = new System.Drawing.Point(3, 16);
-            this.gtgrdvwBookies.Name = "gtgrdvwBookies";
-            this.gtgrdvwBookies.ReadOnly = true;
-            this.gtgrdvwBookies.Size = new System.Drawing.Size(964, 156);
-            this.gtgrdvwBookies.TabIndex = 0;
-            // 
-            // BookieID
-            // 
-            this.BookieID.HeaderText = "Bookie ID";
-            this.BookieID.Name = "BookieID";
-            this.BookieID.ReadOnly = true;
-            // 
-            // IPAddress
-            // 
-            this.IPAddress.HeaderText = "IP Address";
-            this.IPAddress.Name = "IPAddress";
-            this.IPAddress.ReadOnly = true;
-            // 
-            // Port
-            // 
-            this.Port.HeaderText = "Port";
-            this.Port.Name = "Port";
-            this.Port.ReadOnly = true;
             // 
             // BetBookieID
             // 
@@ -311,27 +337,28 @@
             this.PlaceBet.Name = "PlaceBet";
             this.PlaceBet.ReadOnly = true;
             // 
-            // statusStrip1
+            // backgroundWorker
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tlstrpPrgssBr,
-            this.tlstrpStatusLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 473);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(976, 21);
-            this.statusStrip1.TabIndex = 5;
-            this.statusStrip1.Text = "statusStrip1";
+            this.backgroundWorker.WorkerReportsProgress = true;
+            this.backgroundWorker.WorkerSupportsCancellation = true;
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             // 
-            // tlstrpPrgssBr
+            // bttnRefresh
             // 
-            this.tlstrpPrgssBr.Name = "tlstrpPrgssBr";
-            this.tlstrpPrgssBr.Size = new System.Drawing.Size(100, 15);
+            this.bttnRefresh.Location = new System.Drawing.Point(889, 40);
+            this.bttnRefresh.Name = "bttnRefresh";
+            this.bttnRefresh.Size = new System.Drawing.Size(75, 23);
+            this.bttnRefresh.TabIndex = 7;
+            this.bttnRefresh.Text = "Refresh";
+            this.bttnRefresh.UseVisualStyleBackColor = true;
+            this.bttnRefresh.Click += new System.EventHandler(this.bttnRefresh_Click);
             // 
-            // tlstrpStatusLabel
+            // tlstrpUpdateLabel
             // 
-            this.tlstrpStatusLabel.Name = "tlstrpStatusLabel";
-            this.tlstrpStatusLabel.Size = new System.Drawing.Size(74, 16);
-            this.tlstrpStatusLabel.Text = "Status: None";
+            this.tlstrpUpdateLabel.Name = "tlstrpUpdateLabel";
+            this.tlstrpUpdateLabel.Size = new System.Drawing.Size(85, 16);
+            this.tlstrpUpdateLabel.Text = "Updates: None";
             // 
             // GamblerView
             // 
@@ -348,14 +375,14 @@
             this.mnStrp.PerformLayout();
             this.tblLytPnl.ResumeLayout(false);
             this.tblLytPnl.PerformLayout();
+            this.statusStrp.ResumeLayout(false);
+            this.statusStrp.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dtgrdvwBookies)).EndInit();
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dtgrdvwBets)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.gtgrdvwBookies)).EndInit();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -378,7 +405,7 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.DataGridView dtgrdvwBets;
-        private System.Windows.Forms.DataGridView gtgrdvwBookies;
+        private System.Windows.Forms.DataGridView dtgrdvwBookies;
         private System.Windows.Forms.DataGridViewTextBoxColumn BookieID;
         private System.Windows.Forms.DataGridViewTextBoxColumn IPAddress;
         private System.Windows.Forms.DataGridViewTextBoxColumn Port;
@@ -391,8 +418,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Limit;
         private System.Windows.Forms.DataGridViewCheckBoxColumn BetPlaced;
         private System.Windows.Forms.DataGridViewButtonColumn PlaceBet;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip statusStrp;
         private System.Windows.Forms.ToolStripProgressBar tlstrpPrgssBr;
+        private System.Windows.Forms.Button bttnRefresh;
+        private System.Windows.Forms.ToolStripStatusLabel tlstrpUpdateLabel;
         private System.Windows.Forms.ToolStripStatusLabel tlstrpStatusLabel;
     }
 }

@@ -21,5 +21,6 @@ namespace Gambler.Model
         public int teamID { get; private set; }
         public int odds { get; private set; }
         public bool validBet { get; private set; }
+        public bool openBet { get; private set; }
     }
 }

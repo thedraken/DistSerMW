@@ -36,13 +36,13 @@ namespace Gambler.Model.RPC
             Console.WriteLine("Bookie " + bookieID + " sent response: " + sayHelloResponse);
         }
 
-        public String sendConnect(String gamblerIP, int gamblerPort)
+        public String sendConnect()
         {
             // connect the bookie 
             object[] parameter = new object[] {
                 gambler.iD,
-                gamblerIP,
-                gamblerPort
+                gambler.address.ToString(),
+                gambler.portNo
             };
             JsonResponse response = handleJsonRpcRequest("connect", parameter);
 
