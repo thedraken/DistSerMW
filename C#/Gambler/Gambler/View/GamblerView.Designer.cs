@@ -37,18 +37,22 @@
             this.statusStrp = new System.Windows.Forms.StatusStrip();
             this.tlstrpPrgssBr = new System.Windows.Forms.ToolStripProgressBar();
             this.tlstrpStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tlstrpUpdateLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.bttnRefresh = new System.Windows.Forms.Button();
             this.txtbxGmblrFnds = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtbxGmblrID = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dtgrdvwBookies = new System.Windows.Forms.DataGridView();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.dtgrdvwBets = new System.Windows.Forms.DataGridView();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.BookieID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IPAddress = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Port = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.dtgrdvwBets = new System.Windows.Forms.DataGridView();
+            this.bookieSayHello = new System.Windows.Forms.DataGridViewButtonColumn();
             this.BetBookieID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BetID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TeamAID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -58,9 +62,6 @@
             this.Limit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BetPlaced = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.PlaceBet = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this.bttnRefresh = new System.Windows.Forms.Button();
-            this.tlstrpUpdateLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.mnStrp.SuspendLayout();
             this.tblLytPnl.SuspendLayout();
             this.statusStrp.SuspendLayout();
@@ -156,6 +157,12 @@
             this.tlstrpStatusLabel.Size = new System.Drawing.Size(74, 16);
             this.tlstrpStatusLabel.Text = "Status: None";
             // 
+            // tlstrpUpdateLabel
+            // 
+            this.tlstrpUpdateLabel.Name = "tlstrpUpdateLabel";
+            this.tlstrpUpdateLabel.Size = new System.Drawing.Size(85, 16);
+            this.tlstrpUpdateLabel.Text = "Updates: None";
+            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.bttnRefresh);
@@ -170,6 +177,16 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Gambler details";
+            // 
+            // bttnRefresh
+            // 
+            this.bttnRefresh.Location = new System.Drawing.Point(889, 40);
+            this.bttnRefresh.Name = "bttnRefresh";
+            this.bttnRefresh.Size = new System.Drawing.Size(75, 23);
+            this.bttnRefresh.TabIndex = 7;
+            this.bttnRefresh.Text = "Refresh";
+            this.bttnRefresh.UseVisualStyleBackColor = true;
+            this.bttnRefresh.Click += new System.EventHandler(this.bttnRefresh_Click);
             // 
             // txtbxGmblrFnds
             // 
@@ -224,31 +241,14 @@
             this.dtgrdvwBookies.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.BookieID,
             this.IPAddress,
-            this.Port});
+            this.Port,
+            this.bookieSayHello});
             this.dtgrdvwBookies.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dtgrdvwBookies.Location = new System.Drawing.Point(3, 16);
             this.dtgrdvwBookies.Name = "dtgrdvwBookies";
             this.dtgrdvwBookies.ReadOnly = true;
             this.dtgrdvwBookies.Size = new System.Drawing.Size(964, 156);
             this.dtgrdvwBookies.TabIndex = 0;
-            // 
-            // BookieID
-            // 
-            this.BookieID.HeaderText = "Bookie ID";
-            this.BookieID.Name = "BookieID";
-            this.BookieID.ReadOnly = true;
-            // 
-            // IPAddress
-            // 
-            this.IPAddress.HeaderText = "IP Address";
-            this.IPAddress.Name = "IPAddress";
-            this.IPAddress.ReadOnly = true;
-            // 
-            // Port
-            // 
-            this.Port.HeaderText = "Port";
-            this.Port.Name = "Port";
-            this.Port.ReadOnly = true;
             // 
             // groupBox3
             // 
@@ -282,6 +282,37 @@
             this.dtgrdvwBets.ReadOnly = true;
             this.dtgrdvwBets.Size = new System.Drawing.Size(964, 190);
             this.dtgrdvwBets.TabIndex = 3;
+            // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.WorkerReportsProgress = true;
+            this.backgroundWorker.WorkerSupportsCancellation = true;
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
+            // 
+            // BookieID
+            // 
+            this.BookieID.HeaderText = "Bookie ID";
+            this.BookieID.Name = "BookieID";
+            this.BookieID.ReadOnly = true;
+            // 
+            // IPAddress
+            // 
+            this.IPAddress.HeaderText = "IP Address";
+            this.IPAddress.Name = "IPAddress";
+            this.IPAddress.ReadOnly = true;
+            // 
+            // Port
+            // 
+            this.Port.HeaderText = "Port";
+            this.Port.Name = "Port";
+            this.Port.ReadOnly = true;
+            // 
+            // bookieSayHello
+            // 
+            this.bookieSayHello.HeaderText = "Say Hello";
+            this.bookieSayHello.Name = "bookieSayHello";
+            this.bookieSayHello.ReadOnly = true;
             // 
             // BetBookieID
             // 
@@ -337,29 +368,6 @@
             this.PlaceBet.Name = "PlaceBet";
             this.PlaceBet.ReadOnly = true;
             // 
-            // backgroundWorker
-            // 
-            this.backgroundWorker.WorkerReportsProgress = true;
-            this.backgroundWorker.WorkerSupportsCancellation = true;
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
-            // 
-            // bttnRefresh
-            // 
-            this.bttnRefresh.Location = new System.Drawing.Point(889, 40);
-            this.bttnRefresh.Name = "bttnRefresh";
-            this.bttnRefresh.Size = new System.Drawing.Size(75, 23);
-            this.bttnRefresh.TabIndex = 7;
-            this.bttnRefresh.Text = "Refresh";
-            this.bttnRefresh.UseVisualStyleBackColor = true;
-            this.bttnRefresh.Click += new System.EventHandler(this.bttnRefresh_Click);
-            // 
-            // tlstrpUpdateLabel
-            // 
-            this.tlstrpUpdateLabel.Name = "tlstrpUpdateLabel";
-            this.tlstrpUpdateLabel.Size = new System.Drawing.Size(85, 16);
-            this.tlstrpUpdateLabel.Text = "Updates: None";
-            // 
             // GamblerView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -406,9 +414,15 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.DataGridView dtgrdvwBets;
         private System.Windows.Forms.DataGridView dtgrdvwBookies;
+        private System.Windows.Forms.StatusStrip statusStrp;
+        private System.Windows.Forms.ToolStripProgressBar tlstrpPrgssBr;
+        private System.Windows.Forms.Button bttnRefresh;
+        private System.Windows.Forms.ToolStripStatusLabel tlstrpUpdateLabel;
+        private System.Windows.Forms.ToolStripStatusLabel tlstrpStatusLabel;
         private System.Windows.Forms.DataGridViewTextBoxColumn BookieID;
         private System.Windows.Forms.DataGridViewTextBoxColumn IPAddress;
         private System.Windows.Forms.DataGridViewTextBoxColumn Port;
+        private System.Windows.Forms.DataGridViewButtonColumn bookieSayHello;
         private System.Windows.Forms.DataGridViewTextBoxColumn BetBookieID;
         private System.Windows.Forms.DataGridViewTextBoxColumn BetID;
         private System.Windows.Forms.DataGridViewTextBoxColumn TeamAID;
@@ -418,11 +432,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Limit;
         private System.Windows.Forms.DataGridViewCheckBoxColumn BetPlaced;
         private System.Windows.Forms.DataGridViewButtonColumn PlaceBet;
-        private System.Windows.Forms.StatusStrip statusStrp;
-        private System.Windows.Forms.ToolStripProgressBar tlstrpPrgssBr;
-        private System.Windows.Forms.Button bttnRefresh;
-        private System.Windows.Forms.ToolStripStatusLabel tlstrpUpdateLabel;
-        private System.Windows.Forms.ToolStripStatusLabel tlstrpStatusLabel;
     }
 }
 

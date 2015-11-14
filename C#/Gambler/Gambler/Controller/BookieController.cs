@@ -10,52 +10,59 @@ namespace Gambler.Controller
 {
     class BookieController
     {
+        public BookieController()
+        {
+            ListOfBookies = new ObservableCollection<Model.Bookie>();
+        }
 
-        public ObservableCollection<Model.Bookie> listOfBookies { get; private set; }
-        public List<Model.Bet> listOfAllBets
+        public ObservableCollection<Model.Bookie> ListOfBookies { get; private set; }
+        public List<Model.Bet> ListOfAllBets
         {
             get
             {
                 List<Model.Bet> list = new List<Model.Bet>();
-                foreach (Model.Bookie b in listOfBookies.Where(t=> t.listOfBets.Count > 0))
-                    list.AddRange(b.listOfBets);
+                foreach (Model.Bookie b in ListOfBookies.Where(t=> t.ListOfBets.Count > 0))
+                    list.AddRange(b.ListOfBets);
                 return list;
             }
         }
-        public List<Model.Bet> listOfAllOpenBets
+        public List<Model.Bet> ListOfAllOpenBets
         {
             get
             {
-                return listOfAllBets.Where(t => t.validBet && t.openBet).ToList();
+                return ListOfAllBets.Where(t => t.validBet && t.openBet).ToList();
             }
         }
-        public List<Model.Match> listOfAllMatches
+        public List<Model.Match> ListOfAllMatches
         {
             get
             {
                 List<Model.Match> list = new List<Model.Match>();
-                foreach (Model.Bookie b in listOfBookies.Where(t => t.listOfMatches.Count > 0))
-                    list.AddRange(b.listOfMatches);
+                foreach (Model.Bookie b in ListOfBookies.Where(t => t.ListOfMatches.Count > 0))
+                    list.AddRange(b.ListOfMatches);
                 return list;
             }
         }
-        public List<Model.Match> listOfOpenMatches
+        public List<Model.Match> ListOfOpenMatches
         {
             get
             {
-                return listOfAllMatches.Where(t => t.openMatch).ToList();
+                return ListOfAllMatches.Where(t => t.openMatch).ToList();
             }
         }
-        public Model.Bookie connectBookie(Model.Gambler gambler, IPAddress address, int portNo)
+        public void sayHello(string bookieName)
+        {
+
+        }
+        public void connectBookie(Model.Gambler gambler, IPAddress address, int portNo)
         {
             Model.Bookie b = new Model.Bookie(gambler, address, portNo);
-            listOfBookies.Add(b);
-            return b;
+            ListOfBookies.Add(b);
         }
         public bool updatePending()
         {
-            bool toReturn = listOfBookies.Any(t => t.updatePending);
-            foreach (Model.Bookie b in listOfBookies.Where(t => t.updatePending))
+            bool toReturn = ListOfBookies.Any(t => t.UpdatePending);
+            foreach (Model.Bookie b in ListOfBookies.Where(t => t.UpdatePending))
                 b.processedUpdate();
             return toReturn;
         }

@@ -140,7 +140,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtbxName);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "SetName";
+            this.PersonsName = "SetName";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Gambler\'s details";

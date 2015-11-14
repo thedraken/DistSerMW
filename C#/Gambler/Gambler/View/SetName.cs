@@ -18,29 +18,29 @@ namespace Gambler.View
         {
             InitializeComponent();
         }
-        public string name { get; private set; }
+        public string PersonsName { get; protected set; }
+        
         private void bttnOK_Click(object sender, EventArgs e)
         {
-            name = txtbxName.Text;
+            PersonsName = txtbxName.Text;
             checkValidPortNo(txtbxPortNo.Text);
             if (checkComboValidIP(listOfCombos))
                 textToIPAddress(cmbxIP1.Text, cmbxIP2.Text, cmbxIP3.Text, cmbxIP4.Text);
             else
-                address = null;
+                Address = null;
             this.Close();
         }
         private void SetName_FormClosing(object sender, FormClosingEventArgs e)
         {
             bool failure = false;
             StringBuilder sb = new StringBuilder();
-            if (name == null || name == string.Empty)
+            sb = ipNameAndPortErrorCheck(out failure, sb);
+            if (PersonsName == null || PersonsName == string.Empty)
             {
                 failure = true;
                 sb.Append("\nPlease enter a name");
             }
-            bool ipCheck = false;
-            sb = ipAndPortErrorCheck(out ipCheck, sb);
-            if (failure || ipCheck)
+            if (failure)
                 MessageBox.Show("There was some errors:" + sb.ToString() + "\nPlease correct them and press OK", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             e.Cancel = failure;
         }

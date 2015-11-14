@@ -15,34 +15,36 @@ namespace Gambler.Model
         public Bookie(Gambler connectingGambler, IPAddress address, int portNo)
             : base(address, portNo)
         {
-            connection = new RPC.BookieConnection(connectingGambler, address.ToString(), portNo);
-            connection.establishSocketConnection();
-            this.iD = connection.sendConnect();
-            updatePending = true;
-            listOfBets.CollectionChanged += handleListChange;
-            listOfMatches.CollectionChanged += handleListChange;
+            ListOfBets = new ObservableCollection<Bet>();
+            ListOfMatches = new ObservableCollection<Match>();
+            Connection = new RPC.BookieConnection(connectingGambler, address.ToString(), portNo);
+            Connection.establishSocketConnection();
+            this.iD = Connection.sendConnect();
+            UpdatePending = true;
+            ListOfBets.CollectionChanged += handleListChange;
+            ListOfMatches.CollectionChanged += handleListChange;
         }
         private object lockObj = new object();
-        public ObservableCollection<Bet> listOfBets { get; private set; }
-        public ObservableCollection<Match> listOfMatches { get; private set; }
+        public ObservableCollection<Bet> ListOfBets { get; private set; }
+        public ObservableCollection<Match> ListOfMatches { get; private set; }
         public void addBet(Bet bet)
         {
-            this.listOfBets.Add(bet);
+            this.ListOfBets.Add(bet);
         }
-        public Model.RPC.BookieConnection connection { get; private set; }
-        public bool updatePending { get; private set; }
+        public Model.RPC.BookieConnection Connection { get; private set; }
+        public bool UpdatePending { get; private set; }
         public void processedUpdate()
         {
             lock (lockObj)
             {
-                updatePending = false;    
+                UpdatePending = false;    
             }
         }
         private void handleListChange(object sender, NotifyCollectionChangedEventArgs e)
         {
             lock (lockObj)
             {
-                updatePending = true;
+                UpdatePending = true;
             }
         }
     }

@@ -24,18 +24,18 @@ namespace Gambler.View
             if (checkComboValidIP(listOfCombos))
                 textToIPAddress(cmbxIP1.Text, cmbxIP2.Text, cmbxIP3.Text, cmbxIP4.Text);
             else
-                address = null;
+                Address = null;
             result = System.Windows.Forms.DialogResult.OK;
             this.Close();
         }
 
         private void ConnectToBookie_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (result == System.Windows.Forms.DialogResult.OK)
+            if (this.DialogResult == System.Windows.Forms.DialogResult.OK)
             {
                 bool failure = false;
                 StringBuilder sb = new StringBuilder();
-                sb = ipAndPortErrorCheck(out failure, sb);
+                sb = ipNameAndPortErrorCheck(out failure, sb);
                 if (failure)
                     MessageBox.Show("There was some errors:" + sb.ToString() + "\nPlease correct them and press OK", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 e.Cancel = failure;

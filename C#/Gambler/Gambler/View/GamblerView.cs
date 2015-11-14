@@ -24,15 +24,24 @@ namespace Gambler.View
             ConnectToBookie bookie = new ConnectToBookie();
             bookie.ShowDialog();
             if (bookie.result == System.Windows.Forms.DialogResult.OK)
-                bkController.connectBookie(gmblrController.gmblr, bookie.address, bookie.portNumber);
+            {
+                try
+                {
+                    bkController.connectBookie(gmblrController.gmblr, bookie.Address, bookie.PortNumber);
+                }
+                catch (Controller.GamblerAlreadyExists ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
             dtgrdvwBookies.Rows.Clear();
-            foreach (Model.Bookie b in bkController.listOfBookies)
+            foreach (Model.Bookie b in bkController.ListOfBookies)
                 addBookieToDataGrid(b);
         }
 
         private void addBookieToDataGrid(Model.Bookie b)
         {
-            dtgrdvwBookies.Rows.Add(b.iD, b.address.ToString(), b.portNo.ToString());
+            dtgrdvwBookies.Rows.Add(b.iD, b.address.ToString(), b.portNo.ToString(), "Say hello");
         }
 
         private void fillToolStripMenuItem_Click(object sender, EventArgs e)
@@ -48,7 +57,7 @@ namespace Gambler.View
         {
             SetName setName = new SetName();
             setName.ShowDialog();
-            this.gmblrController = new Controller.GamblerController(setName.name, setName.address, setName.portNumber);
+            this.gmblrController = new Controller.GamblerController(setName.PersonsName, setName.Address, setName.PortNumber);
             txtbxGmblrFnds.Text = "€" + this.gmblrController.getMoney().ToString();
             txtbxGmblrID.Text = this.gmblrController.getID();
             bkController = new Controller.BookieController();

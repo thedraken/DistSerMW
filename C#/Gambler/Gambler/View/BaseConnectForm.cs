@@ -13,13 +13,13 @@ namespace Gambler.View
     {
         public BaseConnectForm()
         {
-            this.address = IPAddress.Loopback;
+            this.Address = IPAddress.Loopback;
         }
         private int ipMin = 1;
         private int ipMax = 255;
         protected List<ComboBox> listOfCombos;
-        public IPAddress address { get; protected set; }
-        public int portNumber { get; protected set; }
+        public IPAddress Address { get; protected set; }
+        public int PortNumber { get; protected set; }
         protected bool checkComboValidIP(List<ComboBox> listOfCombos)
         {
             foreach (ComboBox cmbx in listOfCombos)
@@ -34,19 +34,19 @@ namespace Gambler.View
         protected void checkValidPortNo(string text)
         {
             if (FunctionController.getInstance().isInt(text))
-                portNumber = int.Parse(text);
+                PortNumber = int.Parse(text);
             else
-                portNumber = int.MinValue;
+                PortNumber = int.MinValue;
         }
-        protected StringBuilder ipAndPortErrorCheck(out bool failure, StringBuilder sb)
+        protected StringBuilder ipNameAndPortErrorCheck(out bool failure, StringBuilder sb)
         {
             failure = false;
-            if (portNumber == int.MinValue || portNumber < 3000)
+            if (PortNumber == int.MinValue || PortNumber < 3000)
             {
                 failure = true;
                 sb.Append("\nPlease enter a port number greater than 3000");
             }
-            if (address == null)
+            if (Address == null)
             {
                 failure = true;
                 sb.Append("\nPlease enter a valid IP address");
@@ -58,13 +58,13 @@ namespace Gambler.View
             string toConvert = oct1 + "." + oct2 + "." + oct3 + "." + oct4;
             IPAddress temp;
             if (IPAddress.TryParse(toConvert, out temp))
-                address = temp;
+                Address = temp;
             else
-                address = null;
+                Address = null;
         }
         protected void changeComboBoxesToDefault()
         {
-            string[] split = address.ToString().Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+            string[] split = Address.ToString().Split(new string[] { "." }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = ipMin; i <= ipMax; i++)
                 listOfCombos.ForEach(t => t.Items.Add(i));
             for (int i = 0; i < split.Count(); i++)

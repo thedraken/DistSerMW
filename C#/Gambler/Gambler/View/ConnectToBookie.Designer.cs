@@ -42,7 +42,7 @@
             // cmbxIP4
             // 
             this.cmbxIP4.FormattingEnabled = true;
-            this.cmbxIP4.Location = new System.Drawing.Point(220, 5);
+            this.cmbxIP4.Location = new System.Drawing.Point(223, 6);
             this.cmbxIP4.Name = "cmbxIP4";
             this.cmbxIP4.Size = new System.Drawing.Size(40, 21);
             this.cmbxIP4.TabIndex = 18;
@@ -50,7 +50,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 34);
+            this.label3.Location = new System.Drawing.Point(12, 35);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(46, 13);
             this.label3.TabIndex = 17;
@@ -59,7 +59,7 @@
             // cmbxIP3
             // 
             this.cmbxIP3.FormattingEnabled = true;
-            this.cmbxIP3.Location = new System.Drawing.Point(174, 5);
+            this.cmbxIP3.Location = new System.Drawing.Point(177, 6);
             this.cmbxIP3.Name = "cmbxIP3";
             this.cmbxIP3.Size = new System.Drawing.Size(40, 21);
             this.cmbxIP3.TabIndex = 16;
@@ -67,7 +67,7 @@
             // cmbxIP2
             // 
             this.cmbxIP2.FormattingEnabled = true;
-            this.cmbxIP2.Location = new System.Drawing.Point(128, 5);
+            this.cmbxIP2.Location = new System.Drawing.Point(131, 6);
             this.cmbxIP2.Name = "cmbxIP2";
             this.cmbxIP2.Size = new System.Drawing.Size(40, 21);
             this.cmbxIP2.TabIndex = 15;
@@ -75,14 +75,14 @@
             // cmbxIP1
             // 
             this.cmbxIP1.FormattingEnabled = true;
-            this.cmbxIP1.Location = new System.Drawing.Point(82, 4);
+            this.cmbxIP1.Location = new System.Drawing.Point(85, 5);
             this.cmbxIP1.Name = "cmbxIP1";
             this.cmbxIP1.Size = new System.Drawing.Size(40, 21);
             this.cmbxIP1.TabIndex = 14;
             // 
             // txtbxPortNo
             // 
-            this.txtbxPortNo.Location = new System.Drawing.Point(82, 31);
+            this.txtbxPortNo.Location = new System.Drawing.Point(85, 32);
             this.txtbxPortNo.Name = "txtbxPortNo";
             this.txtbxPortNo.Size = new System.Drawing.Size(178, 20);
             this.txtbxPortNo.TabIndex = 13;
@@ -90,7 +90,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 8);
+            this.label2.Location = new System.Drawing.Point(12, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(58, 13);
             this.label2.TabIndex = 12;
@@ -98,7 +98,7 @@
             // 
             // bttnOK
             // 
-            this.bttnOK.Location = new System.Drawing.Point(185, 54);
+            this.bttnOK.Location = new System.Drawing.Point(188, 55);
             this.bttnOK.Name = "bttnOK";
             this.bttnOK.Size = new System.Drawing.Size(75, 23);
             this.bttnOK.TabIndex = 11;
@@ -109,7 +109,7 @@
             // bttnCancel
             // 
             this.bttnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bttnCancel.Location = new System.Drawing.Point(12, 54);
+            this.bttnCancel.Location = new System.Drawing.Point(15, 55);
             this.bttnCancel.Name = "bttnCancel";
             this.bttnCancel.Size = new System.Drawing.Size(75, 23);
             this.bttnCancel.TabIndex = 19;
@@ -123,7 +123,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.bttnCancel;
-            this.ClientSize = new System.Drawing.Size(269, 85);
+            this.ClientSize = new System.Drawing.Size(269, 81);
             this.Controls.Add(this.bttnCancel);
             this.Controls.Add(this.cmbxIP4);
             this.Controls.Add(this.label3);

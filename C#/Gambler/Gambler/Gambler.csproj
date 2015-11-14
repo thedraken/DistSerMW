@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\BookieController.cs" />
+    <Compile Include="Controller\Exception.cs" />
     <Compile Include="Controller\FunctionController.cs" />
     <Compile Include="Controller\GamblerController.cs" />
     <Compile Include="Model\Bet.cs" />
