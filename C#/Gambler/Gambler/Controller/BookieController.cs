@@ -52,7 +52,8 @@ namespace Gambler.Controller
         }
         public void sayHello(string bookieName)
         {
-
+            foreach (Model.Bookie b in ListOfBookies.Where(t => t.ID == bookieName))
+                b.sayHello();
         }
         public void connectBookie(Model.Gambler gambler, IPAddress address, int portNo)
         {

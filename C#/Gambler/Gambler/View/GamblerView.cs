@@ -41,7 +41,7 @@ namespace Gambler.View
 
         private void addBookieToDataGrid(Model.Bookie b)
         {
-            dtgrdvwBookies.Rows.Add(b.iD, b.address.ToString(), b.portNo.ToString(), "Say hello");
+            int rowNo = dtgrdvwBookies.Rows.Add(b.ID, b.Address.ToString(), b.PortNo.ToString(), "Say hello");
         }
 
         private void fillToolStripMenuItem_Click(object sender, EventArgs e)
@@ -61,6 +61,7 @@ namespace Gambler.View
             txtbxGmblrFnds.Text = "€" + this.gmblrController.getMoney().ToString();
             txtbxGmblrID.Text = this.gmblrController.getID();
             bkController = new Controller.BookieController();
+            tlstrpStatusLabel.Text = "Status: Listening on port: " + gmblrController.gmblr.PortNo;
         }
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -83,6 +84,16 @@ namespace Gambler.View
         {
             bttnRefresh.ForeColor = Color.Black;
             tlstrpUpdateLabel.Text = "Updates: None";
+        }
+        private void dtgrdvwBookies_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            string columnTitle = dtgrdvwBookies.Columns[e.ColumnIndex].HeaderText;
+            if (columnTitle == "Say Hello")
+            {
+                string bookieID = dtgrdvwBookies.Rows[e.RowIndex].Cells[0].Value.ToString();
+                this.bkController.sayHello(bookieID);
+
+            }
         }
     }
 }

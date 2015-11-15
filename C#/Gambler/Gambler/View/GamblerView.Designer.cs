@@ -46,13 +46,12 @@
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.dtgrdvwBookies = new System.Windows.Forms.DataGridView();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.dtgrdvwBets = new System.Windows.Forms.DataGridView();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.BookieID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IPAddress = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Port = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bookieSayHello = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.dtgrdvwBets = new System.Windows.Forms.DataGridView();
             this.BetBookieID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BetID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TeamAID = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -62,6 +61,7 @@
             this.Limit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BetPlaced = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.PlaceBet = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.mnStrp.SuspendLayout();
             this.tblLytPnl.SuspendLayout();
             this.statusStrp.SuspendLayout();
@@ -249,6 +249,31 @@
             this.dtgrdvwBookies.ReadOnly = true;
             this.dtgrdvwBookies.Size = new System.Drawing.Size(964, 156);
             this.dtgrdvwBookies.TabIndex = 0;
+            this.dtgrdvwBookies.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtgrdvwBookies_CellClick);
+            // 
+            // BookieID
+            // 
+            this.BookieID.HeaderText = "Bookie ID";
+            this.BookieID.Name = "BookieID";
+            this.BookieID.ReadOnly = true;
+            // 
+            // IPAddress
+            // 
+            this.IPAddress.HeaderText = "IP Address";
+            this.IPAddress.Name = "IPAddress";
+            this.IPAddress.ReadOnly = true;
+            // 
+            // Port
+            // 
+            this.Port.HeaderText = "Port";
+            this.Port.Name = "Port";
+            this.Port.ReadOnly = true;
+            // 
+            // bookieSayHello
+            // 
+            this.bookieSayHello.HeaderText = "Say Hello";
+            this.bookieSayHello.Name = "bookieSayHello";
+            this.bookieSayHello.ReadOnly = true;
             // 
             // groupBox3
             // 
@@ -282,37 +307,6 @@
             this.dtgrdvwBets.ReadOnly = true;
             this.dtgrdvwBets.Size = new System.Drawing.Size(964, 190);
             this.dtgrdvwBets.TabIndex = 3;
-            // 
-            // backgroundWorker
-            // 
-            this.backgroundWorker.WorkerReportsProgress = true;
-            this.backgroundWorker.WorkerSupportsCancellation = true;
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
-            // 
-            // BookieID
-            // 
-            this.BookieID.HeaderText = "Bookie ID";
-            this.BookieID.Name = "BookieID";
-            this.BookieID.ReadOnly = true;
-            // 
-            // IPAddress
-            // 
-            this.IPAddress.HeaderText = "IP Address";
-            this.IPAddress.Name = "IPAddress";
-            this.IPAddress.ReadOnly = true;
-            // 
-            // Port
-            // 
-            this.Port.HeaderText = "Port";
-            this.Port.Name = "Port";
-            this.Port.ReadOnly = true;
-            // 
-            // bookieSayHello
-            // 
-            this.bookieSayHello.HeaderText = "Say Hello";
-            this.bookieSayHello.Name = "bookieSayHello";
-            this.bookieSayHello.ReadOnly = true;
             // 
             // BetBookieID
             // 
@@ -367,6 +361,13 @@
             this.PlaceBet.HeaderText = "Place Bet";
             this.PlaceBet.Name = "PlaceBet";
             this.PlaceBet.ReadOnly = true;
+            // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.WorkerReportsProgress = true;
+            this.backgroundWorker.WorkerSupportsCancellation = true;
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
             // 
             // GamblerView
             // 

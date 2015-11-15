@@ -19,7 +19,7 @@ namespace Gambler.Model
             ListOfMatches = new ObservableCollection<Match>();
             Connection = new RPC.BookieConnection(connectingGambler, address.ToString(), portNo);
             Connection.establishSocketConnection();
-            this.iD = Connection.sendConnect();
+            this.ID = Connection.sendConnect();
             UpdatePending = true;
             ListOfBets.CollectionChanged += handleListChange;
             ListOfMatches.CollectionChanged += handleListChange;
@@ -46,6 +46,10 @@ namespace Gambler.Model
             {
                 UpdatePending = true;
             }
+        }
+        public void sayHello()
+        {
+            Connection.sayHello();
         }
     }
 }

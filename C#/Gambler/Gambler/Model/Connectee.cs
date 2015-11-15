@@ -11,16 +11,16 @@ namespace Gambler.Model
     {
         public Connectee(IPAddress address, int portNo, string name) : this(address, portNo)
         {   
-            this.iD = name;
+            this.ID = name;
         }
         public Connectee(IPAddress address, int portNo)
         {
-            this.address = address;
-            this.portNo = portNo;
+            this.Address = address;
+            this.PortNo = portNo;
         }
 
-        public IPAddress address { get; private set; }
-        public int portNo { get; private set; }
-        public string iD { get; protected set; }
+        public IPAddress Address { get; private set; }
+        public int PortNo { get; private set; }
+        public string ID { get; protected set; }
     }
 }

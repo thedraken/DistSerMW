@@ -12,8 +12,10 @@ namespace Gambler.Model
         public Gambler(string name, IPAddress address, int portNo) : base(address, portNo, name)
         {
             money = 0;
+            Connection = new RPC.GamblerServer(this, this.Address.ToString(), this.PortNo);
+            Connection.createGamblerServerInterface();
         }
-        
+        public Model.RPC.GamblerServer Connection { get; private set; }
         public double money { get; private set; }
         public void addMoney(double amountToAdd)
         {

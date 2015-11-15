@@ -25,7 +25,7 @@ namespace Gambler.Controller
         }
         public string getID()
         {
-            return this.gmblr.iD;
+            return this.gmblr.ID;
         }
     }
 }

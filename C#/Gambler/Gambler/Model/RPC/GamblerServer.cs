@@ -13,7 +13,7 @@ using JSON_RPC_Server;
 
 namespace Gambler.Model.RPC
 {
-    class GamblerServer
+    public class GamblerServer
     {
         // the enclosing gambler
         private Gambler gambler;

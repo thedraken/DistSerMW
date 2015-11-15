@@ -26,7 +26,7 @@ namespace Gambler.Model.RPC
         public void sayHello()
         {
             object[] parameter = new object[] {
-                gambler.iD
+                gambler.ID
             };
             JsonResponse response = handleJsonRpcRequest("sayHelloToBookie", parameter);
 
@@ -40,9 +40,9 @@ namespace Gambler.Model.RPC
         {
             // connect the bookie 
             object[] parameter = new object[] {
-                gambler.iD,
-                gambler.address.ToString(),
-                gambler.portNo
+                gambler.ID,
+                gambler.Address.ToString(),
+                gambler.PortNo
             };
             JsonResponse response = handleJsonRpcRequest("connect", parameter);
 
