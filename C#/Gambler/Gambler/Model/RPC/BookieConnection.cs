@@ -16,7 +16,7 @@ namespace Gambler.Model.RPC
         private String bookieID; // bookie-ID of the bookie on the other side of this connection
         private Gambler gambler;   // the enclosing bookie
 
-        public BookieConnection(Gambler gambler, String gamblerIP, int gamblerPort) : base(gamblerIP, gamblerPort)
+        public BookieConnection(Gambler gambler, String gamblerIP, int gamblerPort) : base(gambler.ID, gamblerIP, gamblerPort)
         {
             // initialize JsonRpcConnection base class
             this.gambler = gambler;

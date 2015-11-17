@@ -47,7 +47,7 @@ namespace Gambler.Controller
         {
             get
             {
-                return ListOfAllMatches.Where(t => t.openMatch).ToList();
+                return ListOfAllMatches.Where(t => t.OpenMatch).ToList();
             }
         }
         public void sayHello(string bookieName)

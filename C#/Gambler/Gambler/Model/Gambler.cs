@@ -22,5 +22,7 @@ namespace Gambler.Model
             this.money += amountToAdd;
         }
         
+
+        
     }
 }

@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Gambler.Model;
 using JSON_RPC_Server;
+using System.Collections.ObjectModel;
 
 namespace Gambler.Model.RPC
 {
@@ -127,7 +128,7 @@ class MyGamblerService : JsonRpcService
     {
         this.gambler = gambler;
     }
-
+    private object _lock = new object();
     
     [JsonRpcMethod]
     public String sayHelloToGambler(String bookieName)
@@ -138,8 +139,28 @@ class MyGamblerService : JsonRpcService
         Console.WriteLine("sayHelloToGambler(" + bookieName + ")");
         return "Gambler says: Hello, bookie " + bookieName;
     }
-
-    // TODO implement further needed Rpc exposed methods here. Use the [JsonRpcMethod] - Tag to expose them to RPCalls
-
-
+    [JsonRpcMethod]
+    public bool matchStarted(String bookieName, object recievedMatch)
+    {
+        lock (_lock)
+        {
+            _listOfUpdates.Add(recievedMatch);
+        }
+        return true;
+    }
+    private ObservableCollection<Object> _listOfUpdates = new ObservableCollection<object>();
+    public ObservableCollection<Object> getList()
+    {
+        lock (_lock)
+        {
+            return this._listOfUpdates;
+        }
+    }
+    public void removeObjectFromList(Object o)
+    {
+        lock(_lock)
+        {
+            this._listOfUpdates.Remove(o);
+        }
+    }
 }

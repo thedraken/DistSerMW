@@ -19,8 +19,8 @@ namespace Gambler.Model.RPC.Common
 
         private String serverIP;  // IP address of the JSON-RPC server
         private int serverPort;   // port number of the JSON-RPC server
-
-
+        private int currentID = 0;
+        private String uniqueID;
 
         private TcpClient tcpClient; // socket connection with the JSON-RPC server
         private NetworkStream stream;
@@ -28,12 +28,12 @@ namespace Gambler.Model.RPC.Common
         private StreamReader reader; // reader to read from socket's stream
         private JsonSerializer jsonSerializer; // Json object to use e.g. for serialization/deserialization
 
-        public JsonRpcConnection(String serverIP, int serverPort)
+        public JsonRpcConnection(String uniqueID, String serverIP, int serverPort)
         {
             // remember IP and port of the JSON-RPC server, also in case we need to re-connect
             this.serverIP = serverIP;
             this.serverPort = serverPort;
-
+            this.uniqueID = uniqueID;
           
 
             // create an instance of JsonSerializer, the primary class for serialization of JSON Objects
@@ -112,7 +112,7 @@ namespace Gambler.Model.RPC.Common
             {
                 Method = method,
                 Params = parameters,
-                Id = 42
+                Id = uniqueID + (++currentID).ToString()
             };
             JArray jsonParams = request.Params as JArray;
             JsonResponse response = null; 

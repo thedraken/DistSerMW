@@ -23,7 +23,9 @@ namespace Gambler.Model
             UpdatePending = true;
             ListOfBets.CollectionChanged += handleListChange;
             ListOfMatches.CollectionChanged += handleListChange;
+            this._connectingGambler = connectingGambler;
         }
+        private Gambler _connectingGambler;
         private object lockObj = new object();
         public ObservableCollection<Bet> ListOfBets { get; private set; }
         public ObservableCollection<Match> ListOfMatches { get; private set; }
@@ -51,5 +53,6 @@ namespace Gambler.Model
         {
             Connection.sayHello();
         }
+        
     }
 }

@@ -10,27 +10,27 @@ namespace Gambler.Model
     {
         public Match(int id, string teamA, float oddsA, string teamB, float oddsB, int limit)
         {
-            this.id = id;
-            this.teamA = teamA;
-            this.oddsA = oddsA;
-            this.oddsB = oddsB;
-            this.teamB = teamB;
-            this.limit = limit;
-            openMatch = true;
+            this.ID = id;
+            this.TeamA = teamA;
+            this.OddsA = oddsA;
+            this.OddsB = oddsB;
+            this.TeamB = teamB;
+            this.Limit = limit;
+            OpenMatch = true;
         }
         public void updateOdds(float oddsA, float oddsB, int limit)
         {
-            this.oddsA = oddsA;
-            this.oddsB = oddsB;
-            this.limit = limit;
+            this.OddsA = oddsA;
+            this.OddsB = oddsB;
+            this.Limit = limit;
         }
 
-        public int id { get; private set; }
-        public string teamA { get; private set; }
-        public float oddsA { get; private set; }
-        public string teamB { get; private set; }
-        public float oddsB { get; private set; }
-        public int limit { get; private set; }
-        public bool openMatch { get; set; }
+        public int ID { get; private set; }
+        public string TeamA { get; private set; }
+        public float OddsA { get; private set; }
+        public string TeamB { get; private set; }
+        public float OddsB { get; private set; }
+        public int Limit { get; private set; }
+        public bool OpenMatch { get; set; }
     }
 }
