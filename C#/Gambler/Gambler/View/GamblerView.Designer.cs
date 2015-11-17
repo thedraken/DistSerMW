@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.mnStrp = new System.Windows.Forms.MenuStrip();
             this.bookieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,16 +53,8 @@
             this.bookieSayHello = new System.Windows.Forms.DataGridViewButtonColumn();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dtgrdvwBets = new System.Windows.Forms.DataGridView();
-            this.BetBookieID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BetID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TeamAID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TeamAOdds = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TeamBID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TeamBOdds = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Limit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BetPlaced = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.PlaceBet = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.tmrRefreshBets = new System.Windows.Forms.Timer(this.components);
+            this.bttnPlcBet = new System.Windows.Forms.Button();
             this.mnStrp.SuspendLayout();
             this.tblLytPnl.SuspendLayout();
             this.statusStrp.SuspendLayout();
@@ -277,6 +270,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.bttnPlcBet);
             this.groupBox3.Controls.Add(this.dtgrdvwBets);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox3.Location = new System.Drawing.Point(3, 261);
@@ -291,83 +285,27 @@
             this.dtgrdvwBets.AllowUserToAddRows = false;
             this.dtgrdvwBets.AllowUserToDeleteRows = false;
             this.dtgrdvwBets.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtgrdvwBets.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.BetBookieID,
-            this.BetID,
-            this.TeamAID,
-            this.TeamAOdds,
-            this.TeamBID,
-            this.TeamBOdds,
-            this.Limit,
-            this.BetPlaced,
-            this.PlaceBet});
-            this.dtgrdvwBets.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dtgrdvwBets.Dock = System.Windows.Forms.DockStyle.Top;
             this.dtgrdvwBets.Location = new System.Drawing.Point(3, 16);
             this.dtgrdvwBets.Name = "dtgrdvwBets";
             this.dtgrdvwBets.ReadOnly = true;
-            this.dtgrdvwBets.Size = new System.Drawing.Size(964, 190);
+            this.dtgrdvwBets.Size = new System.Drawing.Size(964, 154);
             this.dtgrdvwBets.TabIndex = 3;
             // 
-            // BetBookieID
+            // tmrRefreshBets
             // 
-            this.BetBookieID.HeaderText = "Bookie ID";
-            this.BetBookieID.Name = "BetBookieID";
-            this.BetBookieID.ReadOnly = true;
+            this.tmrRefreshBets.Interval = 1000;
+            this.tmrRefreshBets.Tick += new System.EventHandler(this.tmrRefreshBets_Tick);
             // 
-            // BetID
+            // bttnPlcBet
             // 
-            this.BetID.HeaderText = "Bet ID";
-            this.BetID.Name = "BetID";
-            this.BetID.ReadOnly = true;
-            // 
-            // TeamAID
-            // 
-            this.TeamAID.HeaderText = "Team A";
-            this.TeamAID.Name = "TeamAID";
-            this.TeamAID.ReadOnly = true;
-            // 
-            // TeamAOdds
-            // 
-            this.TeamAOdds.HeaderText = "Team A Odds";
-            this.TeamAOdds.Name = "TeamAOdds";
-            this.TeamAOdds.ReadOnly = true;
-            // 
-            // TeamBID
-            // 
-            this.TeamBID.HeaderText = "Team B";
-            this.TeamBID.Name = "TeamBID";
-            this.TeamBID.ReadOnly = true;
-            // 
-            // TeamBOdds
-            // 
-            this.TeamBOdds.HeaderText = "Team B Odds";
-            this.TeamBOdds.Name = "TeamBOdds";
-            this.TeamBOdds.ReadOnly = true;
-            // 
-            // Limit
-            // 
-            this.Limit.HeaderText = "Limit";
-            this.Limit.Name = "Limit";
-            this.Limit.ReadOnly = true;
-            // 
-            // BetPlaced
-            // 
-            this.BetPlaced.HeaderText = "Bet Placed?";
-            this.BetPlaced.Name = "BetPlaced";
-            this.BetPlaced.ReadOnly = true;
-            // 
-            // PlaceBet
-            // 
-            this.PlaceBet.HeaderText = "Place Bet";
-            this.PlaceBet.Name = "PlaceBet";
-            this.PlaceBet.ReadOnly = true;
-            // 
-            // backgroundWorker
-            // 
-            this.backgroundWorker.WorkerReportsProgress = true;
-            this.backgroundWorker.WorkerSupportsCancellation = true;
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
+            this.bttnPlcBet.Location = new System.Drawing.Point(889, 177);
+            this.bttnPlcBet.Name = "bttnPlcBet";
+            this.bttnPlcBet.Size = new System.Drawing.Size(75, 23);
+            this.bttnPlcBet.TabIndex = 4;
+            this.bttnPlcBet.Text = "Place bet";
+            this.bttnPlcBet.UseVisualStyleBackColor = true;
+            this.bttnPlcBet.Click += new System.EventHandler(this.bttnPlcBet_Click);
             // 
             // GamblerView
             // 
@@ -405,7 +343,6 @@
         private System.Windows.Forms.ToolStripMenuItem walletToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fillToolStripMenuItem;
         private System.Windows.Forms.TableLayoutPanel tblLytPnl;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtbxGmblrID;
@@ -424,15 +361,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn IPAddress;
         private System.Windows.Forms.DataGridViewTextBoxColumn Port;
         private System.Windows.Forms.DataGridViewButtonColumn bookieSayHello;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BetBookieID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BetID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TeamAID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TeamAOdds;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TeamBID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn TeamBOdds;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Limit;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn BetPlaced;
-        private System.Windows.Forms.DataGridViewButtonColumn PlaceBet;
+        private System.Windows.Forms.Timer tmrRefreshBets;
+        private System.Windows.Forms.Button bttnPlcBet;
     }
 }
 

@@ -52,8 +52,23 @@ namespace Gambler.Model.RPC
             this.bookieID = bookieID;
             return bookieID;
         }
-        
 
+        public PlaceBetResult placeBet(Bet b)
+        {
+            //TODO
+            return PlaceBetResult.ACCEPTED;
+        }
+        public bool showMatches()
+        {
+            object[] parameter = new object[] {
+                gambler.ID
+            };
+            JsonResponse response = handleJsonRpcRequest("showMatches", parameter);
+            Object result = response.Result.ToString();
+
+            Trace.TraceInformation("connected with bookie " + bookieID);
+            return true;
+        }
         // TODO insert more methods to communicate with a bookie.
 
     }

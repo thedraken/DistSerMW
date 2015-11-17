@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -38,10 +39,9 @@ namespace Gambler.View
             foreach (Model.Bookie b in bkController.ListOfBookies)
                 addBookieToDataGrid(b);
         }
-
         private void addBookieToDataGrid(Model.Bookie b)
         {
-            int rowNo = dtgrdvwBookies.Rows.Add(b.ID, b.Address.ToString(), b.PortNo.ToString(), "Say hello");
+            dtgrdvwBookies.Rows.Add(b.ID, b.Address.ToString(), b.PortNo.ToString(), "Say hello");
         }
 
         private void fillToolStripMenuItem_Click(object sender, EventArgs e)
@@ -62,26 +62,12 @@ namespace Gambler.View
             txtbxGmblrID.Text = this.gmblrController.getID();
             bkController = new Controller.BookieController();
             tlstrpStatusLabel.Text = "Status: Listening on port: " + gmblrController.gmblr.PortNo;
+            tmrRefreshBets.Start();
         }
-
-        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            while (true)
-            {
-                Thread.Sleep(1000);
-                if (bkController.updatePending())
-                    backgroundWorker.ReportProgress(0, true);
-            }
-        }
-
-        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            tlstrpUpdateLabel.Text = "Updates: Pending";
-            bttnRefresh.ForeColor = Color.Red;
-        }
-
         private void bttnRefresh_Click(object sender, EventArgs e)
         {
+            bkController.refreshMatches();
+
             bttnRefresh.ForeColor = Color.Black;
             tlstrpUpdateLabel.Text = "Updates: None";
         }
@@ -94,6 +80,18 @@ namespace Gambler.View
                 this.bkController.sayHello(bookieID);
 
             }
+        }
+
+        private void tmrRefreshBets_Tick(object sender, EventArgs e)
+        {
+            var dataSource = new BindingSource();
+            dataSource.DataSource = bkController.ListOfMatches;
+            dtgrdvwBets.DataSource = dataSource;
+        }
+
+        private void bttnPlcBet_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

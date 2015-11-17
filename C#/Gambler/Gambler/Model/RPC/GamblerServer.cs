@@ -43,12 +43,12 @@ namespace Gambler.Model.RPC
             return gamblerPort;
         }
 
-
+        public MyGamblerService Service { get; private set; }
 
         public void createGamblerServerInterface()
         {
             // create an instance of the service
-            Object gamblerService = new MyGamblerService(gambler);
+            Service = new MyGamblerService(gambler);
 
             // start a JSON-RPC server; all methods tagged with the [JsonRpcMethod] attribute
             // will be invokable remotely; all requests as well as all responses will be
@@ -108,6 +108,9 @@ class SampleInterceptor : JSON_RPC_Server.Interceptor
     {
         String request = JsonConvert.SerializeObject(jsonRequest);
         String response = JsonConvert.SerializeObject(jsonResponse);
+        //TODO deal with preventing duplicates request coming through
+        //Match phase duplication
+        //Winning duplications
 
         // print intercepted request/respons-pair on the console
         Console.WriteLine("intercepted response: " + response + " for request: " + request);
@@ -119,7 +122,7 @@ class SampleInterceptor : JSON_RPC_Server.Interceptor
 /// The class implementing the methods that are exposed via JSON-RPC.
 /// The methods that should be exposed are tagged with [JsonRpcMethod]
 /// </summary>
-class MyGamblerService : JsonRpcService
+public class MyGamblerService : JsonRpcService
 {
 
     private Gambler.Model.Gambler gambler;
@@ -142,25 +145,64 @@ class MyGamblerService : JsonRpcService
     [JsonRpcMethod]
     public bool matchStarted(String bookieName, object recievedMatch)
     {
+        RecievedMessage rm = new RecievedMessage(recievedMatch, RecievedMessage.MessageType.matchStarted);
         lock (_lock)
         {
-            _listOfUpdates.Add(recievedMatch);
+            _listOfUpdates.Add(rm);
         }
         return true;
     }
-    private ObservableCollection<Object> _listOfUpdates = new ObservableCollection<object>();
-    public ObservableCollection<Object> getList()
+    public bool setOdds(String bookieName, string matchID, string team, float newOdds)
+    {
+        string[] results = { matchID, team, newOdds.ToString() };
+        RecievedMessage rm = new RecievedMessage(results, RecievedMessage.MessageType.setOdds);
+        lock (_lock)
+        {
+            _listOfUpdates.Add(rm);
+        }
+        return true;
+    }
+    public bool endBid(String bookieName, string matchID, string winningTeam, float amountWon)
+    {
+        string[] results = { matchID, winningTeam, amountWon.ToString() };
+        RecievedMessage rm = new RecievedMessage(results, RecievedMessage.MessageType.endBid);
+        lock (_lock)
+        {
+            _listOfUpdates.Add(rm);
+        }
+        return true;
+    }
+
+    private ObservableCollection<RecievedMessage> _listOfUpdates = new ObservableCollection<RecievedMessage>();
+    public ObservableCollection<RecievedMessage> getList()
     {
         lock (_lock)
         {
             return this._listOfUpdates;
         }
     }
-    public void removeObjectFromList(Object o)
+    public void removeObjectFromList(RecievedMessage o)
     {
         lock(_lock)
         {
             this._listOfUpdates.Remove(o);
         }
     }
+}
+
+public class RecievedMessage
+{
+    public RecievedMessage(Object result, MessageType type)
+    {
+        this.Result = result;
+        this.Type = type;
+    }
+    public enum MessageType
+    {
+        setOdds,
+        matchStarted,
+        endBid
+    }
+    public Object Result { get; private set; }
+    public MessageType Type { get; private set; }
 }

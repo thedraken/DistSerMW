@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -13,9 +14,24 @@ namespace Gambler.Controller
         public BookieController()
         {
             ListOfBookies = new ObservableCollection<Model.Bookie>();
+            ListOfMatches = new ObservableCollection<Model.Match>();
         }
 
         public ObservableCollection<Model.Bookie> ListOfBookies { get; private set; }
+        public ObservableCollection<Model.Match> ListOfMatches { get; private set; }
+
+        private void handleNewMatch(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            ListOfMatches.Clear();
+            foreach (Model.Bookie b in ListOfBookies)
+            {
+                foreach (Model.Match m in b.ListOfMatches.Where(t => t.OpenMatch))
+                {
+                    ListOfMatches.Add(m);
+                }
+            }
+        }
+        
         public List<Model.Bet> ListOfAllBets
         {
             get
@@ -33,23 +49,6 @@ namespace Gambler.Controller
                 return ListOfAllBets.Where(t => t.validBet && t.openBet).ToList();
             }
         }
-        public List<Model.Match> ListOfAllMatches
-        {
-            get
-            {
-                List<Model.Match> list = new List<Model.Match>();
-                foreach (Model.Bookie b in ListOfBookies.Where(t => t.ListOfMatches.Count > 0))
-                    list.AddRange(b.ListOfMatches);
-                return list;
-            }
-        }
-        public List<Model.Match> ListOfOpenMatches
-        {
-            get
-            {
-                return ListOfAllMatches.Where(t => t.OpenMatch).ToList();
-            }
-        }
         public void sayHello(string bookieName)
         {
             foreach (Model.Bookie b in ListOfBookies.Where(t => t.ID == bookieName))
@@ -59,13 +58,12 @@ namespace Gambler.Controller
         {
             Model.Bookie b = new Model.Bookie(gambler, address, portNo);
             ListOfBookies.Add(b);
+            b.ListOfMatches.CollectionChanged += handleNewMatch;
         }
-        public bool updatePending()
+        public void refreshMatches()
         {
-            bool toReturn = ListOfBookies.Any(t => t.UpdatePending);
-            foreach (Model.Bookie b in ListOfBookies.Where(t => t.UpdatePending))
-                b.processedUpdate();
-            return toReturn;
+            foreach (Model.Bookie b in ListOfBookies)
+                b.refreshMatches();
         }
     }
 }

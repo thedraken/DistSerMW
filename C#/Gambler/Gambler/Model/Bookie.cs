@@ -15,44 +15,110 @@ namespace Gambler.Model
         public Bookie(Gambler connectingGambler, IPAddress address, int portNo)
             : base(address, portNo)
         {
-            ListOfBets = new ObservableCollection<Bet>();
-            ListOfMatches = new ObservableCollection<Match>();
+            _listOfBets = new ObservableCollection<Bet>();
+            _listOfMatches = new ObservableCollection<Match>();
             Connection = new RPC.BookieConnection(connectingGambler, address.ToString(), portNo);
             Connection.establishSocketConnection();
             this.ID = Connection.sendConnect();
-            UpdatePending = true;
-            ListOfBets.CollectionChanged += handleListChange;
-            ListOfMatches.CollectionChanged += handleListChange;
             this._connectingGambler = connectingGambler;
+            this._connectingGambler.Connection.Service.getList().CollectionChanged += handleUpdates;
         }
         private Gambler _connectingGambler;
         private object lockObj = new object();
-        public ObservableCollection<Bet> ListOfBets { get; private set; }
-        public ObservableCollection<Match> ListOfMatches { get; private set; }
+        private ObservableCollection<Bet> _listOfBets;
+        private ObservableCollection<Match> _listOfMatches;
+        public ObservableCollection<Match> ListOfMatches
+        {
+            get
+            {
+                lock(lockObj)
+                {
+                    return this._listOfMatches;
+                }
+            }
+        }
+        public ObservableCollection<Bet> ListOfBets
+        {
+            get
+            {
+                lock (lockObj)
+                {
+                    return this._listOfBets;
+                }
+            }
+        }
         public void addBet(Bet bet)
         {
-            this.ListOfBets.Add(bet);
+            lock (lockObj)
+            {
+                this._listOfBets.Add(bet);
+            }
+        }
+        private void addMatch(Match m)
+        {
+            lock (lockObj)
+            {
+                this._listOfMatches.Add(m);
+            }
+        }
+        private void handleUpdates(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            for (int i = 0; i < e.NewItems.Count; i++)
+            {
+                RecievedMessage rm = (RecievedMessage)e.NewItems[i];
+                string data = rm.Result.ToString().Trim('{');
+                data = data.Trim('}');
+                data = data.Replace("\r\n", "");
+                data = data.Replace("\"", "");
+                data = data.Replace(" ", "");
+                string[] array = data.Split(',');
+                switch (rm.Type)
+                {
+                    case RecievedMessage.MessageType.matchStarted:
+                        int id = int.MinValue;
+                        string teamA = string.Empty;
+                        string teamB = string.Empty;
+                        float oddsA = float.MinValue;
+                        float oddsB = float.MinValue;
+                        int limit = int.MinValue;
+                        foreach (string s in array)
+                        {
+                            if (s.StartsWith("bookieID"))
+                            {
+                                if (s.Split(':')[1] != this.ID)
+                                    break;
+                            }
+                            else if (s.StartsWith("id"))
+                                id = int.Parse(s.Split(':')[1]);
+                            else if (s.StartsWith("teamA"))
+                                teamA = s.Split(':')[1];
+                            else if (s.StartsWith("teamB"))
+                                teamB = s.Split(':')[1];
+                            else if (s.StartsWith("oddsA"))
+                                oddsA = float.Parse(s.Split(':')[1]);
+                            else if (s.StartsWith("oddsB"))
+                                oddsB = float.Parse(s.Split(':')[1]);
+                            else if (s.StartsWith("limit"))
+                                limit = int.Parse(s.Split(':')[1]);
+                        }
+                        if (teamA != string.Empty && teamB != string.Empty)
+                        {
+                            Match m = new Match(id, teamA, oddsA, teamB, oddsB, limit, this);
+                            addMatch(m);
+                        }
+                        break;
+                }
+            }
+
         }
         public Model.RPC.BookieConnection Connection { get; private set; }
-        public bool UpdatePending { get; private set; }
-        public void processedUpdate()
-        {
-            lock (lockObj)
-            {
-                UpdatePending = false;    
-            }
-        }
-        private void handleListChange(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            lock (lockObj)
-            {
-                UpdatePending = true;
-            }
-        }
         public void sayHello()
         {
             Connection.sayHello();
         }
-        
+        public void refreshMatches()
+        {
+            Connection.showMatches();
+        }
     }
 }
