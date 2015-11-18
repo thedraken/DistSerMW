@@ -49,9 +49,26 @@ namespace Gambler.Model
         }
         public void addBet(Bet bet)
         {
-            lock (lockObj)
+            switch (Connection.placeBet(bet))
             {
-                this._listOfBets.Add(bet);
+                case global::Gambler.Model.RPC.Common.PlaceBetResult.ACCEPTED:
+                    lock (lockObj)
+                    {
+                        this._listOfBets.Add(bet);
+                    }
+                    break;
+                case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_UNKNOWN_MATCH:
+                    break;
+                case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_UNKNOWN_TEAM:
+                    break;
+                case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_ALREADY_PLACED_BET:
+                    break;
+                case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_LIMIT_EXCEEDED:
+                    break;
+                case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_ODDS_MISMATCH:
+                    break;
+                default:
+                    break;
             }
         }
         private void addMatch(Match m)

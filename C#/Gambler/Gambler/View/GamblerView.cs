@@ -43,7 +43,6 @@ namespace Gambler.View
         {
             dtgrdvwBookies.Rows.Add(b.ID, b.Address.ToString(), b.PortNo.ToString(), "Say hello");
         }
-
         private void fillToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AddMoney money = new AddMoney();
@@ -52,7 +51,6 @@ namespace Gambler.View
                 gmblrController.fillWallet(money.fundsToAdd);
             txtbxGmblrFnds.Text = "€" + gmblrController.getMoney().ToString();
         }
-
         private void GamblerView_Shown(object sender, EventArgs e)
         {
             SetName setName = new SetName();
@@ -81,17 +79,26 @@ namespace Gambler.View
 
             }
         }
-
         private void tmrRefreshBets_Tick(object sender, EventArgs e)
         {
             var dataSource = new BindingSource();
             dataSource.DataSource = bkController.ListOfMatches;
             dtgrdvwBets.DataSource = dataSource;
+            txtbxGmblrFnds.Text = "€" + this.gmblrController.getMoney().ToString();
         }
-
         private void bttnPlcBet_Click(object sender, EventArgs e)
         {
-
+            if (bkController.ListOfMatches.Count > 0)
+            {
+                PlaceBet frm = new PlaceBet(bkController.ListOfMatches.ToList());
+                frm.ShowDialog();
+                if (frm.DialogResult == System.Windows.Forms.DialogResult.OK)
+                {
+                    
+                }
+            }
+            else
+                MessageBox.Show("No matches available", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

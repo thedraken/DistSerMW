@@ -56,5 +56,9 @@ namespace Gambler.Model
         {
             this._betPlaced = b;
         }
+        public override string ToString()
+        {
+            return this.OwningBookie + " - " + this.ID;
+        }
     }
 }

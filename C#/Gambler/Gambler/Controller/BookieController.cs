@@ -19,7 +19,6 @@ namespace Gambler.Controller
 
         public ObservableCollection<Model.Bookie> ListOfBookies { get; private set; }
         public ObservableCollection<Model.Match> ListOfMatches { get; private set; }
-
         private void handleNewMatch(object sender, NotifyCollectionChangedEventArgs e)
         {
             ListOfMatches.Clear();
@@ -31,7 +30,6 @@ namespace Gambler.Controller
                 }
             }
         }
-        
         public List<Model.Bet> ListOfAllBets
         {
             get
@@ -64,6 +62,10 @@ namespace Gambler.Controller
         {
             foreach (Model.Bookie b in ListOfBookies)
                 b.refreshMatches();
+        }
+        public void placeBet(Model.Match m, string teamName, double amount)
+        {
+            
         }
     }
 }

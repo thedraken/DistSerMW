@@ -17,7 +17,7 @@ namespace Gambler.Controller
         public void fillWallet(double amountToAdd)
         {
             if (amountToAdd > 0)
-                gmblr.addMoney(amountToAdd);
+                gmblr.addMoney(Math.Round(amountToAdd, 2));
         }
         public double getMoney()
         {
