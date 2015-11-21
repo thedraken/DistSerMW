@@ -44,7 +44,7 @@ namespace Gambler.Controller
         {
             get
             {
-                return ListOfAllBets.Where(t => t.validBet && t.openBet).ToList();
+                return ListOfAllBets.Where(t => t.ValidBet && t.OpenBet).ToList();
             }
         }
         public void sayHello(string bookieName)
@@ -63,9 +63,16 @@ namespace Gambler.Controller
             foreach (Model.Bookie b in ListOfBookies)
                 b.refreshMatches();
         }
-        public void placeBet(Model.Match m, string teamName, double amount)
+        public void placeBet(Model.Match m, string teamName, double amount, float odds)
         {
-            
+            Model.Bet b = new Model.Bet(m.OwningBookieID, m.ID, teamName, amount, odds);
+            Model.Bookie bookie = ListOfBookies.Where(t => t.ID.Equals(m.OwningBookieID)).FirstOrDefault();
+            bookie.addBet(b);
+        }
+        public void closeConnection()
+        {
+            foreach (Model.Bookie bk in ListOfBookies)
+                bk.closeConnection();
         }
     }
 }

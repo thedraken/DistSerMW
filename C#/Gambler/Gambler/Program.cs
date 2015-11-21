@@ -18,6 +18,7 @@ namespace Gambler
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new GamblerView());
+            
         }
     }
 }

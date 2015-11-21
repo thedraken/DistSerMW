@@ -13,6 +13,7 @@ namespace Gambler.Controller
         {
             gmblr = new Model.Gambler(nameOfGambler, address, portNo);
         }
+        
         public Model.Gambler gmblr { get; private set; }
         public void fillWallet(double amountToAdd)
         {
@@ -21,7 +22,7 @@ namespace Gambler.Controller
         }
         public double getMoney()
         {
-            return this.gmblr.money;
+            return this.gmblr.Money;
         }
         public string getID()
         {

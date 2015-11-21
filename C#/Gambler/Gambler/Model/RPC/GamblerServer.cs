@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Gambler.Model;
 using JSON_RPC_Server;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace Gambler.Model.RPC
 {
@@ -22,6 +23,8 @@ namespace Gambler.Model.RPC
         private String gamblerIP;
         // port on which the gambler's JSON-RPC server listens
         private int gamblerPort;
+
+        private Thread socketListeningThread;
 
         private JsonSerializer jsonSerializer;
 
@@ -76,8 +79,9 @@ namespace Gambler.Model.RPC
             }
             if (gamblerSocketListener != null)
             {
-                Thread thread = new Thread(new ThreadStart(gamblerSocketListener.start));
-                thread.Start();
+                socketListeningThread = new Thread(new ThreadStart(gamblerSocketListener.start));
+                socketListeningThread.IsBackground = true;
+                socketListeningThread.Start();
             }
         }
     }

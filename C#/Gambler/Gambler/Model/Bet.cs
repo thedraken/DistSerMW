@@ -8,19 +8,19 @@ namespace Gambler.Model
 {
     public class Bet
     {
-        public Bet(string bookieID, int matchID, int teamID, double stake, int odds) {
-            this.bookieID = bookieID;
-            this.matchID = matchID;
-            this.teamID = teamID;
-            this.stake = stake;
-            this.odds = odds;
+        public Bet(string bookieID, int matchID, string teamID, double stake, float odds) {
+            this.BookieID = bookieID;
+            this.MatchID = matchID;
+            this.TeamID = teamID;
+            this.Stake = stake;
+            this.Odds = odds;
         }
-        public double stake{get; private set;}
-        public string bookieID { get; private set; }
-        public int matchID { get; private set; }
-        public int teamID { get; private set; }
-        public int odds { get; private set; }
-        public bool validBet { get; private set; }
-        public bool openBet { get; private set; }
+        public double Stake{get; private set;}
+        public string BookieID { get; private set; }
+        public int MatchID { get; private set; }
+        public string TeamID { get; private set; }
+        public float Odds { get; private set; }
+        public bool ValidBet { get; private set; }
+        public bool OpenBet { get; private set; }
     }
 }

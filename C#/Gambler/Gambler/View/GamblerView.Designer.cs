@@ -52,9 +52,9 @@
             this.Port = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bookieSayHello = new System.Windows.Forms.DataGridViewButtonColumn();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.bttnPlcBet = new System.Windows.Forms.Button();
             this.dtgrdvwBets = new System.Windows.Forms.DataGridView();
             this.tmrRefreshBets = new System.Windows.Forms.Timer(this.components);
-            this.bttnPlcBet = new System.Windows.Forms.Button();
             this.mnStrp.SuspendLayout();
             this.tblLytPnl.SuspendLayout();
             this.statusStrp.SuspendLayout();
@@ -280,6 +280,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Open Matches";
             // 
+            // bttnPlcBet
+            // 
+            this.bttnPlcBet.Location = new System.Drawing.Point(889, 177);
+            this.bttnPlcBet.Name = "bttnPlcBet";
+            this.bttnPlcBet.Size = new System.Drawing.Size(75, 23);
+            this.bttnPlcBet.TabIndex = 4;
+            this.bttnPlcBet.Text = "Place bet";
+            this.bttnPlcBet.UseVisualStyleBackColor = true;
+            this.bttnPlcBet.Click += new System.EventHandler(this.bttnPlcBet_Click);
+            // 
             // dtgrdvwBets
             // 
             this.dtgrdvwBets.AllowUserToAddRows = false;
@@ -297,16 +307,6 @@
             this.tmrRefreshBets.Interval = 1000;
             this.tmrRefreshBets.Tick += new System.EventHandler(this.tmrRefreshBets_Tick);
             // 
-            // bttnPlcBet
-            // 
-            this.bttnPlcBet.Location = new System.Drawing.Point(889, 177);
-            this.bttnPlcBet.Name = "bttnPlcBet";
-            this.bttnPlcBet.Size = new System.Drawing.Size(75, 23);
-            this.bttnPlcBet.TabIndex = 4;
-            this.bttnPlcBet.Text = "Place bet";
-            this.bttnPlcBet.UseVisualStyleBackColor = true;
-            this.bttnPlcBet.Click += new System.EventHandler(this.bttnPlcBet_Click);
-            // 
             // GamblerView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -317,6 +317,7 @@
             this.MainMenuStrip = this.mnStrp;
             this.Name = "GamblerView";
             this.Text = "Gambler";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GamblerView_FormClosing);
             this.Shown += new System.EventHandler(this.GamblerView_Shown);
             this.mnStrp.ResumeLayout(false);
             this.mnStrp.PerformLayout();

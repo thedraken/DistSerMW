@@ -55,8 +55,15 @@ namespace Gambler.Model.RPC
 
         public PlaceBetResult placeBet(Bet b)
         {
-            //TODO
-            return PlaceBetResult.ACCEPTED;
+            object[] parameter = new object[] {
+                gambler.ID,
+                b.MatchID,
+                b.TeamID,
+                b.Odds,
+                b.Stake
+            };
+            JsonResponse response = handleJsonRpcRequest("placeBet", parameter);
+            return (PlaceBetResult)Enum.Parse(typeof(PlaceBetResult), response.Result.ToString());
         }
         public bool showMatches()
         {

@@ -15,6 +15,7 @@ namespace Gambler.View
         public string TeamName { get; private set; }
         public double Amount { get; private set; }
         public Model.Match Match { get; private set; }
+        public float Odds { get; private set; }
         public PlaceBet(List<Model.Match> listOfMatches)
         {
             InitializeComponent();
@@ -31,7 +32,13 @@ namespace Gambler.View
             bool success = true;
             this.Match = (Model.Match)cmbxMatch.SelectedItem;
             if (rdbttnTeamA.Checked || rdbttnTeamB.Checked)
+            {
                 this.TeamName = rdbttnTeamA.Checked ? this.Match.TeamA : this.Match.TeamB;
+                if (rdbttnTeamA.Checked)
+                    Odds = this.Match.OddsA;
+                else
+                    Odds = this.Match.OddsB;
+            }
             else
             {
                 success = false;

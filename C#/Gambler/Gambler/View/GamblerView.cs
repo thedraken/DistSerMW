@@ -32,7 +32,7 @@ namespace Gambler.View
                 }
                 catch (Controller.GamblerAlreadyExists ex)
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    handleException(ex);
                 }
             }
             dtgrdvwBookies.Rows.Clear();
@@ -65,9 +65,6 @@ namespace Gambler.View
         private void bttnRefresh_Click(object sender, EventArgs e)
         {
             bkController.refreshMatches();
-
-            bttnRefresh.ForeColor = Color.Black;
-            tlstrpUpdateLabel.Text = "Updates: None";
         }
         private void dtgrdvwBookies_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -94,11 +91,26 @@ namespace Gambler.View
                 frm.ShowDialog();
                 if (frm.DialogResult == System.Windows.Forms.DialogResult.OK)
                 {
-                    
+                    try
+                    {
+                        bkController.placeBet(frm.Match, frm.TeamName, frm.Amount, frm.Odds);
+                    }
+                    catch (Exception ex)
+                    {
+                        handleException(ex);
+                    }
                 }
             }
             else
                 MessageBox.Show("No matches available", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        private void GamblerView_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            bkController.closeConnection();
+        }
+        private void handleException(Exception ex)
+        {
+            MessageBox.Show("There was an error:\n"+ ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

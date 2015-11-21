@@ -58,17 +58,15 @@ namespace Gambler.Model
                     }
                     break;
                 case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_UNKNOWN_MATCH:
-                    break;
+                    throw new Controller.UnknownMatch(bet.MatchID);
                 case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_UNKNOWN_TEAM:
-                    break;
+                    throw new Controller.UnknownTeam(bet.TeamID);
                 case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_ALREADY_PLACED_BET:
-                    break;
+                    throw new Controller.BetAlreadyPlaced();
                 case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_LIMIT_EXCEEDED:
-                    break;
+                    throw new Controller.BetLimitExceeded();
                 case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_ODDS_MISMATCH:
-                    break;
-                default:
-                    break;
+                    throw new Controller.OddsMismatch(bet.Odds, bet.TeamID);
             }
         }
         private void addMatch(Match m)
@@ -137,5 +135,10 @@ namespace Gambler.Model
         {
             Connection.showMatches();
         }
+        public void closeConnection()
+        {
+            this.Connection.closeConnection();
+        }
+
     }
 }

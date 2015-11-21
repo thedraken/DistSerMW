@@ -26,7 +26,7 @@ namespace Gambler.Model
             this.OddsB = oddsB;
             this.Limit = limit;
         }
-        public string OwningBookie
+        public string OwningBookieID
         {
             get
             {
@@ -58,7 +58,7 @@ namespace Gambler.Model
         }
         public override string ToString()
         {
-            return this.OwningBookie + " - " + this.ID;
+            return this.OwningBookieID + " - " + this.ID;
         }
     }
 }

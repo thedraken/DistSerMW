@@ -118,7 +118,10 @@ namespace Gambler.Model.RPC.Common
             JsonResponse response = null; 
            
                 // create a JSON string from the request object
-                String requestString = JsonConvert.SerializeObject(request);
+            String requestString = JsonConvert.SerializeObject(request, new JsonSerializerSettings
+            {
+                ReferenceLoopHandling= ReferenceLoopHandling.Serialize
+            });
 
                 Trace.TraceInformation("sending request: " + requestString);
                 // attempting to send the request via the writer to
