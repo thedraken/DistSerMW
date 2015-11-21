@@ -71,4 +71,20 @@ namespace Gambler.Controller
 
         }
     }
+    public class NotEnoughFunds : BaseException
+    {
+        public NotEnoughFunds(double attemptedBet)
+            : base("You do not have enough funds to place a bet of " + attemptedBet)
+        {
+
+        }
+    }
+    public class NoConnectedBookie : BaseException
+    {
+        public NoConnectedBookie()
+            :base("There are no connected bookies to set the mode of")
+        {
+
+        }
+    }
 }

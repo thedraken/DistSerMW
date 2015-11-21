@@ -17,16 +17,19 @@ namespace Gambler.Model
         {
             _listOfBets = new ObservableCollection<Bet>();
             _listOfMatches = new ObservableCollection<Match>();
+            _listOfWinnings = new ObservableCollection<Winnings>();
             Connection = new RPC.BookieConnection(connectingGambler, address.ToString(), portNo);
             Connection.establishSocketConnection();
             this.ID = Connection.sendConnect();
             this._connectingGambler = connectingGambler;
             this._connectingGambler.Connection.Service.getList().CollectionChanged += handleUpdates;
+            Mode = JSON_RPC_Server.ServiceMode.RELIABLE;
         }
         private Gambler _connectingGambler;
         private object lockObj = new object();
         private ObservableCollection<Bet> _listOfBets;
         private ObservableCollection<Match> _listOfMatches;
+        private ObservableCollection<Winnings> _listOfWinnings;
         public ObservableCollection<Match> ListOfMatches
         {
             get
@@ -44,6 +47,16 @@ namespace Gambler.Model
                 lock (lockObj)
                 {
                     return this._listOfBets;
+                }
+            }
+        }
+        public ObservableCollection<Winnings> ListOfWinnings
+        {
+            get
+            {
+                lock (lockObj)
+                {
+                    return this._listOfWinnings;
                 }
             }
         }
@@ -69,59 +82,44 @@ namespace Gambler.Model
                     throw new Controller.OddsMismatch(bet.Odds, bet.TeamID);
             }
         }
-        private void addMatch(Match m)
-        {
-            lock (lockObj)
-            {
-                this._listOfMatches.Add(m);
-            }
-        }
         private void handleUpdates(object sender, NotifyCollectionChangedEventArgs e)
         {
-            for (int i = 0; i < e.NewItems.Count; i++)
+            foreach (var ni in e.NewItems)
             {
-                RecievedMessage rm = (RecievedMessage)e.NewItems[i];
-                string data = rm.Result.ToString().Trim('{');
-                data = data.Trim('}');
-                data = data.Replace("\r\n", "");
-                data = data.Replace("\"", "");
-                data = data.Replace(" ", "");
-                string[] array = data.Split(',');
-                switch (rm.Type)
+                RecievedMessage rm = (RecievedMessage)ni;
+                if (this.ID == rm.Result.BookieID)
                 {
-                    case RecievedMessage.MessageType.matchStarted:
-                        int id = int.MinValue;
-                        string teamA = string.Empty;
-                        string teamB = string.Empty;
-                        float oddsA = float.MinValue;
-                        float oddsB = float.MinValue;
-                        int limit = int.MinValue;
-                        foreach (string s in array)
-                        {
-                            if (s.StartsWith("bookieID"))
+                    switch (rm.Type)
+                    {
+                        case RecievedMessage.MessageType.matchStarted:
+                            MatchStartedResult msr = (MatchStartedResult)rm.Result;
+                            Match matchToAdd = new Match(msr.ID, msr.TeamA, msr.OddsA, msr.TeamB, msr.OddsB, msr.Limit, this);
+                            lock (lockObj)
                             {
-                                if (s.Split(':')[1] != this.ID)
-                                    break;
+                                this._listOfMatches.Add(matchToAdd);
                             }
-                            else if (s.StartsWith("id"))
-                                id = int.Parse(s.Split(':')[1]);
-                            else if (s.StartsWith("teamA"))
-                                teamA = s.Split(':')[1];
-                            else if (s.StartsWith("teamB"))
-                                teamB = s.Split(':')[1];
-                            else if (s.StartsWith("oddsA"))
-                                oddsA = float.Parse(s.Split(':')[1]);
-                            else if (s.StartsWith("oddsB"))
-                                oddsB = float.Parse(s.Split(':')[1]);
-                            else if (s.StartsWith("limit"))
-                                limit = int.Parse(s.Split(':')[1]);
-                        }
-                        if (teamA != string.Empty && teamB != string.Empty)
-                        {
-                            Match m = new Match(id, teamA, oddsA, teamB, oddsB, limit, this);
-                            addMatch(m);
-                        }
-                        break;
+                            break;
+                        case RecievedMessage.MessageType.endBet:
+                            EndBetResult ebr = (EndBetResult)rm.Result;
+                            lock (lockObj)
+                            {
+
+                                var data = _listOfMatches.Where(t => t.ID.Equals(ebr.MatchID));
+                                Match matchToUpdate = data.First();
+                                matchToUpdate.closeMatch();
+                                Bet betToUpdate = _listOfBets.Where(t => t.MatchID.Equals(ebr.MatchID)).First();
+                                betToUpdate.closeBet();
+                                Model.Winnings winnings = new Winnings(ebr.AmountWon);
+                                this._listOfWinnings.Add(winnings);
+                            }
+                            break;
+                        case RecievedMessage.MessageType.setOdds:
+                            SetOddsResult sor = (SetOddsResult)rm.Result;
+                            var dataOdds = _listOfMatches.Where(t => t.ID.Equals(sor.MatchID));
+                            Match matchToChangeOdds = dataOdds.First();
+                            matchToChangeOdds.updateOdds(sor.TeamName, sor.NewOdds);
+                            break;
+                    }
                 }
             }
 
@@ -139,6 +137,15 @@ namespace Gambler.Model
         {
             this.Connection.closeConnection();
         }
-
+        public JSON_RPC_Server.ServiceMode Mode { get; private set; }
+        public void setMode(JSON_RPC_Server.ServiceMode mode)
+        {
+            Connection.setModeOfHost(mode);
+            this.Mode = mode;
+        }
+        public override string ToString()
+        {
+            return this.ID;
+        }
     }
 }

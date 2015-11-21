@@ -20,11 +20,12 @@ namespace Gambler.Model
             this._owningBookie = owningBookie;
         }
         private Model.Bookie _owningBookie;
-        public void updateOdds(float oddsA, float oddsB, int limit)
+        public void updateOdds(string teamName, float odds)
         {
-            this.OddsA = oddsA;
-            this.OddsB = oddsB;
-            this.Limit = limit;
+            if (TeamA.Equals(teamName))
+                OddsA = odds;
+            else if (TeamB.Equals(teamName))
+                OddsB = odds;
         }
         public string OwningBookieID
         {

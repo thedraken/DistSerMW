@@ -20,6 +20,7 @@ namespace Gambler.View
         }
         private Controller.GamblerController gmblrController;
         private Controller.BookieController bkController;
+        private int countOfWinnings = 0;
         private void connectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ConnectToBookie bookie = new ConnectToBookie();
@@ -60,6 +61,7 @@ namespace Gambler.View
             txtbxGmblrID.Text = this.gmblrController.getID();
             bkController = new Controller.BookieController();
             tlstrpStatusLabel.Text = "Status: Listening on port: " + gmblrController.gmblr.PortNo;
+            bkController.ListOfAllWinnings.CollectionChanged += handleNewWinnings;
             tmrRefreshBets.Start();
         }
         private void bttnRefresh_Click(object sender, EventArgs e)
@@ -82,6 +84,12 @@ namespace Gambler.View
             dataSource.DataSource = bkController.ListOfMatches;
             dtgrdvwBets.DataSource = dataSource;
             txtbxGmblrFnds.Text = "€" + this.gmblrController.getMoney().ToString();
+            int countOfWinningsNow = bkController.ListOfAllWinnings.Count;
+            if (countOfWinnings < countOfWinningsNow)
+            {
+                countOfWinnings = countOfWinningsNow;
+                MessageBox.Show("You've won some money, it has been credited to your account");
+            }
         }
         private void bttnPlcBet_Click(object sender, EventArgs e)
         {
@@ -93,7 +101,10 @@ namespace Gambler.View
                 {
                     try
                     {
-                        bkController.placeBet(frm.Match, frm.TeamName, frm.Amount, frm.Odds);
+                        if (gmblrController.gmblr.Money >= frm.Amount)
+                            bkController.placeBet(frm.Match, frm.TeamName, frm.Amount, frm.Odds);
+                        else
+                            throw new Controller.NotEnoughFunds(frm.Amount);
                     }
                     catch (Exception ex)
                     {
@@ -111,6 +122,22 @@ namespace Gambler.View
         private void handleException(Exception ex)
         {
             MessageBox.Show("There was an error:\n"+ ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        private void handleNewWinnings(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            foreach (var ni in e.NewItems)
+            {
+                Model.Winnings w = (Model.Winnings)ni;
+                gmblrController.fillWallet(w.Amount);
+            }
+        }
+        private void setModeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (bkController.ListOfBookies.Count > 0)
+            {
+                SetMode frm = new SetMode(bkController.ListOfBookies.ToList());
+                frm.ShowDialog();
+            }
         }
     }
 }

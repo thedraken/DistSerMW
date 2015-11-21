@@ -13,7 +13,7 @@ namespace Gambler.View
     public partial class PlaceBet : Form
     {
         public string TeamName { get; private set; }
-        public double Amount { get; private set; }
+        public float Amount { get; private set; }
         public Model.Match Match { get; private set; }
         public float Odds { get; private set; }
         public PlaceBet(List<Model.Match> listOfMatches)
@@ -46,8 +46,8 @@ namespace Gambler.View
             }
             if (txtbxAmnt.Text.Trim() != string.Empty)
             {
-                if (Controller.FunctionController.getInstance().isDouble(txtbxAmnt.Text))
-                    this.Amount = Double.Parse(txtbxAmnt.Text);
+                if (Controller.FunctionController.getInstance().isFloat(txtbxAmnt.Text))
+                    this.Amount = float.Parse(txtbxAmnt.Text);
                 else
                 {
                     success = false;

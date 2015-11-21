@@ -31,6 +31,13 @@ namespace Gambler.Controller
                 return true;
             return false;
         }
+        public bool isFloat(string value)
+        {
+            float ret;
+            if (float.TryParse(value, out ret))
+                return true;
+            return false;
+        }
         public bool isInt(string value)
         {
             int ret;

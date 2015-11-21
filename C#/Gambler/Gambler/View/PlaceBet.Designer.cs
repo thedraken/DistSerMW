@@ -40,6 +40,7 @@
             // 
             // cmbxMatch
             // 
+            this.cmbxMatch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbxMatch.FormattingEnabled = true;
             this.cmbxMatch.Location = new System.Drawing.Point(88, 12);
             this.cmbxMatch.Name = "cmbxMatch";

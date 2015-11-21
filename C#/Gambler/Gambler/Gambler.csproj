@@ -64,9 +64,11 @@
     <Compile Include="Model\RPC\BookieConnection.cs" />
     <Compile Include="Model\RPC\Common\JsonRpcConnection.cs" />
     <Compile Include="Model\RPC\Common\PlaceBetResult.cs" />
+    <Compile Include="Model\RPC\Common\ReplyMessage.cs" />
     <Compile Include="Model\RPC\GamblerServer.cs" />
     <Compile Include="Model\RPC\JSONRPCServer\JsonRPCSocketServer.cs" />
     <Compile Include="Model\RPC\JSONRPCServer\ServiceMode.cs" />
+    <Compile Include="Model\Winnings.cs" />
     <Compile Include="View\AddMoney.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,6 +98,12 @@
     <Compile Include="View\PlaceBet.Designer.cs">
       <DependentUpon>PlaceBet.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\SetMode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\SetMode.Designer.cs">
+      <DependentUpon>SetMode.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\SetName.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,6 +130,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\PlaceBet.resx">
       <DependentUpon>PlaceBet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\SetMode.resx">
+      <DependentUpon>SetMode.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\SetName.resx">
       <DependentUpon>SetName.cs</DependentUpon>

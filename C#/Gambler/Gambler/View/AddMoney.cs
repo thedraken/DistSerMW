@@ -19,9 +19,9 @@ namespace Gambler.View
 
         private void bttnOK_Click(object sender, EventArgs e)
         {
-            if (txtbxFundsToAdd.Text.Length > 0 && Controller.FunctionController.getInstance().isDouble(txtbxFundsToAdd.Text))
+            if (txtbxFundsToAdd.Text.Length > 0 && Controller.FunctionController.getInstance().isFloat(txtbxFundsToAdd.Text))
             {
-                fundsToAdd = Double.Parse(txtbxFundsToAdd.Text);
+                fundsToAdd = float.Parse(txtbxFundsToAdd.Text);
                 this.DialogResult = System.Windows.Forms.DialogResult.OK;
                 this.Close();
             }
@@ -29,7 +29,7 @@ namespace Gambler.View
                 MessageBox.Show("Error", "Please enter a double value", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        public double fundsToAdd { get; private set; }
+        public float fundsToAdd { get; private set; }
 
         private void bttnCancel_Click(object sender, EventArgs e)
         {
