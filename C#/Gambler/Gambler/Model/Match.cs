@@ -61,5 +61,20 @@ namespace Gambler.Model
         {
             return this.OwningBookieID + " - " + this.ID;
         }
+        public override bool Equals(object obj)
+        {
+            if (!this.GetType().Equals(obj.GetType()))
+                return false;
+            Match m = (Match)obj;
+            if (!m.ID.Equals(this.ID))
+                return false;
+            if (!m.OwningBookieID.Equals(this.OwningBookieID))
+                return false;
+            return true;
+        }
+        public override int GetHashCode()
+        {
+            return this.ID;
+        }
     }
 }

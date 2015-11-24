@@ -12,68 +12,116 @@ namespace Gambler.Model.RPC
 {
     public class BookieConnection : JsonRpcConnection
     {
-
-        private String bookieID; // bookie-ID of the bookie on the other side of this connection
-        private Gambler gambler;   // the enclosing bookie
-
+        private String _bookieID; // bookie-ID of the bookie on the other side of this connection
+        private Gambler _gambler;   // the enclosing bookie
+        private int _retry = 0;
+        private int _maxRetries = 3;
         public BookieConnection(Gambler gambler, String gamblerIP, int gamblerPort) : base(gambler.ID, gamblerIP, gamblerPort)
         {
             // initialize JsonRpcConnection base class
-            this.gambler = gambler;
+            this._gambler = gambler;
         }
 
         public void sayHello()
         {
             object[] parameter = new object[] {
-                gambler.ID
+                _gambler.ID
             };
-            JsonResponse response = handleJsonRpcRequest("sayHelloToBookie", parameter);
-
+            JsonResponse response = handleJsonRpcRequest("sayHelloToBookie", parameter, this._gambler.getNextMessageID());
             // show hello message returned by gambler
             String sayHelloResponse = response.Result.ToString();
-
-            Console.WriteLine("Bookie " + bookieID + " sent response: " + sayHelloResponse);
+            Console.WriteLine("Bookie " + _bookieID + " sent response: " + sayHelloResponse);
         }
-
+        public void closeConnection()
+        {
+            object[] parameter = new object[] {
+                _gambler.ID
+            };
+            JsonResponse response = handleJsonRpcRequest("gamblerExiting", parameter, this._gambler.getNextMessageID());
+            Console.WriteLine("Bookie " + _bookieID + " sent response to exit request: " + response.ToString());
+            base.closeRPCConnection();
+        }
         public String sendConnect()
         {
             // connect the bookie 
             object[] parameter = new object[] {
-                gambler.ID,
-                gambler.Address.ToString(),
-                gambler.PortNo
+                _gambler.ID,
+                _gambler.Address.ToString(),
+                _gambler.PortNo
             };
-            JsonResponse response = handleJsonRpcRequest("connect", parameter);
-
+            JsonResponse response = handleJsonRpcRequest("connect", parameter, this._gambler.getNextMessageID());
             String bookieID = response.Result.ToString();
 
             Trace.TraceInformation("connected with bookie " + bookieID);
-            this.bookieID = bookieID;
+            this._bookieID = bookieID;
             return bookieID;
         }
-
         public PlaceBetResult placeBet(Bet b)
         {
             object[] parameter = new object[] {
-                gambler.ID,
+                _gambler.ID,
                 b.MatchID,
                 b.TeamID,
                 b.Odds,
                 b.Stake
             };
-            JsonResponse response = handleJsonRpcRequest("placeBet", parameter);
+            string messageID = this._gambler.getNextMessageID();
+            JsonResponse response = handleJsonRpcRequest("placeBet", parameter, messageID);
+            while (response == null)
+            {
+                if (_retry > _maxRetries)
+                    return PlaceBetResult.LOST_CONNECTION;
+                _retry++;
+                response = handleJsonRpcRequest("placeBet", parameter, messageID);
+            }
             return (PlaceBetResult)Enum.Parse(typeof(PlaceBetResult), response.Result.ToString());
         }
-        public bool showMatches()
+        public List<Match> showMatches(Bookie requestingB)
         {
             object[] parameter = new object[] {
-                gambler.ID
+                _gambler.ID
             };
-            JsonResponse response = handleJsonRpcRequest("showMatches", parameter);
-            Object result = response.Result.ToString();
-
-            Trace.TraceInformation("connected with bookie " + bookieID);
-            return true;
+            JsonResponse response = handleJsonRpcRequest("showMatches", parameter, this._gambler.getNextMessageID());
+            string data = response.Result.ToString();
+            data = data.Replace("\r\n", "");
+            data = data.Replace("\"", "");
+            data = data.Replace(" ", "");
+            string[] array = data.Split(new char[] { '{', '}' }, StringSplitOptions.RemoveEmptyEntries);
+            List<Match> listOfMatches = new List<Match>();
+            foreach (string s in array)
+            {
+                if (s.Contains(","))
+                {
+                    string bookieID = string.Empty;
+                    int id = int.MinValue;
+                    string teamA = string.Empty;
+                    string teamB = string.Empty;
+                    float oddsA = float.MinValue;
+                    float oddsB = float.MinValue;
+                    int limit = int.MinValue;
+                    string[] matchData = s.Split(',');
+                    foreach (string m in matchData)
+                    {
+                        if (m.StartsWith("bookieID"))
+                            bookieID = m.Split(':')[1];
+                        else if (m.StartsWith("id"))
+                            id = int.Parse(m.Split(':')[1]);
+                        else if (m.StartsWith("teamA"))
+                            teamA = m.Split(':')[1];
+                        else if (m.StartsWith("teamB"))
+                            teamB = m.Split(':')[1];
+                        else if (m.StartsWith("oddsA"))
+                            oddsA = float.Parse(m.Split(':')[1]);
+                        else if (m.StartsWith("oddsB"))
+                            oddsB = float.Parse(m.Split(':')[1]);
+                        else if (m.StartsWith("limit"))
+                            limit = int.Parse(m.Split(':')[1]);
+                    }
+                    if (teamA != string.Empty && teamB != string.Empty && bookieID != string.Empty && bookieID == requestingB.ID)
+                        listOfMatches.Add(new Match(id, teamA, oddsA, teamB, oddsB, limit, requestingB));
+                }
+            }
+            return listOfMatches;
         }
     }
 }

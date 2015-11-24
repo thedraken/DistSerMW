@@ -87,4 +87,12 @@ namespace Gambler.Controller
 
         }
     }
+    public class ConnectionDropped : BaseException
+    {
+        public ConnectionDropped()
+            : base("The connection failed 3 times, maybe the bookie is no longer online?")
+        {
+
+        }
+    }
 }

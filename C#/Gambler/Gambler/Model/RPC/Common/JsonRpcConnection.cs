@@ -19,8 +19,6 @@ namespace Gambler.Model.RPC.Common
 
         private String serverIP;  // IP address of the JSON-RPC server
         private int serverPort;   // port number of the JSON-RPC server
-        private int currentID = 0;
-        private String uniqueID;
 
         private TcpClient tcpClient; // socket connection with the JSON-RPC server
         private NetworkStream stream;
@@ -33,8 +31,7 @@ namespace Gambler.Model.RPC.Common
             // remember IP and port of the JSON-RPC server, also in case we need to re-connect
             this.serverIP = serverIP;
             this.serverPort = serverPort;
-            this.uniqueID = uniqueID;
-          
+
 
             // create an instance of JsonSerializer, the primary class for serialization of JSON Objects
             this.jsonSerializer = new JsonSerializer();
@@ -60,17 +57,17 @@ namespace Gambler.Model.RPC.Common
             }
             catch (SocketException e)
             {
-          
+
                 Console.WriteLine(e.ToString());
             }
             catch (IOException e)
             {
-               
+
                 Console.WriteLine(e.ToString());
             }
         }
 
-        public void closeConnection()
+        public void closeRPCConnection()
         {
             try
             {
@@ -85,13 +82,13 @@ namespace Gambler.Model.RPC.Common
         }
 
 
-    /*
-	 * The setModeOfHost method tells the designated Gambler to handle any incoming RPCalls originating 
-	 * from this Bookie with the behaviour specified by the ServiceMode
-	 * 
-	 * Refer to the Getting started document for more information.
-	 */
-        public void setModeOfHost(ServiceMode serviceMode)
+        /*
+         * The setModeOfHost method tells the designated Gambler to handle any incoming RPCalls originating 
+         * from this Bookie with the behaviour specified by the ServiceMode
+         * 
+         * Refer to the Getting started document for more information.
+         */
+        public void setModeOfHost(ServiceMode serviceMode, string uniqueID)
         {
             IPEndPoint localIPEndpoint = (IPEndPoint)tcpClient.Client.LocalEndPoint;
             Object[] parameters = new object[] {
@@ -99,57 +96,55 @@ namespace Gambler.Model.RPC.Common
                 localIPEndpoint.Port,
                 serviceMode.ToString()
             };
-            handleJsonRpcRequest("setModeOfHost", parameters);
+            handleJsonRpcRequest("setModeOfHost", parameters, uniqueID);
         }
 
-        protected JsonResponse handleJsonRpcRequest(String method, Object[] parameters)
-        {       
+        protected JsonResponse handleJsonRpcRequest(String method, Object[] parameters, string uniqueID)
+        {
             JsonRequest request = new JsonRequest
             {
                 Method = method,
                 Params = parameters,
-                Id = uniqueID + (++currentID).ToString()
+                Id = uniqueID
             };
             JArray jsonParams = request.Params as JArray;
-            JsonResponse response = null; 
-           
-                // create a JSON string from the request object
+            JsonResponse jsonResponse = null;
+
+            // create a JSON string from the request object
             String requestString = JsonConvert.SerializeObject(request, new JsonSerializerSettings
             {
-                ReferenceLoopHandling= ReferenceLoopHandling.Serialize
+                ReferenceLoopHandling = ReferenceLoopHandling.Serialize
             });
 
-                Trace.TraceInformation("sending request: " + requestString);
-                // attempting to send the request via the writer to
-                // the JSON-RPC server might throw an IOException
-                if (writer != null)
-                {
-                    writer.Write(requestString);
-                    // flush the stream to make sure the request is sent via the socket
-                    writer.Flush();
-                }
+            Trace.TraceInformation("sending request: " + requestString);
+            // attempting to send the request via the writer to
+            // the JSON-RPC server might throw an IOException
+            if (writer != null)
+            {
+                writer.Write(requestString);
+                // flush the stream to make sure the request is sent via the socket
+                writer.Flush();
+            }
 
-                // try to receive a response via the reader
-                response = (JsonResponse)jsonSerializer.Deserialize(reader, typeof(JsonResponse));
+            // try to receive a response via the reader
+            var response = jsonSerializer.Deserialize(reader, typeof(JsonResponse));
 
-                // check whether a response has been received
-                if (response != null)
-                {
-                    // (re-)serialize the response for informational purposes
-                    String responseString = JsonConvert.SerializeObject(response);
+            // check whether a response has been received
+            if (response != null)
+            {
+                jsonResponse = (JsonResponse)response;
+                // (re-)serialize the response for informational purposes
+                String responseString = JsonConvert.SerializeObject(jsonResponse);
 
-                    Trace.TraceInformation("received response: " + responseString);
-                }
-                else
-                {
-                    // connection to JSON-RPC server is lost
-                    Trace.TraceInformation("server connection dropped");
-                    
-
-                }
-            
-            return response;
+                Trace.TraceInformation("received response: " + responseString);
+            }
+            else
+            {
+                // connection to JSON-RPC server is lost
+                Trace.TraceInformation("server connection dropped");
+                establishSocketConnection();
+            }
+            return jsonResponse;
         }
-
     }
 }

@@ -24,8 +24,10 @@ namespace Gambler.Model
             this._connectingGambler = connectingGambler;
             this._connectingGambler.Connection.Service.getList().CollectionChanged += handleUpdates;
             Mode = JSON_RPC_Server.ServiceMode.RELIABLE;
+            Connected = true;
         }
         private Gambler _connectingGambler;
+        public bool Connected { get; private set; }
         private object lockObj = new object();
         private ObservableCollection<Bet> _listOfBets;
         private ObservableCollection<Match> _listOfMatches;
@@ -80,6 +82,8 @@ namespace Gambler.Model
                     throw new Controller.BetLimitExceeded();
                 case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_ODDS_MISMATCH:
                     throw new Controller.OddsMismatch(bet.Odds, bet.TeamID);
+                case RPC.Common.PlaceBetResult.LOST_CONNECTION:
+                    throw new Controller.ConnectionDropped();
             }
         }
         private void handleUpdates(object sender, NotifyCollectionChangedEventArgs e)
@@ -118,6 +122,9 @@ namespace Gambler.Model
                             Match matchToChangeOdds = dataOdds.First();
                             matchToChangeOdds.updateOdds(sor.TeamName, sor.NewOdds);
                             break;
+                        case RecievedMessage.MessageType.bookieExiting:
+                            this.Connected = false;
+                            break;
                     }
                 }
             }
@@ -130,7 +137,18 @@ namespace Gambler.Model
         }
         public void refreshMatches()
         {
-            Connection.showMatches();
+            List<Match> listOfMatches = Connection.showMatches(this);
+            if (listOfMatches != null && listOfMatches.Count > 0)
+            {
+                foreach(Match m in listOfMatches)
+                {
+                    lock (lockObj)
+                    {
+                        if (!_listOfMatches.Contains(m))
+                            _listOfMatches.Add(m);
+                    }
+                }
+            }
         }
         public void closeConnection()
         {
@@ -139,7 +157,7 @@ namespace Gambler.Model
         public JSON_RPC_Server.ServiceMode Mode { get; private set; }
         public void setMode(JSON_RPC_Server.ServiceMode mode)
         {
-            Connection.setModeOfHost(mode);
+            Connection.setModeOfHost(mode, this._connectingGambler.getNextMessageID());
             this.Mode = mode;
         }
         public override string ToString()

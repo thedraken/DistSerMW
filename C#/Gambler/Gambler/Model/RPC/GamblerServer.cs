@@ -151,7 +151,6 @@ public class MyGamblerService : JsonRpcService
         this.gambler = gambler;
     }
     private object _lock = new object();
-    
     [JsonRpcMethod]
     public String sayHelloToGambler(String bookieName)
     {
@@ -217,6 +216,11 @@ public class MyGamblerService : JsonRpcService
         RecievedMessage rm = new RecievedMessage(ebr, RecievedMessage.MessageType.endBet);
         return addUpdate(rm);
     }
+    public bool bookieExiting(String bookieName)
+    {
+        BookieExitingResult ber = new BookieExitingResult(bookieName);
+        return addUpdate(new RecievedMessage(ber, RecievedMessage.MessageType.bookieExiting));
+    }
     private bool addUpdate(RecievedMessage rm)
     {
         lock (_lock)
@@ -254,7 +258,8 @@ public class RecievedMessage
     {
         setOdds,
         matchStarted,
-        endBet
+        endBet,
+        bookieExiting
     }
     public Result Result { get; private set; }
     public MessageType Type { get; private set; }
@@ -360,5 +365,13 @@ public class MatchStartedResult : Result
     public override int GetHashCode()
     {
         return MatchID;
+    }
+}
+public class BookieExitingResult : Result
+{
+    public BookieExitingResult(string bookieID)
+        : base(bookieID, 0)
+    {
+
     }
 }
