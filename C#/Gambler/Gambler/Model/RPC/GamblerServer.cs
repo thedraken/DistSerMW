@@ -92,17 +92,23 @@ namespace Gambler.Model.RPC
 
 class SampleInterceptor : JSON_RPC_Server.Interceptor
 {
-
-
-    //TODO implement a more meaningfull interceptor
-
+    private List<RequestResponse> _listOfResponsesAndRequest = new List<RequestResponse>();
     public JsonResponse interceptRequest(JsonRequest jsonRequest)
     {
-        String request = JsonConvert.SerializeObject(jsonRequest);
-
         // print intercepted request on the console
+        String request = JsonConvert.SerializeObject(jsonRequest);
         Console.WriteLine("intercepted request: " + request);
-        return null;
+        JsonResponse response = null;
+        if (jsonRequest.Id != null)
+        {
+            var data = _listOfResponsesAndRequest.Where(t=> t.Request.Id.ToString().Equals(jsonRequest.Id.ToString()));
+            if (data.Count() > 0 && data.First().Response != null)
+            {
+                response = data.First().Response;
+                Console.WriteLine("Duplicate request recieved, sending original response back");
+            }
+        }
+        return response;
     }
 
     // HINT 1: 	this message returns an JsonResponse object, in case that it shall do nothing with it, simply return null.
@@ -113,15 +119,23 @@ class SampleInterceptor : JSON_RPC_Server.Interceptor
     {
         String request = JsonConvert.SerializeObject(jsonRequest);
         String response = JsonConvert.SerializeObject(jsonResponse);
-        //TODO deal with preventing duplicates request coming through
-        //Match phase duplication
-        //Winning duplications
-
+        if (_listOfResponsesAndRequest.Where(t => t.Request.Id.ToString().Equals(jsonRequest.Id.ToString())).Count() == 0)
+            _listOfResponsesAndRequest.Add(new RequestResponse(jsonRequest, jsonResponse));
         // print intercepted request/respons-pair on the console
         Console.WriteLine("intercepted response: " + response + " for request: " + request);
     }
 }
 
+public class RequestResponse
+{
+    public RequestResponse(JsonRequest request, JsonResponse response)
+    {
+        this.Request = request;
+        this.Response = response;
+    }
+    public JsonRequest Request { get; private set; }
+    public JsonResponse Response { get; private set; }
+}
 
 /// <summary>
 /// The class implementing the methods that are exposed via JSON-RPC.
