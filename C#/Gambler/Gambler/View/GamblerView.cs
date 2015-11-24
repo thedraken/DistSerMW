@@ -81,6 +81,7 @@ namespace Gambler.View
         }
         private void tmrRefreshBets_Tick(object sender, EventArgs e)
         {
+            bkController.updateMatches();
             var dataSource = new BindingSource();
             dataSource.DataSource = bkController.ListOfMatches;
             dtgrdvwBets.DataSource = dataSource;
@@ -97,6 +98,7 @@ namespace Gambler.View
                 countOfLoses = countOfLosesNow;
                 MessageBox.Show("Some matches ended and you didn't win, better luck next time!", "Loser", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+
         }
         private void bttnPlcBet_Click(object sender, EventArgs e)
         {
@@ -109,7 +111,10 @@ namespace Gambler.View
                     try
                     {
                         if (gmblrController.gmblr.Money >= frm.Amount)
+                        {
                             bkController.placeBet(frm.Match, frm.TeamName, frm.Amount, frm.Odds);
+                            gmblrController.fillWallet(-frm.Amount);
+                        }
                         else
                             throw new Controller.NotEnoughFunds(frm.Amount);
                     }
@@ -125,6 +130,7 @@ namespace Gambler.View
         private void GamblerView_FormClosing(object sender, FormClosingEventArgs e)
         {
             bkController.closeConnection();
+            gmblrController.destroyConnection();
         }
         private void handleException(Exception ex)
         {

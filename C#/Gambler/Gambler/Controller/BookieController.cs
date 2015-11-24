@@ -53,8 +53,12 @@ namespace Gambler.Controller
         }
         private void handleNewMatch(object sender, NotifyCollectionChangedEventArgs e)
         {
+            updateMatches();
+        }
+        public void updateMatches()
+        {
             ListOfMatches.Clear();
-            foreach (Model.Bookie b in ListOfBookies)
+            foreach (Model.Bookie b in ListOfBookies.Where(t => t.Connected))
             {
                 foreach (Model.Match m in b.ListOfMatches.Where(t => t.OpenMatch))
                 {

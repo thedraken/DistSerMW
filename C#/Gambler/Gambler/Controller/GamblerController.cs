@@ -17,8 +17,7 @@ namespace Gambler.Controller
         public Model.Gambler gmblr { get; private set; }
         public void fillWallet(double amountToAdd)
         {
-            if (amountToAdd > 0)
-                gmblr.addMoney(Math.Round(amountToAdd, 2));
+            gmblr.addMoney(Math.Round(amountToAdd, 2));
         }
         public double getMoney()
         {
@@ -27,6 +26,10 @@ namespace Gambler.Controller
         public string getID()
         {
             return this.gmblr.ID;
+        }
+        public void destroyConnection()
+        {
+            this.gmblr.destroyConnection();
         }
     }
 }

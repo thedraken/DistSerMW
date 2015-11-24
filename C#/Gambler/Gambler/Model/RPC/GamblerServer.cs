@@ -28,6 +28,7 @@ namespace Gambler.Model.RPC
         private Thread socketListeningThread;
 
         private JsonSerializer jsonSerializer;
+        private SocketListener gamblerSocketListener;
 
         public GamblerServer(Gambler gambler, String gamblerIP, int gamblerPort)
         {
@@ -67,7 +68,7 @@ namespace Gambler.Model.RPC
             //Follwoing the code for an Interceptor which simply prints all intercepted requests
             // and responses, just for illustration purposes
             Interceptor interceptor = new SampleInterceptor();
-            SocketListener gamblerSocketListener = null;
+            gamblerSocketListener = null;
             try
             {
                 // launch a socket listener accepting and handling JSON-RPC requests
@@ -78,11 +79,25 @@ namespace Gambler.Model.RPC
              
                 Console.WriteLine(e.ToString());
             }
+
+
+
             if (gamblerSocketListener != null)
             {
                 socketListeningThread = new Thread(new ThreadStart(gamblerSocketListener.start));
                 socketListeningThread.IsBackground = true;
                 socketListeningThread.Start();
+            }
+        }
+        public void destroyGamblerServerInterface()
+        {
+            try
+            {
+                gamblerSocketListener.stop();
+            }
+            catch
+            {
+
             }
         }
     }
@@ -151,7 +166,6 @@ public class MyGamblerService : JsonRpcService
         this.gambler = gambler;
     }
     private object _lock = new object();
-    
     [JsonRpcMethod]
     public String sayHelloToGambler(String bookieName)
     {
@@ -217,6 +231,11 @@ public class MyGamblerService : JsonRpcService
         RecievedMessage rm = new RecievedMessage(ebr, RecievedMessage.MessageType.endBet);
         return addUpdate(rm);
     }
+    public bool bookieExiting(String bookieName)
+    {
+        BookieExitingResult ber = new BookieExitingResult(bookieName);
+        return addUpdate(new RecievedMessage(ber, RecievedMessage.MessageType.bookieExiting));
+    }
     private bool addUpdate(RecievedMessage rm)
     {
         lock (_lock)
@@ -254,7 +273,8 @@ public class RecievedMessage
     {
         setOdds,
         matchStarted,
-        endBet
+        endBet,
+        bookieExiting
     }
     public Result Result { get; private set; }
     public MessageType Type { get; private set; }
@@ -360,5 +380,13 @@ public class MatchStartedResult : Result
     public override int GetHashCode()
     {
         return MatchID;
+    }
+}
+public class BookieExitingResult : Result
+{
+    public BookieExitingResult(string bookieID)
+        : base(bookieID, 0)
+    {
+
     }
 }

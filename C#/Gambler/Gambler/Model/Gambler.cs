@@ -16,6 +16,7 @@ namespace Gambler.Model
             Connection.createGamblerServerInterface();
         }
         private object lockObj = new object();
+        private int _messageID = 0;
         public Model.RPC.GamblerServer Connection { get; private set; }
         private double _money;
         public double Money
@@ -34,6 +35,14 @@ namespace Gambler.Model
             {
                 this._money += amountToAdd;
             }
+        }
+        public string getNextMessageID()
+        {
+            return this.ID + (++_messageID);
+        }
+        public void destroyConnection()
+        {
+            Connection.destroyGamblerServerInterface();
         }
     }
 }

@@ -98,6 +98,8 @@ namespace JSON_RPC_Server
 
         private int listenPort;
         private Interceptor interceptor;
+        private TcpListener server;
+        private bool continueThread = true;
 
         /// <summary>
         /// Create a socket listener. Listens for incoming connection
@@ -111,24 +113,38 @@ namespace JSON_RPC_Server
             this.listenPort = listenPort;
             this.interceptor = interceptor;
         }
-
+        List<Thread> listOfThreads = new List<Thread>();
         /// <summary>
         /// Main loop of this connection listener.
         /// </summary>
         public void start()
         {
             Object managementService = new JSON_RPC_Server.ManagementService();
-            var server = new TcpListener(IPAddress.Any, listenPort);
+            server = new TcpListener(IPAddress.Any, listenPort);
             server.Start();
             Trace.TraceInformation("listening for connections at: " + listenPort);
-            while (true)
+            while (continueThread)
             {
-                TcpClient client = server.AcceptTcpClient();
-                ClientConnectionHandler clientConnectionHandler = new ClientConnectionHandler(client, interceptor);
-                Thread thread = new Thread(new ThreadStart(clientConnectionHandler.handleConnection));
-
-                thread.Start();
+                try
+                {
+                    TcpClient client = server.AcceptTcpClient();
+                    ClientConnectionHandler clientConnectionHandler = new ClientConnectionHandler(client, interceptor);
+                    Thread thread = new Thread(new ThreadStart(clientConnectionHandler.handleConnection));
+                    listOfThreads.Add(thread);
+                    thread.Start();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error in TcpClient - " + ex.Message);
+                }
             }
+        }
+        public void stop()
+        {
+            continueThread = false;
+            Thread.Sleep(10000);
+            listOfThreads.ForEach(t => t.Abort());
+            server.Stop();
         }
 
         /// <summary>
