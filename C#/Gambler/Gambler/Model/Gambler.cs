@@ -40,12 +40,9 @@ namespace Gambler.Model
         {
             return this.ID + (++_messageID);
         }
-<<<<<<< HEAD
         public void destroyConnection()
         {
             Connection.destroyGamblerServerInterface();
         }
-=======
->>>>>>> origin/master
     }
 }
