@@ -102,12 +102,8 @@ namespace Gambler.Model.RPC.Common
             handleJsonRpcRequest("setModeOfHost", parameters);
         }
 
-        // TODO adapt this class to the applications needs when sending messages.
         protected JsonResponse handleJsonRpcRequest(String method, Object[] parameters)
-        {
-
-            // TODO make sure to assign appropriate ID's
-       
+        {       
             JsonRequest request = new JsonRequest
             {
                 Method = method,
@@ -149,6 +145,7 @@ namespace Gambler.Model.RPC.Common
                     // connection to JSON-RPC server is lost
                     Trace.TraceInformation("server connection dropped");
                     
+
                 }
             
             return response;

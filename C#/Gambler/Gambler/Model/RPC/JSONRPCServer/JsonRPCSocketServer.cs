@@ -251,6 +251,10 @@ namespace JSON_RPC_Server
                                     // signal request handling has finished
                                     sequentialiser.Release();
                                 });
+
+                            //TODO deal with duplicates
+
+
                             var async = new JsonRpcStateAsync(rpcResultHandler, writer) { JsonRpc = requestString };
                             JsonRpcProcessor.Process(async, writer);
 
@@ -283,10 +287,12 @@ namespace JSON_RPC_Server
                 catch (IOException)
                 {
                     Trace.TraceInformation("closing connection with: " + remoteEndPoint);
+                    //TODO
                 }
                 catch (Exception e)
                 {
                     Trace.TraceError("RPCServer exception " + e);
+                    //TODO
                 }
                 finally
                 {

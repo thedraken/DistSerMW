@@ -148,7 +148,7 @@ public class MyGamblerService : JsonRpcService
         return "Gambler says: Hello, bookie " + bookieName;
     }
     [JsonRpcMethod]
-    public ReplyMessage matchStarted(String bookieName, object recievedMatch)
+    public bool matchStarted(String bookieName, object recievedMatch)
     {
         string data = recievedMatch.ToString().Trim('{');
         data = data.Trim('}');
@@ -187,36 +187,34 @@ public class MyGamblerService : JsonRpcService
             return addUpdate(rm);
         }
         else
-            return ReplyMessage.REJECTED;
+            return false;
     }
     [JsonRpcMethod]
-    public ReplyMessage setOdds(String bookieName, int matchID, string team, float newOdds)
+    public bool setOdds(String bookieName, int matchID, string team, float newOdds)
     {
         SetOddsResult sor = new SetOddsResult(bookieName, matchID, team, newOdds);
         RecievedMessage rm = new RecievedMessage(sor, RecievedMessage.MessageType.setOdds);
         return addUpdate(rm);
     }
     [JsonRpcMethod]
-    public ReplyMessage endBet(String bookieName, int matchID, string winningTeam, float amountWon)
+    public bool endBet(String bookieName, int matchID, string winningTeam, float amountWon)
     {
         EndBetResult ebr = new EndBetResult(bookieName, matchID, winningTeam, amountWon);
         RecievedMessage rm = new RecievedMessage(ebr, RecievedMessage.MessageType.endBet);
         return addUpdate(rm);
     }
-    private ReplyMessage addUpdate(RecievedMessage rm)
+    private bool addUpdate(RecievedMessage rm)
     {
-        ReplyMessage message = ReplyMessage.REJECTED;
         lock (_lock)
         {
             if (_listOfUpdates.Contains(rm))
-                message = ReplyMessage.REJECTED_DUPLICATE;
+                return false;
             else
             {
                 _listOfUpdates.Add(rm);
-                message = ReplyMessage.ACCEPTED;
-            }
+                return true;
+            }   
         }
-        return message;
     }
     private ObservableCollection<RecievedMessage> _listOfUpdates = new ObservableCollection<RecievedMessage>();
     public ObservableCollection<RecievedMessage> getList()
@@ -264,44 +262,66 @@ public class RecievedMessage
 }
 public abstract class Result
 {
-    public Result(string bookieID)
+    public Result(string bookieID, int matchID)
     {
         this.BookieID = bookieID;
+        this.MatchID = matchID;
     }
     public string BookieID { get; private set; }
+    public int MatchID { get; private set; }
 }
 public class EndBetResult : Result
 {
     public EndBetResult(string bookieID, int matchID, string winningTeam, float amountWon)
-        : base(bookieID)
+        : base(bookieID, matchID)
     {
         this.AmountWon = amountWon;
         this.WinningTeam = winningTeam;
-        this.MatchID = matchID;
     }
-    public int MatchID { get; private set; }
+    
     public string WinningTeam { get; private set; }
     public float AmountWon { get; private set; }
+    public override bool Equals(object obj)
+    {
+        if (obj.GetType() != this.GetType())
+            return false;
+        EndBetResult ebr = (EndBetResult)obj;
+        if (!ebr.MatchID.Equals(this.MatchID))
+            return false;
+        return true;
+    }
+    public override int GetHashCode()
+    {
+        return MatchID;
+    }
 }
 public class SetOddsResult : Result
 {
+    private static int _id = 0;
     public SetOddsResult(string bookieID, int matchID, string teamName, float newOdds)
-        : base(bookieID)
+        : base(bookieID, matchID)
     {
-        this.MatchID = matchID;
         this.TeamName = teamName;
         this.NewOdds = newOdds;
+        this.ID = ++_id;
     }
-    public int MatchID { get; private set; }
+    public int ID { get; private set; }
     public string TeamName { get; private set; }
     public float NewOdds { get; private set; }
+    public override bool Equals(object obj)
+    {
+        return false;
+    }
+    public override int GetHashCode()
+    {
+        return ID;
+    }
 }
 public class MatchStartedResult : Result
 {
     public MatchStartedResult(string bookieID, int id, string teamA, string teamB, float oddsA, float oddsB, int limit)
-        : base(bookieID)
+        : base(bookieID, id)
     {   
-        this.ID = id;
         this.TeamA = teamA;
         this.TeamB = teamB;
         this.OddsA = oddsA;
@@ -309,10 +329,22 @@ public class MatchStartedResult : Result
         this.Limit = limit;
     }
     
-    public int ID { get; private set; }
     public string TeamA { get; private set; }
     public string TeamB { get; private set; }
     public float OddsA { get; private set; }
     public float OddsB { get; private set; }
     public int Limit { get; private set; }
+    public override bool Equals(object obj)
+    {
+        if (obj.GetType() != this.GetType())
+            return false;
+        MatchStartedResult msr = (MatchStartedResult)obj;
+        if (!msr.MatchID.Equals(this.MatchID))
+            return false;
+        return true;
+    }
+    public override int GetHashCode()
+    {
+        return MatchID;
+    }
 }

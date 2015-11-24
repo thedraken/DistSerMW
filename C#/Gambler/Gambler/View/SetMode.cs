@@ -51,6 +51,5 @@ namespace Gambler.View
                 cmbbxMode.SelectedValue = b.Mode;
             }
         }
-
     }
 }

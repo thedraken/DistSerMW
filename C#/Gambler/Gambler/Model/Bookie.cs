@@ -93,7 +93,7 @@ namespace Gambler.Model
                     {
                         case RecievedMessage.MessageType.matchStarted:
                             MatchStartedResult msr = (MatchStartedResult)rm.Result;
-                            Match matchToAdd = new Match(msr.ID, msr.TeamA, msr.OddsA, msr.TeamB, msr.OddsB, msr.Limit, this);
+                            Match matchToAdd = new Match(msr.MatchID, msr.TeamA, msr.OddsA, msr.TeamB, msr.OddsB, msr.Limit, this);
                             lock (lockObj)
                             {
                                 this._listOfMatches.Add(matchToAdd);
@@ -103,7 +103,6 @@ namespace Gambler.Model
                             EndBetResult ebr = (EndBetResult)rm.Result;
                             lock (lockObj)
                             {
-
                                 var data = _listOfMatches.Where(t => t.ID.Equals(ebr.MatchID));
                                 Match matchToUpdate = data.First();
                                 matchToUpdate.closeMatch();

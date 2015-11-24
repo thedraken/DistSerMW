@@ -21,6 +21,7 @@ namespace Gambler.View
         private Controller.GamblerController gmblrController;
         private Controller.BookieController bkController;
         private int countOfWinnings = 0;
+        private int countOfLoses = 0;
         private void connectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ConnectToBookie bookie = new ConnectToBookie();
@@ -84,11 +85,17 @@ namespace Gambler.View
             dataSource.DataSource = bkController.ListOfMatches;
             dtgrdvwBets.DataSource = dataSource;
             txtbxGmblrFnds.Text = "€" + this.gmblrController.getMoney().ToString();
-            int countOfWinningsNow = bkController.ListOfAllWinnings.Count;
+            int countOfWinningsNow = bkController.ListOfAllWinnings.Where(t=> t.Amount > 0).ToList().Count;
             if (countOfWinnings < countOfWinningsNow)
             {
                 countOfWinnings = countOfWinningsNow;
-                MessageBox.Show("You've won some money, it has been credited to your account");
+                MessageBox.Show("You've won some money, it has been credited to your account", "Winner", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            int countOfLosesNow = bkController.ListOfAllWinnings.Where(t => t.Amount == 0).ToList().Count;
+            if (countOfLoses < countOfLosesNow)
+            {
+                countOfLoses = countOfLosesNow;
+                MessageBox.Show("Some matches ended and you didn't win, better luck next time!", "Loser", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         private void bttnPlcBet_Click(object sender, EventArgs e)

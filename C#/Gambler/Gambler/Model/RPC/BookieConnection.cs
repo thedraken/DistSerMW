@@ -22,7 +22,6 @@ namespace Gambler.Model.RPC
             this.gambler = gambler;
         }
 
-        // TODO remove this sample method which is just there for illustration purposes
         public void sayHello()
         {
             object[] parameter = new object[] {
@@ -76,7 +75,5 @@ namespace Gambler.Model.RPC
             Trace.TraceInformation("connected with bookie " + bookieID);
             return true;
         }
-        // TODO insert more methods to communicate with a bookie.
-
     }
 }
