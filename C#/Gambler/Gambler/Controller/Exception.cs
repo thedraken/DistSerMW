@@ -22,6 +22,11 @@ namespace Gambler.Controller
             }
         }
     }
+    public class ConnectionFailed : BaseException
+    {
+        public ConnectionFailed()
+            : base("The connection failed, did you type in the correct address?") { }
+    }
 
     public class GamblerAlreadyExists :BaseException
     {

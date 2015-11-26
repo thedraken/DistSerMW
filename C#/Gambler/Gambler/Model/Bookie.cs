@@ -18,13 +18,33 @@ namespace Gambler.Model
             _listOfBets = new ObservableCollection<Bet>();
             _listOfMatches = new ObservableCollection<Match>();
             _listOfWinnings = new ObservableCollection<Winnings>();
+            this._connectingGambler = connectingGambler;
+            Mode = JSON_RPC_Server.ServiceMode.RELIABLE;
             Connection = new RPC.BookieConnection(connectingGambler, address.ToString(), portNo);
+            this._connectingGambler.Connection.Service.getList().CollectionChanged += handleUpdates;
             Connection.establishSocketConnection();
             this.ID = Connection.sendConnect();
-            this._connectingGambler = connectingGambler;
-            this._connectingGambler.Connection.Service.getList().CollectionChanged += handleUpdates;
-            Mode = JSON_RPC_Server.ServiceMode.RELIABLE;
+            if (this.ID == string.Empty)
+                throw new Controller.ConnectionFailed();
             Connected = true;
+            var list = this._connectingGambler.Connection.Service.getList();
+            foreach(var item in list)
+            {
+                if (this.ID.Equals(item.Result.BookieID))
+                {
+                    switch (item.Type)
+                    {
+                        case RecievedMessage.MessageType.endBet:
+                            recievedMessageToBet(item);
+                            break;
+                        case RecievedMessage.MessageType.matchStarted:
+                            recievedMessageToMatch(item);
+                            break;
+                    }
+                }
+
+            }
+
         }
         private Gambler _connectingGambler;
         public bool Connected { get; private set; }
@@ -64,26 +84,29 @@ namespace Gambler.Model
         }
         public void addBet(Bet bet)
         {
-            switch (Connection.placeBet(bet))
+            if (this.Connected)
             {
-                case global::Gambler.Model.RPC.Common.PlaceBetResult.ACCEPTED:
-                    lock (lockObj)
-                    {
-                        this._listOfBets.Add(bet);
-                    }
-                    break;
-                case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_UNKNOWN_MATCH:
-                    throw new Controller.UnknownMatch(bet.MatchID);
-                case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_UNKNOWN_TEAM:
-                    throw new Controller.UnknownTeam(bet.TeamID);
-                case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_ALREADY_PLACED_BET:
-                    throw new Controller.BetAlreadyPlaced();
-                case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_LIMIT_EXCEEDED:
-                    throw new Controller.BetLimitExceeded();
-                case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_ODDS_MISMATCH:
-                    throw new Controller.OddsMismatch(bet.Odds, bet.TeamID);
-                case RPC.Common.PlaceBetResult.LOST_CONNECTION:
-                    throw new Controller.ConnectionDropped();
+                switch (Connection.placeBet(bet))
+                {
+                    case global::Gambler.Model.RPC.Common.PlaceBetResult.ACCEPTED:
+                        lock (lockObj)
+                        {
+                            this._listOfBets.Add(bet);
+                        }
+                        break;
+                    case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_UNKNOWN_MATCH:
+                        throw new Controller.UnknownMatch(bet.MatchID);
+                    case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_UNKNOWN_TEAM:
+                        throw new Controller.UnknownTeam(bet.TeamID);
+                    case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_ALREADY_PLACED_BET:
+                        throw new Controller.BetAlreadyPlaced();
+                    case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_LIMIT_EXCEEDED:
+                        throw new Controller.BetLimitExceeded();
+                    case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_ODDS_MISMATCH:
+                        throw new Controller.OddsMismatch(bet.Odds, bet.TeamID);
+                    case RPC.Common.PlaceBetResult.LOST_CONNECTION:
+                        throw new Controller.ConnectionDropped();
+                }
             }
         }
         private void handleUpdates(object sender, NotifyCollectionChangedEventArgs e)
@@ -96,25 +119,10 @@ namespace Gambler.Model
                     switch (rm.Type)
                     {
                         case RecievedMessage.MessageType.matchStarted:
-                            MatchStartedResult msr = (MatchStartedResult)rm.Result;
-                            Match matchToAdd = new Match(msr.MatchID, msr.TeamA, msr.OddsA, msr.TeamB, msr.OddsB, msr.Limit, this);
-                            lock (lockObj)
-                            {
-                                this._listOfMatches.Add(matchToAdd);
-                            }
+                            recievedMessageToMatch(rm);
                             break;
                         case RecievedMessage.MessageType.endBet:
-                            EndBetResult ebr = (EndBetResult)rm.Result;
-                            lock (lockObj)
-                            {
-                                var data = _listOfMatches.Where(t => t.ID.Equals(ebr.MatchID));
-                                Match matchToUpdate = data.First();
-                                matchToUpdate.closeMatch();
-                                Bet betToUpdate = _listOfBets.Where(t => t.MatchID.Equals(ebr.MatchID)).First();
-                                betToUpdate.closeBet();
-                                Model.Winnings winnings = new Winnings(ebr.AmountWon);
-                                this._listOfWinnings.Add(winnings);
-                            }
+                            recievedMessageToBet(rm);
                             break;
                         case RecievedMessage.MessageType.setOdds:
                             SetOddsResult sor = (SetOddsResult)rm.Result;
@@ -124,41 +132,75 @@ namespace Gambler.Model
                             break;
                         case RecievedMessage.MessageType.bookieExiting:
                             this.Connected = false;
+
                             break;
                     }
                 }
             }
 
         }
+
+        private void recievedMessageToBet(RecievedMessage rm)
+        {
+            EndBetResult ebr = (EndBetResult)rm.Result;
+            lock (lockObj)
+            {
+                var data = _listOfMatches.Where(t => t.ID.Equals(ebr.MatchID));
+                Match matchToUpdate = data.First();
+                matchToUpdate.closeMatch();
+                Bet betToUpdate = _listOfBets.Where(t => t.MatchID.Equals(ebr.MatchID)).First();
+                betToUpdate.closeBet();
+                Model.Winnings winnings = new Winnings(ebr.AmountWon);
+                this._listOfWinnings.Add(winnings);
+            }
+        }
+
+        private void recievedMessageToMatch(RecievedMessage rm)
+        {
+            MatchStartedResult msr = (MatchStartedResult)rm.Result;
+            Match matchToAdd = new Match(msr.MatchID, msr.TeamA, msr.OddsA, msr.TeamB, msr.OddsB, msr.Limit, this);
+            lock (lockObj)
+            {
+                this._listOfMatches.Add(matchToAdd);
+            }
+        }
         public Model.RPC.BookieConnection Connection { get; private set; }
         public void sayHello()
         {
-            Connection.sayHello();
+            if (this.Connected)
+                Connection.sayHello();
         }
         public void refreshMatches()
         {
-            List<Match> listOfMatches = Connection.showMatches(this);
-            if (listOfMatches != null && listOfMatches.Count > 0)
+            if (this.Connected)
             {
-                foreach(Match m in listOfMatches)
+                List<Match> listOfMatches = Connection.showMatches(this);
+                if (listOfMatches != null && listOfMatches.Count > 0)
                 {
-                    lock (lockObj)
+                    foreach (Match m in listOfMatches)
                     {
-                        if (!_listOfMatches.Contains(m))
-                            _listOfMatches.Add(m);
+                        lock (lockObj)
+                        {
+                            if (!_listOfMatches.Contains(m))
+                                _listOfMatches.Add(m);
+                        }
                     }
                 }
             }
         }
         public void closeConnection()
         {
-            this.Connection.closeConnection();
+            if (this.Connected)
+                this.Connection.closeConnection();
         }
         public JSON_RPC_Server.ServiceMode Mode { get; private set; }
         public void setMode(JSON_RPC_Server.ServiceMode mode)
         {
-            Connection.setModeOfHost(mode, this._connectingGambler.getNextMessageID());
-            this.Mode = mode;
+            if (this.Connected)
+            {
+                Connection.setModeOfHost(mode, this._connectingGambler.getNextMessageID());
+                this.Mode = mode;
+            }
         }
         public override string ToString()
         {

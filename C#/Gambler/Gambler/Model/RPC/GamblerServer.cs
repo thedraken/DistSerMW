@@ -231,6 +231,7 @@ public class MyGamblerService : JsonRpcService
         RecievedMessage rm = new RecievedMessage(ebr, RecievedMessage.MessageType.endBet);
         return addUpdate(rm);
     }
+    [JsonRpcMethod]
     public bool bookieExiting(String bookieName)
     {
         BookieExitingResult ber = new BookieExitingResult(bookieName);

@@ -32,7 +32,7 @@ namespace Gambler.View
                 {
                     bkController.connectBookie(gmblrController.gmblr, bookie.Address, bookie.PortNumber);
                 }
-                catch (Controller.GamblerAlreadyExists ex)
+                catch (Exception ex)
                 {
                     handleException(ex);
                 }
@@ -98,7 +98,13 @@ namespace Gambler.View
                 countOfLoses = countOfLosesNow;
                 MessageBox.Show("Some matches ended and you didn't win, better luck next time!", "Loser", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
+            if (bkController.ListOfBookies.Where(t => !t.Connected).Count() > 0)
+            {
+                bkController.removeClosedBookies();
+                dtgrdvwBookies.Rows.Clear();
+                foreach (Model.Bookie b in bkController.ListOfBookies)
+                    addBookieToDataGrid(b);
+            }
         }
         private void bttnPlcBet_Click(object sender, EventArgs e)
         {
@@ -129,6 +135,7 @@ namespace Gambler.View
         }
         private void GamblerView_FormClosing(object sender, FormClosingEventArgs e)
         {
+            tmrRefreshBets.Stop();
             bkController.closeConnection();
             gmblrController.destroyConnection();
         }

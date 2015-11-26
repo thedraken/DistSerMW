@@ -13,12 +13,13 @@ namespace Gambler.Controller
     {
         public BookieController()
         {
-            ListOfBookies = new ObservableCollection<Model.Bookie>();
             ListOfMatches = new ObservableCollection<Model.Match>();
             ListOfAllBets = new ObservableCollection<Model.Bet>();
             ListOfAllWinnings = new ObservableCollection<Model.Winnings>();
         }
-        public ObservableCollection<Model.Bookie> ListOfBookies { get; private set; }
+        private object lockObj = new object();
+        private ObservableCollection<Model.Bookie> _listOfBookies = new ObservableCollection<Model.Bookie>();
+        public ObservableCollection<Model.Bookie> ListOfBookies { get { lock(lockObj){return this._listOfBookies;}} }
         public ObservableCollection<Model.Match> ListOfMatches { get; private set; }
         public ObservableCollection<Model.Bet> ListOfAllBets { get; private set; }
         public ObservableCollection<Model.Winnings> ListOfAllWinnings { get; private set; }
@@ -30,7 +31,10 @@ namespace Gambler.Controller
         public void connectBookie(Model.Gambler gambler, IPAddress address, int portNo)
         {
             Model.Bookie b = new Model.Bookie(gambler, address, portNo);
-            ListOfBookies.Add(b);
+            lock (lockObj)
+            {
+                _listOfBookies.Add(b);
+            }
             b.ListOfMatches.CollectionChanged += handleNewMatch;
             b.ListOfBets.CollectionChanged += handleNewBet;
             b.ListOfWinnings.CollectionChanged += handleNewWinnings;
@@ -88,6 +92,14 @@ namespace Gambler.Controller
         {
             foreach (Model.Bookie b in ListOfBookies.Where(t => t.ID.Equals(bookieName)))
                 b.setMode(mode);
+        }
+        public void removeClosedBookies()
+        {
+            lock(lockObj)
+            {
+                for (int i = _listOfBookies.Count - 1; i >= 0; i--)
+                    _listOfBookies.RemoveAt(i);
+            }
         }
     }
 }

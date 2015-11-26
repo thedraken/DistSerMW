@@ -28,9 +28,11 @@ namespace Gambler.Model.RPC
                 _gambler.ID
             };
             JsonResponse response = handleJsonRpcRequest("sayHelloToBookie", parameter, this._gambler.getNextMessageID());
-            // show hello message returned by gambler
-            String sayHelloResponse = response.Result.ToString();
-            Console.WriteLine("Bookie " + _bookieID + " sent response: " + sayHelloResponse);
+            if (response != null)
+            {
+                String sayHelloResponse = response.Result.ToString();
+                Console.WriteLine("Bookie " + _bookieID + " sent response: " + sayHelloResponse);
+            }
         }
         public void closeConnection()
         {
@@ -38,7 +40,8 @@ namespace Gambler.Model.RPC
                 _gambler.ID
             };
             JsonResponse response = handleJsonRpcRequest("gamblerExiting", parameter, this._gambler.getNextMessageID());
-            Console.WriteLine("Bookie " + _bookieID + " sent response to exit request: " + response.ToString());
+            if (response != null)
+                Console.WriteLine("Bookie " + _bookieID + " sent response to exit request: " + response.ToString());
             base.closeRPCConnection();
         }
         public String sendConnect()
@@ -50,11 +53,19 @@ namespace Gambler.Model.RPC
                 _gambler.PortNo
             };
             JsonResponse response = handleJsonRpcRequest("connect", parameter, this._gambler.getNextMessageID());
-            String bookieID = response.Result.ToString();
+            if (response != null)
+            {
+                String bookieID = response.Result.ToString();
 
-            Trace.TraceInformation("connected with bookie " + bookieID);
-            this._bookieID = bookieID;
-            return bookieID;
+                Trace.TraceInformation("connected with bookie " + bookieID);
+                this._bookieID = bookieID;
+                return bookieID;
+            }
+            else
+            {
+                Trace.TraceInformation("failed to connect to bookie");
+                return string.Empty;
+            }
         }
         public PlaceBetResult placeBet(Bet b)
         {
@@ -82,46 +93,50 @@ namespace Gambler.Model.RPC
                 _gambler.ID
             };
             JsonResponse response = handleJsonRpcRequest("showMatches", parameter, this._gambler.getNextMessageID());
-            string data = response.Result.ToString();
-            data = data.Replace("\r\n", "");
-            data = data.Replace("\"", "");
-            data = data.Replace(" ", "");
-            string[] array = data.Split(new char[] { '{', '}' }, StringSplitOptions.RemoveEmptyEntries);
-            List<Match> listOfMatches = new List<Match>();
-            foreach (string s in array)
+            if (response != null)
             {
-                if (s.Contains(","))
+                string data = response.Result.ToString();
+                data = data.Replace("\r\n", "");
+                data = data.Replace("\"", "");
+                data = data.Replace(" ", "");
+                string[] array = data.Split(new char[] { '{', '}' }, StringSplitOptions.RemoveEmptyEntries);
+                List<Match> listOfMatches = new List<Match>();
+                foreach (string s in array)
                 {
-                    string bookieID = string.Empty;
-                    int id = int.MinValue;
-                    string teamA = string.Empty;
-                    string teamB = string.Empty;
-                    float oddsA = float.MinValue;
-                    float oddsB = float.MinValue;
-                    int limit = int.MinValue;
-                    string[] matchData = s.Split(',');
-                    foreach (string m in matchData)
+                    if (s.Contains(","))
                     {
-                        if (m.StartsWith("bookieID"))
-                            bookieID = m.Split(':')[1];
-                        else if (m.StartsWith("id"))
-                            id = int.Parse(m.Split(':')[1]);
-                        else if (m.StartsWith("teamA"))
-                            teamA = m.Split(':')[1];
-                        else if (m.StartsWith("teamB"))
-                            teamB = m.Split(':')[1];
-                        else if (m.StartsWith("oddsA"))
-                            oddsA = float.Parse(m.Split(':')[1]);
-                        else if (m.StartsWith("oddsB"))
-                            oddsB = float.Parse(m.Split(':')[1]);
-                        else if (m.StartsWith("limit"))
-                            limit = int.Parse(m.Split(':')[1]);
+                        string bookieID = string.Empty;
+                        int id = int.MinValue;
+                        string teamA = string.Empty;
+                        string teamB = string.Empty;
+                        float oddsA = float.MinValue;
+                        float oddsB = float.MinValue;
+                        int limit = int.MinValue;
+                        string[] matchData = s.Split(',');
+                        foreach (string m in matchData)
+                        {
+                            if (m.StartsWith("bookieID"))
+                                bookieID = m.Split(':')[1];
+                            else if (m.StartsWith("id"))
+                                id = int.Parse(m.Split(':')[1]);
+                            else if (m.StartsWith("teamA"))
+                                teamA = m.Split(':')[1];
+                            else if (m.StartsWith("teamB"))
+                                teamB = m.Split(':')[1];
+                            else if (m.StartsWith("oddsA"))
+                                oddsA = float.Parse(m.Split(':')[1]);
+                            else if (m.StartsWith("oddsB"))
+                                oddsB = float.Parse(m.Split(':')[1]);
+                            else if (m.StartsWith("limit"))
+                                limit = int.Parse(m.Split(':')[1]);
+                        }
+                        if (teamA != string.Empty && teamB != string.Empty && bookieID != string.Empty && bookieID == requestingB.ID)
+                            listOfMatches.Add(new Match(id, teamA, oddsA, teamB, oddsB, limit, requestingB));
                     }
-                    if (teamA != string.Empty && teamB != string.Empty && bookieID != string.Empty && bookieID == requestingB.ID)
-                        listOfMatches.Add(new Match(id, teamA, oddsA, teamB, oddsB, limit, requestingB));
                 }
+                return listOfMatches;
             }
-            return listOfMatches;
+            return new List<Match>();
         }
     }
 }

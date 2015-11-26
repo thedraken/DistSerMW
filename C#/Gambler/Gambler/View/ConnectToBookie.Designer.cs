@@ -45,7 +45,7 @@
             this.cmbxIP4.Location = new System.Drawing.Point(223, 6);
             this.cmbxIP4.Name = "cmbxIP4";
             this.cmbxIP4.Size = new System.Drawing.Size(40, 21);
-            this.cmbxIP4.TabIndex = 18;
+            this.cmbxIP4.TabIndex = 3;
             // 
             // label3
             // 
@@ -62,7 +62,7 @@
             this.cmbxIP3.Location = new System.Drawing.Point(177, 6);
             this.cmbxIP3.Name = "cmbxIP3";
             this.cmbxIP3.Size = new System.Drawing.Size(40, 21);
-            this.cmbxIP3.TabIndex = 16;
+            this.cmbxIP3.TabIndex = 2;
             // 
             // cmbxIP2
             // 
@@ -70,7 +70,7 @@
             this.cmbxIP2.Location = new System.Drawing.Point(131, 6);
             this.cmbxIP2.Name = "cmbxIP2";
             this.cmbxIP2.Size = new System.Drawing.Size(40, 21);
-            this.cmbxIP2.TabIndex = 15;
+            this.cmbxIP2.TabIndex = 1;
             // 
             // cmbxIP1
             // 
@@ -78,14 +78,14 @@
             this.cmbxIP1.Location = new System.Drawing.Point(85, 5);
             this.cmbxIP1.Name = "cmbxIP1";
             this.cmbxIP1.Size = new System.Drawing.Size(40, 21);
-            this.cmbxIP1.TabIndex = 14;
+            this.cmbxIP1.TabIndex = 0;
             // 
             // txtbxPortNo
             // 
             this.txtbxPortNo.Location = new System.Drawing.Point(85, 32);
             this.txtbxPortNo.Name = "txtbxPortNo";
             this.txtbxPortNo.Size = new System.Drawing.Size(178, 20);
-            this.txtbxPortNo.TabIndex = 13;
+            this.txtbxPortNo.TabIndex = 4;
             // 
             // label2
             // 
@@ -101,7 +101,7 @@
             this.bttnOK.Location = new System.Drawing.Point(188, 55);
             this.bttnOK.Name = "bttnOK";
             this.bttnOK.Size = new System.Drawing.Size(75, 23);
-            this.bttnOK.TabIndex = 11;
+            this.bttnOK.TabIndex = 5;
             this.bttnOK.Text = "OK";
             this.bttnOK.UseVisualStyleBackColor = true;
             this.bttnOK.Click += new System.EventHandler(this.bttnOK_Click);
@@ -112,7 +112,7 @@
             this.bttnCancel.Location = new System.Drawing.Point(15, 55);
             this.bttnCancel.Name = "bttnCancel";
             this.bttnCancel.Size = new System.Drawing.Size(75, 23);
-            this.bttnCancel.TabIndex = 19;
+            this.bttnCancel.TabIndex = 6;
             this.bttnCancel.Text = "Cancel";
             this.bttnCancel.UseVisualStyleBackColor = true;
             this.bttnCancel.Click += new System.EventHandler(this.bttnCancel_Click);

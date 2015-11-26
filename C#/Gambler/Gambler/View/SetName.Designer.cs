@@ -61,7 +61,7 @@
             this.bttnOK.Location = new System.Drawing.Point(188, 81);
             this.bttnOK.Name = "bttnOK";
             this.bttnOK.Size = new System.Drawing.Size(75, 23);
-            this.bttnOK.TabIndex = 2;
+            this.bttnOK.TabIndex = 6;
             this.bttnOK.Text = "OK";
             this.bttnOK.UseVisualStyleBackColor = true;
             this.bttnOK.Click += new System.EventHandler(this.bttnOK_Click);
@@ -88,7 +88,7 @@
             this.cmbxIP1.Location = new System.Drawing.Point(85, 31);
             this.cmbxIP1.Name = "cmbxIP1";
             this.cmbxIP1.Size = new System.Drawing.Size(40, 21);
-            this.cmbxIP1.TabIndex = 6;
+            this.cmbxIP1.TabIndex = 1;
             // 
             // cmbxIP2
             // 
@@ -96,7 +96,7 @@
             this.cmbxIP2.Location = new System.Drawing.Point(131, 32);
             this.cmbxIP2.Name = "cmbxIP2";
             this.cmbxIP2.Size = new System.Drawing.Size(40, 21);
-            this.cmbxIP2.TabIndex = 7;
+            this.cmbxIP2.TabIndex = 2;
             // 
             // cmbxIP3
             // 
@@ -104,7 +104,7 @@
             this.cmbxIP3.Location = new System.Drawing.Point(177, 32);
             this.cmbxIP3.Name = "cmbxIP3";
             this.cmbxIP3.Size = new System.Drawing.Size(40, 21);
-            this.cmbxIP3.TabIndex = 8;
+            this.cmbxIP3.TabIndex = 3;
             // 
             // label3
             // 
@@ -121,7 +121,7 @@
             this.cmbxIP4.Location = new System.Drawing.Point(223, 32);
             this.cmbxIP4.Name = "cmbxIP4";
             this.cmbxIP4.Size = new System.Drawing.Size(40, 21);
-            this.cmbxIP4.TabIndex = 10;
+            this.cmbxIP4.TabIndex = 4;
             // 
             // SetName
             // 
@@ -129,6 +129,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(275, 116);
+            this.ControlBox = false;
             this.Controls.Add(this.cmbxIP4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbxIP3);
@@ -140,7 +141,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtbxName);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.PersonsName = "SetName";
+            this.Name = "SetName";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Gambler\'s details";

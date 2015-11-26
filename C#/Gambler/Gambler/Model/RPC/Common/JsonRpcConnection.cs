@@ -101,50 +101,67 @@ namespace Gambler.Model.RPC.Common
 
         protected JsonResponse handleJsonRpcRequest(String method, Object[] parameters, string uniqueID)
         {
-            JsonRequest request = new JsonRequest
+            try
             {
-                Method = method,
-                Params = parameters,
-                Id = uniqueID
-            };
-            JArray jsonParams = request.Params as JArray;
-            JsonResponse jsonResponse = null;
+                JsonRequest request = new JsonRequest
+                {
+                    Method = method,
+                    Params = parameters,
+                    Id = uniqueID
+                };
+                JArray jsonParams = request.Params as JArray;
+                JsonResponse jsonResponse = null;
 
-            // create a JSON string from the request object
-            String requestString = JsonConvert.SerializeObject(request, new JsonSerializerSettings
-            {
-                ReferenceLoopHandling = ReferenceLoopHandling.Serialize
-            });
+                // create a JSON string from the request object
+                String requestString = JsonConvert.SerializeObject(request, new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+                });
 
-            Trace.TraceInformation("sending request: " + requestString);
-            // attempting to send the request via the writer to
-            // the JSON-RPC server might throw an IOException
-            if (writer != null)
-            {
-                writer.Write(requestString);
-                // flush the stream to make sure the request is sent via the socket
-                writer.Flush();
+                Trace.TraceInformation("sending request: " + requestString);
+                // attempting to send the request via the writer to
+                // the JSON-RPC server might throw an IOException
+                if (writer != null)
+                {
+                    writer.Write(requestString);
+                    // flush the stream to make sure the request is sent via the socket
+                    writer.Flush();
+                }
+
+
+                // try to receive a response via the reader
+                if (reader != null)
+                {
+                    var response = jsonSerializer.Deserialize(reader, typeof(JsonResponse));
+                    // check whether a response has been received
+                    if (response != null)
+                    {
+                        jsonResponse = (JsonResponse)response;
+                        // (re-)serialize the response for informational purposes
+                        String responseString = JsonConvert.SerializeObject(jsonResponse);
+
+                        Trace.TraceInformation("received response: " + responseString);
+                    }
+                    else
+                    {
+                        // connection to JSON-RPC server is lost
+                        Trace.TraceInformation("server connection dropped");
+                        establishSocketConnection();
+                    }
+                }
+                else
+                {
+                    // connection to JSON-RPC server is lost
+                    Trace.TraceInformation("server connection dropped");
+                    establishSocketConnection();
+                }
+                return jsonResponse;
             }
-
-            // try to receive a response via the reader
-            var response = jsonSerializer.Deserialize(reader, typeof(JsonResponse));
-
-            // check whether a response has been received
-            if (response != null)
+            catch (Exception ex)
             {
-                jsonResponse = (JsonResponse)response;
-                // (re-)serialize the response for informational purposes
-                String responseString = JsonConvert.SerializeObject(jsonResponse);
-
-                Trace.TraceInformation("received response: " + responseString);
+                Trace.TraceInformation("There was an error while handling a JSONRCP request, was the server shutting down? Error reads: " + ex.Message);
+                return null;
             }
-            else
-            {
-                // connection to JSON-RPC server is lost
-                Trace.TraceInformation("server connection dropped");
-                establishSocketConnection();
-            }
-            return jsonResponse;
         }
     }
 }
