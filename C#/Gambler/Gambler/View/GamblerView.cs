@@ -31,6 +31,7 @@ namespace Gambler.View
                 try
                 {
                     bkController.connectBookie(gmblrController.gmblr, bookie.Address, bookie.PortNumber);
+
                 }
                 catch (Exception ex)
                 {
@@ -158,6 +159,16 @@ namespace Gambler.View
                 SetMode frm = new SetMode(bkController.ListOfBookies.ToList());
                 frm.ShowDialog();
             }
+        }
+        private void bttnCheckBets_Click(object sender, EventArgs e)
+        {
+            if (bkController.ListOfMatches.Count > 0)
+            {
+                OtherBets frm = new OtherBets(bkController.ListOfMatches.ToList(), bkController);
+                frm.ShowDialog();
+            }
+            else
+                MessageBox.Show("No matches available", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

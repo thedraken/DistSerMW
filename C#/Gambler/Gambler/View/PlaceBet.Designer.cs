@@ -36,15 +36,18 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.bttnCancel = new System.Windows.Forms.Button();
+            this.rdBttnDraw = new System.Windows.Forms.RadioButton();
+            this.txtbxAmountIfWon = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // cmbxMatch
             // 
             this.cmbxMatch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbxMatch.FormattingEnabled = true;
-            this.cmbxMatch.Location = new System.Drawing.Point(88, 12);
+            this.cmbxMatch.Location = new System.Drawing.Point(102, 12);
             this.cmbxMatch.Name = "cmbxMatch";
-            this.cmbxMatch.Size = new System.Drawing.Size(212, 21);
+            this.cmbxMatch.Size = new System.Drawing.Size(281, 21);
             this.cmbxMatch.TabIndex = 0;
             this.cmbxMatch.SelectedIndexChanged += new System.EventHandler(this.cmbxMatch_SelectedIndexChanged);
             // 
@@ -58,29 +61,32 @@
             this.rdbttnTeamA.TabIndex = 1;
             this.rdbttnTeamA.TabStop = true;
             this.rdbttnTeamA.UseVisualStyleBackColor = true;
+            this.rdbttnTeamA.Click += new System.EventHandler(this.rdbttn_Click);
             // 
             // rdbttnTeamB
             // 
             this.rdbttnTeamB.AutoSize = true;
             this.rdbttnTeamB.Enabled = false;
-            this.rdbttnTeamB.Location = new System.Drawing.Point(172, 39);
+            this.rdbttnTeamB.Location = new System.Drawing.Point(170, 39);
             this.rdbttnTeamB.Name = "rdbttnTeamB";
             this.rdbttnTeamB.Size = new System.Drawing.Size(14, 13);
             this.rdbttnTeamB.TabIndex = 2;
             this.rdbttnTeamB.TabStop = true;
             this.rdbttnTeamB.UseVisualStyleBackColor = true;
+            this.rdbttnTeamB.Click += new System.EventHandler(this.rdbttn_Click);
             // 
             // txtbxAmnt
             // 
-            this.txtbxAmnt.Location = new System.Drawing.Point(88, 58);
+            this.txtbxAmnt.Location = new System.Drawing.Point(102, 58);
             this.txtbxAmnt.Name = "txtbxAmnt";
-            this.txtbxAmnt.Size = new System.Drawing.Size(214, 20);
+            this.txtbxAmnt.Size = new System.Drawing.Size(283, 20);
             this.txtbxAmnt.TabIndex = 3;
+            this.txtbxAmnt.TextChanged += new System.EventHandler(this.txtbxAmnt_TextChanged);
             // 
             // bttnOK
             // 
             this.bttnOK.Enabled = false;
-            this.bttnOK.Location = new System.Drawing.Point(227, 84);
+            this.bttnOK.Location = new System.Drawing.Point(310, 119);
             this.bttnOK.Name = "bttnOK";
             this.bttnOK.Size = new System.Drawing.Size(75, 23);
             this.bttnOK.TabIndex = 4;
@@ -109,7 +115,7 @@
             // bttnCancel
             // 
             this.bttnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.bttnCancel.Location = new System.Drawing.Point(12, 84);
+            this.bttnCancel.Location = new System.Drawing.Point(12, 119);
             this.bttnCancel.Name = "bttnCancel";
             this.bttnCancel.Size = new System.Drawing.Size(75, 23);
             this.bttnCancel.TabIndex = 7;
@@ -117,14 +123,47 @@
             this.bttnCancel.UseVisualStyleBackColor = true;
             this.bttnCancel.Click += new System.EventHandler(this.bttnCancel_Click);
             // 
+            // rdBttnDraw
+            // 
+            this.rdBttnDraw.AutoSize = true;
+            this.rdBttnDraw.Enabled = false;
+            this.rdBttnDraw.Location = new System.Drawing.Point(298, 37);
+            this.rdBttnDraw.Name = "rdBttnDraw";
+            this.rdBttnDraw.Size = new System.Drawing.Size(50, 17);
+            this.rdBttnDraw.TabIndex = 8;
+            this.rdBttnDraw.TabStop = true;
+            this.rdBttnDraw.Text = "Draw";
+            this.rdBttnDraw.UseVisualStyleBackColor = true;
+            this.rdBttnDraw.Click += new System.EventHandler(this.rdbttn_Click);
+            // 
+            // txtbxAmountIfWon
+            // 
+            this.txtbxAmountIfWon.Enabled = false;
+            this.txtbxAmountIfWon.Location = new System.Drawing.Point(102, 84);
+            this.txtbxAmountIfWon.Name = "txtbxAmountIfWon";
+            this.txtbxAmountIfWon.Size = new System.Drawing.Size(283, 20);
+            this.txtbxAmountIfWon.TabIndex = 9;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 87);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(87, 13);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Expected returns";
+            // 
             // PlaceBet
             // 
             this.AcceptButton = this.bttnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.bttnCancel;
-            this.ClientSize = new System.Drawing.Size(312, 117);
+            this.ClientSize = new System.Drawing.Size(395, 154);
             this.ControlBox = false;
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.txtbxAmountIfWon);
+            this.Controls.Add(this.rdBttnDraw);
             this.Controls.Add(this.bttnCancel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -154,5 +193,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button bttnCancel;
+        private System.Windows.Forms.RadioButton rdBttnDraw;
+        private System.Windows.Forms.TextBox txtbxAmountIfWon;
+        private System.Windows.Forms.Label label3;
     }
 }

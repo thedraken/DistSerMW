@@ -190,6 +190,7 @@ public class MyGamblerService : JsonRpcService
         string teamB = string.Empty;
         float oddsA = float.MinValue;
         float oddsB = float.MinValue;
+        float oddsDraw = float.MinValue;
         int limit = int.MinValue;  
         foreach (string s in array)
         {
@@ -207,10 +208,12 @@ public class MyGamblerService : JsonRpcService
                 oddsB = float.Parse(s.Split(':')[1]);
             else if (s.StartsWith("limit"))
                 limit = int.Parse(s.Split(':')[1]);
+            else if (s.StartsWith("oddsDraw"))
+                oddsDraw = float.Parse(s.Split(':')[1]);
         }
         if (teamA != string.Empty && teamB != string.Empty && bookieID != string.Empty)
         {
-            MatchStartedResult msr = new MatchStartedResult(bookieID, id, teamA, teamB, oddsA, oddsB, limit);
+            MatchStartedResult msr = new MatchStartedResult(bookieID, id, teamA, teamB, oddsA, oddsB, oddsDraw, limit);
             RecievedMessage rm = new RecievedMessage(msr, RecievedMessage.MessageType.matchStarted);
             return addUpdate(rm);
         }
@@ -354,7 +357,7 @@ public class SetOddsResult : Result
 }
 public class MatchStartedResult : Result
 {
-    public MatchStartedResult(string bookieID, int id, string teamA, string teamB, float oddsA, float oddsB, int limit)
+    public MatchStartedResult(string bookieID, int id, string teamA, string teamB, float oddsA, float oddsB, float oddsDraw, int limit)
         : base(bookieID, id)
     {   
         this.TeamA = teamA;
@@ -368,6 +371,7 @@ public class MatchStartedResult : Result
     public string TeamB { get; private set; }
     public float OddsA { get; private set; }
     public float OddsB { get; private set; }
+    public float OddsDraw { get; private set; }
     public int Limit { get; private set; }
     public override bool Equals(object obj)
     {

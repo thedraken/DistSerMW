@@ -27,24 +27,8 @@ namespace Gambler.Model
             if (this.ID == string.Empty)
                 throw new Controller.ConnectionFailed();
             Connected = true;
-            var list = this._connectingGambler.Connection.Service.getList();
-            foreach(var item in list)
-            {
-                if (this.ID.Equals(item.Result.BookieID))
-                {
-                    switch (item.Type)
-                    {
-                        case RecievedMessage.MessageType.endBet:
-                            recievedMessageToBet(item);
-                            break;
-                        case RecievedMessage.MessageType.matchStarted:
-                            recievedMessageToMatch(item);
-                            break;
-                    }
-                }
-
-            }
-
+            this.refreshMatches();
+            this._connectingGambler.addMoney(this.Connection.getPreviousWinnings());
         }
         private Gambler _connectingGambler;
         public bool Connected { get; private set; }
@@ -139,7 +123,6 @@ namespace Gambler.Model
             }
 
         }
-
         private void recievedMessageToBet(RecievedMessage rm)
         {
             EndBetResult ebr = (EndBetResult)rm.Result;
@@ -154,11 +137,10 @@ namespace Gambler.Model
                 this._listOfWinnings.Add(winnings);
             }
         }
-
         private void recievedMessageToMatch(RecievedMessage rm)
         {
             MatchStartedResult msr = (MatchStartedResult)rm.Result;
-            Match matchToAdd = new Match(msr.MatchID, msr.TeamA, msr.OddsA, msr.TeamB, msr.OddsB, msr.Limit, this);
+            Match matchToAdd = new Match(msr.MatchID, msr.TeamA, msr.OddsA, msr.TeamB, msr.OddsB, msr.OddsDraw, msr.Limit, this);
             lock (lockObj)
             {
                 this._listOfMatches.Add(matchToAdd);
@@ -205,6 +187,10 @@ namespace Gambler.Model
         public override string ToString()
         {
             return this.ID;
+        }
+        public List<Bet> getBetsPlacedForMatch(Match m)
+        {
+            return Connection.getOtherBetsPlaced(m);
         }
     }
 }

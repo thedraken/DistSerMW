@@ -20,6 +20,7 @@ namespace Gambler.View
         {
             InitializeComponent();
             this._listOfMatches = listOfMatches;
+            Amount = 0;
         }
         private List<Model.Match> _listOfMatches;
         private void bttnCancel_Click(object sender, EventArgs e)
@@ -31,18 +32,29 @@ namespace Gambler.View
             StringBuilder sb = new StringBuilder();
             bool success = true;
             this.Match = (Model.Match)cmbxMatch.SelectedItem;
-            if (rdbttnTeamA.Checked || rdbttnTeamB.Checked)
+            if (rdbttnTeamA.Checked || rdbttnTeamB.Checked || rdBttnDraw.Checked)
             {
-                this.TeamName = rdbttnTeamA.Checked ? this.Match.TeamA : this.Match.TeamB;
+
                 if (rdbttnTeamA.Checked)
+                {
                     Odds = this.Match.OddsA;
-                else
+                    this.TeamName = this.Match.TeamA;
+                }
+                else if (rdbttnTeamB.Checked)
+                {
                     Odds = this.Match.OddsB;
+                    this.TeamName = this.Match.TeamB;
+                }
+                else
+                {
+                    Odds = this.Match.OddsDraw;
+                    this.TeamName = "draw";
+                }
             }
             else
             {
                 success = false;
-                sb.Append("\nPlease select at one of the teams to bet on");
+                sb.Append("\nPlease select at one of the teams, or a draw, to bet on");
             }
             if (txtbxAmnt.Text.Trim() != string.Empty)
             {
@@ -84,7 +96,34 @@ namespace Gambler.View
             txtbxAmnt.Enabled = true;
             rdbttnTeamA.Enabled = true;
             rdbttnTeamB.Enabled = true;
+            rdBttnDraw.Enabled = true;
             bttnOK.Enabled = true;
+        }
+
+        private void txtbxAmnt_TextChanged(object sender, EventArgs e)
+        {
+            if (!Controller.FunctionController.getInstance().isFloat(txtbxAmnt.Text))
+                txtbxAmnt.Text = Amount.ToString();
+            else
+                Amount = float.Parse(txtbxAmnt.Text);
+            updateExpectedOutCome();
+        }
+        private void updateExpectedOutCome()
+        {
+            if ((rdbttnTeamA.Checked || rdbttnTeamB.Checked || rdBttnDraw.Checked)&& Amount > 0)
+            {
+                if (rdbttnTeamA.Checked)
+                    txtbxAmountIfWon.Text = (((Model.Match)cmbxMatch.SelectedItem).OddsA * Amount).ToString();
+                else if (rdbttnTeamB.Checked)
+                    txtbxAmountIfWon.Text = (((Model.Match)cmbxMatch.SelectedItem).OddsB * Amount).ToString();
+                else
+                    txtbxAmountIfWon.Text = (((Model.Match)cmbxMatch.SelectedItem).OddsDraw * Amount).ToString();
+            }
+        }
+
+        private void rdbttn_Click(object sender, EventArgs e)
+        {
+            updateExpectedOutCome();
         }
     }
 }

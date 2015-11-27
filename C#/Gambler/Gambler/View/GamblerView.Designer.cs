@@ -32,11 +32,11 @@
             this.mnStrp = new System.Windows.Forms.MenuStrip();
             this.bookieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.walletToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fillToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tblLytPnl = new System.Windows.Forms.TableLayoutPanel();
             this.statusStrp = new System.Windows.Forms.StatusStrip();
-            this.tlstrpPrgssBr = new System.Windows.Forms.ToolStripProgressBar();
             this.tlstrpStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.bttnRefresh = new System.Windows.Forms.Button();
@@ -54,7 +54,7 @@
             this.bttnPlcBet = new System.Windows.Forms.Button();
             this.dtgrdvwBets = new System.Windows.Forms.DataGridView();
             this.tmrRefreshBets = new System.Windows.Forms.Timer(this.components);
-            this.setModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bttnCheckBets = new System.Windows.Forms.Button();
             this.mnStrp.SuspendLayout();
             this.tblLytPnl.SuspendLayout();
             this.statusStrp.SuspendLayout();
@@ -88,9 +88,16 @@
             // connectToolStripMenuItem
             // 
             this.connectToolStripMenuItem.Name = "connectToolStripMenuItem";
-            this.connectToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.connectToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
             this.connectToolStripMenuItem.Text = "Connect...";
             this.connectToolStripMenuItem.Click += new System.EventHandler(this.connectToolStripMenuItem_Click);
+            // 
+            // setModeToolStripMenuItem
+            // 
+            this.setModeToolStripMenuItem.Name = "setModeToolStripMenuItem";
+            this.setModeToolStripMenuItem.Size = new System.Drawing.Size(133, 22);
+            this.setModeToolStripMenuItem.Text = "Set Mode...";
+            this.setModeToolStripMenuItem.Click += new System.EventHandler(this.setModeToolStripMenuItem_Click);
             // 
             // walletToolStripMenuItem
             // 
@@ -131,18 +138,12 @@
             // statusStrp
             // 
             this.statusStrp.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tlstrpPrgssBr,
             this.tlstrpStatusLabel});
             this.statusStrp.Location = new System.Drawing.Point(0, 473);
             this.statusStrp.Name = "statusStrp";
             this.statusStrp.Size = new System.Drawing.Size(976, 21);
             this.statusStrp.TabIndex = 5;
             this.statusStrp.Text = "statusStrip1";
-            // 
-            // tlstrpPrgssBr
-            // 
-            this.tlstrpPrgssBr.Name = "tlstrpPrgssBr";
-            this.tlstrpPrgssBr.Size = new System.Drawing.Size(100, 15);
             // 
             // tlstrpStatusLabel
             // 
@@ -265,6 +266,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.bttnCheckBets);
             this.groupBox3.Controls.Add(this.bttnPlcBet);
             this.groupBox3.Controls.Add(this.dtgrdvwBets);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -303,12 +305,16 @@
             this.tmrRefreshBets.Interval = 1000;
             this.tmrRefreshBets.Tick += new System.EventHandler(this.tmrRefreshBets_Tick);
             // 
-            // setModeToolStripMenuItem
+            // bttnCheckBets
             // 
-            this.setModeToolStripMenuItem.Name = "setModeToolStripMenuItem";
-            this.setModeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.setModeToolStripMenuItem.Text = "Set Mode...";
-            this.setModeToolStripMenuItem.Click += new System.EventHandler(this.setModeToolStripMenuItem_Click);
+            this.bttnCheckBets.Dock = System.Windows.Forms.DockStyle.Left;
+            this.bttnCheckBets.Location = new System.Drawing.Point(3, 170);
+            this.bttnCheckBets.Name = "bttnCheckBets";
+            this.bttnCheckBets.Size = new System.Drawing.Size(75, 36);
+            this.bttnCheckBets.TabIndex = 5;
+            this.bttnCheckBets.Text = "Check Bets";
+            this.bttnCheckBets.UseVisualStyleBackColor = true;
+            this.bttnCheckBets.Click += new System.EventHandler(this.bttnCheckBets_Click);
             // 
             // GamblerView
             // 
@@ -357,7 +363,6 @@
         private System.Windows.Forms.DataGridView dtgrdvwBets;
         private System.Windows.Forms.DataGridView dtgrdvwBookies;
         private System.Windows.Forms.StatusStrip statusStrp;
-        private System.Windows.Forms.ToolStripProgressBar tlstrpPrgssBr;
         private System.Windows.Forms.Button bttnRefresh;
         private System.Windows.Forms.ToolStripStatusLabel tlstrpStatusLabel;
         private System.Windows.Forms.DataGridViewTextBoxColumn BookieID;
@@ -367,6 +372,7 @@
         private System.Windows.Forms.Timer tmrRefreshBets;
         private System.Windows.Forms.Button bttnPlcBet;
         private System.Windows.Forms.ToolStripMenuItem setModeToolStripMenuItem;
+        private System.Windows.Forms.Button bttnCheckBets;
     }
 }
 

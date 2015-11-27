@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Gambler.Controller
 {
-    class BookieController
+    public class BookieController
     {
         public BookieController()
         {
@@ -49,6 +49,12 @@ namespace Gambler.Controller
             Model.Bet b = new Model.Bet(m.OwningBookieID, m.ID, teamName, amount, odds);
             Model.Bookie bookie = ListOfBookies.Where(t => t.ID.Equals(m.OwningBookieID)).FirstOrDefault();
             bookie.addBet(b);
+        }
+
+        public List<Model.Bet> getMatchBets(Model.Match m)
+        {
+            Model.Bookie bookie = ListOfBookies.Where(t => t.ID.Equals(m.OwningBookieID)).FirstOrDefault();
+            return bookie.getBetsPlacedForMatch(m);
         }
         public void closeConnection()
         {

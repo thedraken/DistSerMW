@@ -95,11 +95,7 @@ namespace Gambler.Model.RPC
             JsonResponse response = handleJsonRpcRequest("showMatches", parameter, this._gambler.getNextMessageID());
             if (response != null)
             {
-                string data = response.Result.ToString();
-                data = data.Replace("\r\n", "");
-                data = data.Replace("\"", "");
-                data = data.Replace(" ", "");
-                string[] array = data.Split(new char[] { '{', '}' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] array = responseToStringArray(response);
                 List<Match> listOfMatches = new List<Match>();
                 foreach (string s in array)
                 {
@@ -111,6 +107,7 @@ namespace Gambler.Model.RPC
                         string teamB = string.Empty;
                         float oddsA = float.MinValue;
                         float oddsB = float.MinValue;
+                        float oddsDraw = float.MinValue;
                         int limit = int.MinValue;
                         string[] matchData = s.Split(',');
                         foreach (string m in matchData)
@@ -129,14 +126,83 @@ namespace Gambler.Model.RPC
                                 oddsB = float.Parse(m.Split(':')[1]);
                             else if (m.StartsWith("limit"))
                                 limit = int.Parse(m.Split(':')[1]);
+                            else if (m.StartsWith("oddsDraw"))
+                                oddsDraw = float.Parse(m.Split(':')[1]);
                         }
                         if (teamA != string.Empty && teamB != string.Empty && bookieID != string.Empty && bookieID == requestingB.ID)
-                            listOfMatches.Add(new Match(id, teamA, oddsA, teamB, oddsB, limit, requestingB));
+                            listOfMatches.Add(new Match(id, teamA, oddsA, teamB, oddsB, oddsDraw, limit, requestingB));
                     }
                 }
                 return listOfMatches;
             }
             return new List<Match>();
+        }
+
+        private static string[] responseToStringArray(JsonResponse response)
+        {
+            string data = response.Result.ToString();
+            data = data.Replace("\r\n", "");
+            data = data.Replace("\"", "");
+            data = data.Replace(" ", "");
+            string[] array = data.Split(new char[] { '{', '}' }, StringSplitOptions.RemoveEmptyEntries);
+            return array;
+        }
+        public List<Bet> getOtherBetsPlaced(Match m)
+        {
+            List<Bet> listOfBets = new List<Bet>();
+            object[] parameter = new object[]{
+                _gambler.ID,
+                m.ID
+            };
+            string messageID = this._gambler.getNextMessageID();
+            JsonResponse response = handleJsonRpcRequest("getMatchBets", parameter, messageID);
+            if (response != null)
+            {
+                string[] array = responseToStringArray(response);
+                foreach (string s in array)
+                {
+                    if (s.Contains(","))
+                    {
+                        string[] betData = s.Split(',');
+                        string bookieID = string.Empty;
+                        int matchID = int.MinValue;
+                        string teamID = string.Empty;
+                        float stake = float.MinValue;
+                        float odds = float.MinValue;
+                        foreach (string b in betData)
+                        {
+                            if (b.StartsWith("bookieID"))
+                                bookieID = b.Split(':')[1];
+                            else if (b.StartsWith("matchID"))
+                                matchID = int.Parse(b.Split(':')[1]);
+                            else if (b.StartsWith("amount"))
+                                stake = float.Parse(b.Split(':')[1]);
+                            else if (b.StartsWith("team"))
+                                teamID = b.Split(':')[1];
+                            else if (b.StartsWith("odds"))
+                                odds = float.Parse(b.Split(':')[1]);
+                        }
+                        if (bookieID != string.Empty && matchID != int.MinValue)
+                            listOfBets.Add(new Bet(bookieID, matchID, teamID, stake, odds));
+                    }
+                }
+            }
+            return listOfBets;
+        }
+        public float getPreviousWinnings()
+        {
+            object[] parameter = new object[]{
+                _gambler.ID
+            };
+            string messageID = this._gambler.getNextMessageID();
+            JsonResponse response = handleJsonRpcRequest("getPreviousWinnings", parameter, messageID);
+            if (response != null)
+            {
+                float ret = 0;
+                if (float.TryParse(response.Result.ToString(), out ret))
+                    return ret;
+            }
+            return 0;
         }
     }
 }
