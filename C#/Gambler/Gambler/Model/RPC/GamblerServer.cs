@@ -13,6 +13,7 @@ using JSON_RPC_Server;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Gambler.Model.RPC.Common;
+using System.Globalization;
 
 namespace Gambler.Model.RPC
 {
@@ -203,13 +204,13 @@ public class MyGamblerService : JsonRpcService
             else if (s.StartsWith("teamB"))
                 teamB = s.Split(':')[1];
             else if (s.StartsWith("oddsA"))
-                oddsA = float.Parse(s.Split(':')[1]);
+                oddsA = float.Parse(s.Split(':')[1], CultureInfo.InvariantCulture);
             else if (s.StartsWith("oddsB"))
-                oddsB = float.Parse(s.Split(':')[1]);
+                oddsB = float.Parse(s.Split(':')[1], CultureInfo.InvariantCulture);
             else if (s.StartsWith("limit"))
-                limit = float.Parse(s.Split(':')[1]);
+                limit = float.Parse(s.Split(':')[1], CultureInfo.InvariantCulture);
             else if (s.StartsWith("oddsDraw"))
-                oddsDraw = float.Parse(s.Split(':')[1]);
+                oddsDraw = float.Parse(s.Split(':')[1], CultureInfo.InvariantCulture);
         }
         if (teamA != string.Empty && teamB != string.Empty && bookieID != string.Empty)
         {

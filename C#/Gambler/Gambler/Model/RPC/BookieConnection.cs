@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -124,13 +125,13 @@ namespace Gambler.Model.RPC
                             else if (m.StartsWith("teamB"))
                                 teamB = m.Split(':')[1];
                             else if (m.StartsWith("oddsA"))
-                                oddsA = float.Parse(m.Split(':')[1]);
+                                oddsA = float.Parse(m.Split(':')[1], CultureInfo.InvariantCulture);
                             else if (m.StartsWith("oddsB"))
-                                oddsB = float.Parse(m.Split(':')[1]);
+                                oddsB = float.Parse(m.Split(':')[1], CultureInfo.InvariantCulture);
                             else if (m.StartsWith("limit"))
-                                limit = float.Parse(m.Split(':')[1]);
+                                limit = float.Parse(m.Split(':')[1], CultureInfo.InvariantCulture);
                             else if (m.StartsWith("oddsDraw"))
-                                oddsDraw = float.Parse(m.Split(':')[1]);
+                                oddsDraw = float.Parse(m.Split(':')[1], CultureInfo.InvariantCulture);
                         }
                         if (teamA != string.Empty && teamB != string.Empty && bookieID != string.Empty && bookieID == requestingB.ID)
                             listOfMatches.Add(new Match(id, teamA, oddsA, teamB, oddsB, oddsDraw, limit, requestingB));
@@ -183,7 +184,7 @@ namespace Gambler.Model.RPC
                             else if (b.StartsWith("team"))
                                 teamID = b.Split(':')[1];
                             else if (b.StartsWith("odds"))
-                                odds = float.Parse(b.Split(':')[1]);
+                                odds = float.Parse(b.Split(':')[1], CultureInfo.InvariantCulture);
                         }
                         if (bookieID != string.Empty && matchID != int.MinValue)
                             listOfBets.Add(new Bet(bookieID, matchID, teamID, stake, odds));
