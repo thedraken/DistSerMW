@@ -70,25 +70,27 @@ namespace Gambler.Model
         {
             if (this.Connected)
             {
-                switch (Connection.placeBet(bet))
+                string result = Connection.placeBet(bet);
+                if (result.Equals(Model.RPC.Common.PlaceBetResult.ACCEPTED.ToString()))
                 {
-                    case global::Gambler.Model.RPC.Common.PlaceBetResult.ACCEPTED:
-                        lock (lockObj)
-                        {
-                            this._listOfBets.Add(bet);
-                        }
-                        break;
-                    case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_UNKNOWN_MATCH:
+                    lock (lockObj)
+                    {
+                        this._listOfBets.Add(bet);
+                    }
+                }
+                else
+                {
+                    if (result.StartsWith(Model.RPC.Common.PlaceBetResult.REJECTED_UNKNOWN_MATCH.ToString()))
                         throw new Controller.UnknownMatch(bet.MatchID);
-                    case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_UNKNOWN_TEAM:
+                    if (result.StartsWith(Model.RPC.Common.PlaceBetResult.REJECTED_UNKNOWN_TEAM.ToString()))
                         throw new Controller.UnknownTeam(bet.TeamID);
-                    case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_ALREADY_PLACED_BET:
+                    if (result.StartsWith(Model.RPC.Common.PlaceBetResult.REJECTED_ALREADY_PLACED_BET.ToString()))
                         throw new Controller.BetAlreadyPlaced();
-                    case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_LIMIT_EXCEEDED:
-                        throw new Controller.BetLimitExceeded();
-                    case global::Gambler.Model.RPC.Common.PlaceBetResult.REJECTED_ODDS_MISMATCH:
+                    if (result.StartsWith(Model.RPC.Common.PlaceBetResult.REJECTED_LIMIT_EXCEEDED.ToString()))
+                        throw new Controller.BetLimitExceeded(result);
+                    if (result.StartsWith(Model.RPC.Common.PlaceBetResult.REJECTED_ODDS_MISMATCH.ToString()))
                         throw new Controller.OddsMismatch(bet.Odds, bet.TeamID);
-                    case RPC.Common.PlaceBetResult.LOST_CONNECTION:
+                    if (result.StartsWith(Model.RPC.Common.PlaceBetResult.LOST_CONNECTION.ToString()))
                         throw new Controller.ConnectionDropped();
                 }
             }

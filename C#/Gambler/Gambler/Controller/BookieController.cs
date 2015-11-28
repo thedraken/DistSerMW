@@ -21,6 +21,19 @@ namespace Gambler.Controller
         private ObservableCollection<Model.Bookie> _listOfBookies = new ObservableCollection<Model.Bookie>();
         public ObservableCollection<Model.Bookie> ListOfBookies { get { lock(lockObj){return this._listOfBookies;}} }
         public ObservableCollection<Model.Match> ListOfMatches { get; private set; }
+        public List<Model.Match> getCloneOfMatches()
+        {
+            List<Model.Match> retList = new List<Model.Match>();
+            lock (lockObj)
+            {
+                foreach (Model.Match m in ListOfMatches)
+                {
+                    Model.Bookie b = _listOfBookies.Where(t=> t.ID.Equals(m.OwningBookieID)).FirstOrDefault();
+                    retList.Add(new Model.Match(m.ID, m.TeamA, m.OddsA, m.TeamB, m.OddsB, m.OddsDraw, m.Limit, b));
+                }
+            }
+            return retList;
+        }
         public ObservableCollection<Model.Bet> ListOfAllBets { get; private set; }
         public ObservableCollection<Model.Winnings> ListOfAllWinnings { get; private set; }
         public void sayHello(string bookieName)

@@ -62,8 +62,8 @@ namespace Gambler.Controller
     }
     public class BetLimitExceeded : BaseException
     {
-        public BetLimitExceeded()
-            : base("The bet limit has been exceeded for this match")
+        public BetLimitExceeded(string extraMessage)
+            : base("The bet limit has been exceeded for this match: " + extraMessage)
         {
 
         }

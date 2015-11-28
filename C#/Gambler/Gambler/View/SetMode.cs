@@ -44,11 +44,18 @@ namespace Gambler.View
         }
         private void cmbbxBookie_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbbxBookie.SelectedValue != null)
+            try
             {
-                cmbbxMode.Enabled = true;
-                Model.Bookie b = (Model.Bookie)cmbbxBookie.SelectedValue;
-                cmbbxMode.SelectedValue = b.Mode;
+                if (cmbbxBookie.SelectedValue != null)
+                {
+                    cmbbxMode.Enabled = true;
+                    Model.Bookie b = (Model.Bookie)cmbbxBookie.SelectedValue;
+                    cmbbxMode.SelectedValue = b.Mode;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

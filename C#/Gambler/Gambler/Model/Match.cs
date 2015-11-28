@@ -8,7 +8,7 @@ namespace Gambler.Model
 {
     public class Match
     {
-        public Match(int id, string teamA, float oddsA, string teamB, float oddsB, float drawOdds, int limit, Bookie owningBookie)
+        public Match(int id, string teamA, float oddsA, string teamB, float oddsB, float drawOdds, float limit, Bookie owningBookie)
         {
             this.ID = id;
             this.TeamA = teamA;
@@ -41,7 +41,7 @@ namespace Gambler.Model
         public string TeamB { get; private set; }
         public float OddsB { get; private set; }
         public float OddsDraw { get; private set; }
-        public int Limit { get; private set; }
+        public float Limit { get; private set; }
         public bool OpenMatch { get; private set; }
         private Bet _betPlaced;
         public bool BetPlaced

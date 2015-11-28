@@ -191,7 +191,7 @@ public class MyGamblerService : JsonRpcService
         float oddsA = float.MinValue;
         float oddsB = float.MinValue;
         float oddsDraw = float.MinValue;
-        int limit = int.MinValue;  
+        float limit = float.MinValue;  
         foreach (string s in array)
         {
             if (s.StartsWith("bookieID"))
@@ -207,7 +207,7 @@ public class MyGamblerService : JsonRpcService
             else if (s.StartsWith("oddsB"))
                 oddsB = float.Parse(s.Split(':')[1]);
             else if (s.StartsWith("limit"))
-                limit = int.Parse(s.Split(':')[1]);
+                limit = float.Parse(s.Split(':')[1]);
             else if (s.StartsWith("oddsDraw"))
                 oddsDraw = float.Parse(s.Split(':')[1]);
         }
@@ -326,6 +326,8 @@ public class EndBetResult : Result
         EndBetResult ebr = (EndBetResult)obj;
         if (!ebr.MatchID.Equals(this.MatchID))
             return false;
+        if (!ebr.BookieID.Equals(this.BookieID))
+            return false;
         return true;
     }
     public override int GetHashCode()
@@ -357,7 +359,7 @@ public class SetOddsResult : Result
 }
 public class MatchStartedResult : Result
 {
-    public MatchStartedResult(string bookieID, int id, string teamA, string teamB, float oddsA, float oddsB, float oddsDraw, int limit)
+    public MatchStartedResult(string bookieID, int id, string teamA, string teamB, float oddsA, float oddsB, float oddsDraw, float limit)
         : base(bookieID, id)
     {   
         this.TeamA = teamA;
@@ -372,13 +374,15 @@ public class MatchStartedResult : Result
     public float OddsA { get; private set; }
     public float OddsB { get; private set; }
     public float OddsDraw { get; private set; }
-    public int Limit { get; private set; }
+    public float Limit { get; private set; }
     public override bool Equals(object obj)
     {
         if (obj.GetType() != this.GetType())
             return false;
         MatchStartedResult msr = (MatchStartedResult)obj;
         if (!msr.MatchID.Equals(this.MatchID))
+            return false;
+        if (!msr.BookieID.Equals(this.BookieID))
             return false;
         return true;
     }

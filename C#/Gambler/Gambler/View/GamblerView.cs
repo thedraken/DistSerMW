@@ -111,7 +111,7 @@ namespace Gambler.View
         {
             if (bkController.ListOfMatches.Count > 0)
             {
-                PlaceBet frm = new PlaceBet(bkController.ListOfMatches.ToList());
+                PlaceBet frm = new PlaceBet(bkController.getCloneOfMatches());
                 frm.ShowDialog();
                 if (frm.DialogResult == System.Windows.Forms.DialogResult.OK)
                 {

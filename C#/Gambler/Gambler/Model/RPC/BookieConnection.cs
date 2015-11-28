@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Gambler.Model.RPC
@@ -67,7 +68,7 @@ namespace Gambler.Model.RPC
                 return string.Empty;
             }
         }
-        public PlaceBetResult placeBet(Bet b)
+        public string placeBet(Bet b)
         {
             object[] parameter = new object[] {
                 _gambler.ID,
@@ -81,11 +82,13 @@ namespace Gambler.Model.RPC
             while (response == null)
             {
                 if (_retry > _maxRetries)
-                    return PlaceBetResult.LOST_CONNECTION;
+                    return PlaceBetResult.LOST_CONNECTION.ToString();
                 _retry++;
+                //Sleep for 10 seconds so we can do initial test scenario
+                Thread.Sleep(10000);
                 response = handleJsonRpcRequest("placeBet", parameter, messageID);
             }
-            return (PlaceBetResult)Enum.Parse(typeof(PlaceBetResult), response.Result.ToString());
+            return response.Result.ToString();
         }
         public List<Match> showMatches(Bookie requestingB)
         {
@@ -108,7 +111,7 @@ namespace Gambler.Model.RPC
                         float oddsA = float.MinValue;
                         float oddsB = float.MinValue;
                         float oddsDraw = float.MinValue;
-                        int limit = int.MinValue;
+                        float limit = float.MinValue;
                         string[] matchData = s.Split(',');
                         foreach (string m in matchData)
                         {
@@ -125,7 +128,7 @@ namespace Gambler.Model.RPC
                             else if (m.StartsWith("oddsB"))
                                 oddsB = float.Parse(m.Split(':')[1]);
                             else if (m.StartsWith("limit"))
-                                limit = int.Parse(m.Split(':')[1]);
+                                limit = float.Parse(m.Split(':')[1]);
                             else if (m.StartsWith("oddsDraw"))
                                 oddsDraw = float.Parse(m.Split(':')[1]);
                         }
