@@ -21,8 +21,8 @@ namespace Gambler.View
 
         private void SetMode_Shown(object sender, EventArgs e)
         {
-            cmbbxBookie.DataSource = ListOfBookies;
             cmbbxMode.DataSource = Enum.GetValues(typeof(JSON_RPC_Server.ServiceMode));
+            cmbbxBookie.DataSource = ListOfBookies;
         }
 
         private void bttnCancel_Click(object sender, EventArgs e)
@@ -44,18 +44,11 @@ namespace Gambler.View
         }
         private void cmbbxBookie_SelectedIndexChanged(object sender, EventArgs e)
         {
-            try
+            if (cmbbxBookie.SelectedValue != null)
             {
-                if (cmbbxBookie.SelectedValue != null)
-                {
-                    cmbbxMode.Enabled = true;
-                    Model.Bookie b = (Model.Bookie)cmbbxBookie.SelectedValue;
-                    cmbbxMode.SelectedValue = b.Mode;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
+                cmbbxMode.Enabled = true;
+                Model.Bookie b = (Model.Bookie)cmbbxBookie.SelectedValue;
+                cmbbxMode.SelectedItem = b.Mode;
             }
         }
     }
