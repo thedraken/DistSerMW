@@ -8,7 +8,7 @@ namespace Gambler.Model
 {
     public class Match
     {
-        public Match(int id, string teamA, float oddsA, string teamB, float oddsB, float drawOdds, float limit, Bookie owningBookie)
+        public Match(int id, string teamA, float oddsA, string teamB, float oddsB, float oddsDraw, float limit, Bookie owningBookie)
         {
             this.ID = id;
             this.TeamA = teamA;
@@ -16,7 +16,7 @@ namespace Gambler.Model
             this.OddsB = oddsB;
             this.TeamB = teamB;
             this.Limit = limit;
-            this.OddsDraw = drawOdds;
+            this.OddsDraw = oddsDraw;
             OpenMatch = true;
             this._owningBookie = owningBookie;
         }

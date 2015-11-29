@@ -113,12 +113,18 @@ namespace Gambler.Model
                         case RecievedMessage.MessageType.setOdds:
                             SetOddsResult sor = (SetOddsResult)rm.Result;
                             var dataOdds = _listOfMatches.Where(t => t.ID.Equals(sor.MatchID));
-                            Match matchToChangeOdds = dataOdds.First();
-                            matchToChangeOdds.updateOdds(sor.TeamName, sor.NewOdds);
+                            try
+                            {
+                                Match matchToChangeOdds = dataOdds.First();
+                                matchToChangeOdds.updateOdds(sor.TeamName, sor.NewOdds);
+                            }
+                            catch
+                            {
+                                Console.WriteLine("Couldn't update the match of ID " + sor.MatchID + " for Bookie " + sor.BookieID);
+                            }
                             break;
                         case RecievedMessage.MessageType.bookieExiting:
                             this.Connected = false;
-
                             break;
                     }
                 }
