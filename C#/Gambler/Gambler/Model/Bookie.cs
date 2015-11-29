@@ -133,8 +133,9 @@ namespace Gambler.Model
                 var data = _listOfMatches.Where(t => t.ID.Equals(ebr.MatchID));
                 Match matchToUpdate = data.First();
                 matchToUpdate.closeMatch();
-                Bet betToUpdate = _listOfBets.Where(t => t.MatchID.Equals(ebr.MatchID)).First();
-                betToUpdate.closeBet();
+                var listOfBetsToUpdate = _listOfBets.Where(t => t.MatchID.Equals(ebr.MatchID) && t.BookieID.Equals(this.ID));
+                foreach(var betToUpdate in listOfBetsToUpdate)
+                    betToUpdate.closeBet();
                 Model.Winnings winnings = new Winnings(ebr.AmountWon);
                 this._listOfWinnings.Add(winnings);
             }
