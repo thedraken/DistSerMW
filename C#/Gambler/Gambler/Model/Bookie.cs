@@ -152,9 +152,12 @@ namespace Gambler.Model
         {
             MatchStartedResult msr = (MatchStartedResult)rm.Result;
             Match matchToAdd = new Match(msr.MatchID, msr.TeamA, msr.OddsA, msr.TeamB, msr.OddsB, msr.OddsDraw, msr.Limit, this);
-            lock (lockObj)
+            if (!_listOfMatches.Contains(matchToAdd))
             {
-                this._listOfMatches.Add(matchToAdd);
+                lock (lockObj)
+                {
+                    this._listOfMatches.Add(matchToAdd);
+                }
             }
         }
         public Model.RPC.BookieConnection Connection { get; private set; }
@@ -167,6 +170,10 @@ namespace Gambler.Model
         {
             if (this.Connected)
             {
+                lock (lockObj)
+                {
+                    this._listOfMatches.Clear();
+                }
                 List<Match> listOfMatches = Connection.showMatches(this);
                 if (listOfMatches != null && listOfMatches.Count > 0)
                 {

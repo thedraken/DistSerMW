@@ -63,7 +63,6 @@ namespace Gambler.Controller
             Model.Bookie bookie = ListOfBookies.Where(t => t.ID.Equals(m.OwningBookieID)).FirstOrDefault();
             bookie.addBet(b);
         }
-
         public List<Model.Bet> getMatchBets(Model.Match m)
         {
             Model.Bookie bookie = ListOfBookies.Where(t => t.ID.Equals(m.OwningBookieID)).FirstOrDefault();

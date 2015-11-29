@@ -23,7 +23,9 @@ namespace Gambler.Model.RPC
             // initialize JsonRpcConnection base class
             this._gambler = gambler;
         }
-
+        /// <summary>
+        /// Allows a Gambler to say hello to a bookie
+        /// </summary>
         public void sayHello()
         {
             object[] parameter = new object[] {
@@ -36,6 +38,9 @@ namespace Gambler.Model.RPC
                 Console.WriteLine("Bookie " + _bookieID + " sent response: " + sayHelloResponse);
             }
         }
+        /// <summary>
+        /// Closes a connection with a bookie
+        /// </summary>
         public void closeConnection()
         {
             object[] parameter = new object[] {
@@ -46,6 +51,10 @@ namespace Gambler.Model.RPC
                 Console.WriteLine("Bookie " + _bookieID + " sent response to exit request: " + response.ToString());
             base.closeRPCConnection();
         }
+        /// <summary>
+        /// Connects with a Bookie
+        /// </summary>
+        /// <returns>The unique ID of the bookie</returns>
         public String sendConnect()
         {
             // connect the bookie 
@@ -69,6 +78,11 @@ namespace Gambler.Model.RPC
                 return string.Empty;
             }
         }
+        /// <summary>
+        /// Allows a gambler to place a bet, will return a string of the message sent back from the bookie
+        /// </summary>
+        /// <param name="b">The bet to place against the bookie</param>
+        /// <returns>The message returned by the bookie server</returns>
         public string placeBet(Bet b)
         {
             object[] parameter = new object[] {
@@ -86,11 +100,17 @@ namespace Gambler.Model.RPC
                     return PlaceBetResult.LOST_CONNECTION.ToString();
                 _retry++;
                 //Sleep for 10 seconds so we can do initial test scenario
+                //Other wise we can't test another user beating this gambler to the punch of creating a bet
                 Thread.Sleep(10000);
                 response = handleJsonRpcRequest("placeBet", parameter, messageID);
             }
             return response.Result.ToString();
         }
+        /// <summary>
+        /// Gets a list of all open matches from the bookie
+        /// </summary>
+        /// <param name="requestingB">The bookie to request the matches from</param>
+        /// <returns>A list of open matches</returns>
         public List<Match> showMatches(Bookie requestingB)
         {
             object[] parameter = new object[] {
@@ -141,7 +161,11 @@ namespace Gambler.Model.RPC
             }
             return new List<Match>();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
         private static string[] responseToStringArray(JsonResponse response)
         {
             string data = response.Result.ToString();
