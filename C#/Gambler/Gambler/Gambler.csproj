@@ -64,7 +64,6 @@
     <Compile Include="Model\RPC\BookieConnection.cs" />
     <Compile Include="Model\RPC\Common\JsonRpcConnection.cs" />
     <Compile Include="Model\RPC\Common\PlaceBetResult.cs" />
-    <Compile Include="Model\RPC\Common\ReplyMessage.cs" />
     <Compile Include="Model\RPC\GamblerServer.cs" />
     <Compile Include="Model\RPC\JSONRPCServer\JsonRPCSocketServer.cs" />
     <Compile Include="Model\RPC\JSONRPCServer\ServiceMode.cs" />
