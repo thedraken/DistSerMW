@@ -12,7 +12,7 @@ namespace Gambler.Model
         public Gambler(string name, IPAddress address, int portNo) : base(address, portNo, name)
         {
             _money = 0;
-            Connection = new RPC.GamblerServer(this, this.Address.ToString(), this.PortNo);
+            Connection = new RPC.GamblerServer(this);
             Connection.createGamblerServerInterface();
         }
         private object lockObj = new object();

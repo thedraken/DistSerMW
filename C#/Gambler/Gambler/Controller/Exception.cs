@@ -28,6 +28,12 @@ namespace Gambler.Controller
             : base("The connection failed, did you type in the correct address?") { }
     }
 
+    public class WalletCantGoBelowZero : BaseException
+    {
+        public WalletCantGoBelowZero(double value, double currentWalletAmount)
+            : base("You cannnot add the value of " + value + " to the wallet of " + currentWalletAmount + " as this would result in a negative wallet") { }
+    }
+
     public class GamblerAlreadyExists :BaseException
     {
         public GamblerAlreadyExists()

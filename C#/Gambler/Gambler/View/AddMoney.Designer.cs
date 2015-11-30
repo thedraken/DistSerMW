@@ -79,6 +79,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.bttnCancel;
             this.ClientSize = new System.Drawing.Size(210, 72);
+            this.ControlBox = false;
             this.Controls.Add(this.bttnCancel);
             this.Controls.Add(this.bttnOK);
             this.Controls.Add(this.txtbxFundsToAdd);
@@ -87,6 +88,7 @@
             this.Name = "AddMoney";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add Money";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AddMoney_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

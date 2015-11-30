@@ -21,34 +21,17 @@ namespace Gambler.Model.RPC
     {
         // the enclosing gambler
         private Gambler gambler;
-        // IP address of the gambler's JSON-RPC server interface
-        private String gamblerIP;
-        // port on which the gambler's JSON-RPC server listens
-        private int gamblerPort;
 
         private Thread socketListeningThread;
 
         private JsonSerializer jsonSerializer;
         private SocketListener gamblerSocketListener;
 
-        public GamblerServer(Gambler gambler, String gamblerIP, int gamblerPort)
+        public GamblerServer(Gambler gambler)
         {
-            this.gamblerIP = gamblerIP;
             this.gambler = gambler;
-            this.gamblerPort = gamblerPort;
             jsonSerializer = new JsonSerializer();
         }
-
-        public String getGamblerIP()
-        {
-            return gamblerIP;
-        }
-
-        public int getGamblerPort()
-        {
-            return gamblerPort;
-        }
-
         public MyGamblerService Service { get; private set; }
 
         public void createGamblerServerInterface()
@@ -73,16 +56,13 @@ namespace Gambler.Model.RPC
             try
             {
                 // launch a socket listener accepting and handling JSON-RPC requests
-                gamblerSocketListener = new SocketListener(gamblerPort, interceptor);
+                gamblerSocketListener = new SocketListener(gambler.PortNo, interceptor);
             }
             catch (IOException e)
             {
              
                 Console.WriteLine(e.ToString());
             }
-
-
-
             if (gamblerSocketListener != null)
             {
                 socketListeningThread = new Thread(new ThreadStart(gamblerSocketListener.start));
@@ -109,12 +89,18 @@ namespace Gambler.Model.RPC
 class SampleInterceptor : JSON_RPC_Server.Interceptor
 {
     private List<RequestResponse> _listOfResponsesAndRequest = new List<RequestResponse>();
+    /// <summary>
+    /// Intecepts incoming jsonRequests, checks to see if already answered and if so will reply with the previous response
+    /// </summary>
+    /// <param name="jsonRequest">The JSON request sent</param>
+    /// <returns>A null if we need to run the function, or the previous response if we've already handled it</returns>
     public JsonResponse interceptRequest(JsonRequest jsonRequest)
     {
         // print intercepted request on the console
         String request = JsonConvert.SerializeObject(jsonRequest);
         Console.WriteLine("intercepted request: " + request);
         JsonResponse response = null;
+        //The request ID is made up of bookie name and the unique number for that message
         if (jsonRequest.Id != null)
         {
             var data = _listOfResponsesAndRequest.Where(t=> t.Request.Id.ToString().Equals(jsonRequest.Id.ToString()));
@@ -126,24 +112,29 @@ class SampleInterceptor : JSON_RPC_Server.Interceptor
         }
         return response;
     }
-
-    // HINT 1: 	this message returns an JsonResponse object, in case that it shall do nothing with it, simply return null.
-    // HINT 2: 	If you want to have more details on the interceptors you can have a look at  
-    //			the code in the class ClientConnectionHandler Class located in the JsonRPCScoketServer.cs file in the MyBookie Project
-
+    /// <summary>
+    /// An interceptor for the responses to be sent to the requesting client
+    /// </summary>
+    /// <param name="jsonRequest">The request for data</param>
+    /// <param name="jsonResponse">The response of data</param>
     public void interceptResponse(JsonRequest jsonRequest, JsonResponse jsonResponse)
     {
         String request = JsonConvert.SerializeObject(jsonRequest);
         String response = JsonConvert.SerializeObject(jsonResponse);
+        //We haven't had the message before from the request, let's add it to the list of processed messages
         if (_listOfResponsesAndRequest.Where(t => t.Request.Id.ToString().Equals(jsonRequest.Id.ToString())).Count() == 0)
             _listOfResponsesAndRequest.Add(new RequestResponse(jsonRequest, jsonResponse));
-        // print intercepted request/respons-pair on the console
         Console.WriteLine("intercepted response: " + response + " for request: " + request);
     }
 }
 
 public class RequestResponse
 {
+    /// <summary>
+    /// Any requests processed by the Gambler will be stored as a request response pair. Helps preventing duplicate messages sent to the gambler
+    /// </summary>
+    /// <param name="request">The JSÒN request message</param>
+    /// <param name="response">The JSON response message</param>
     public RequestResponse(JsonRequest request, JsonResponse response)
     {
         this.Request = request;
@@ -159,9 +150,7 @@ public class RequestResponse
 /// </summary>
 public class MyGamblerService : JsonRpcService
 {
-
     private Gambler.Model.Gambler gambler;
-
     public MyGamblerService(Gambler.Model.Gambler gambler)
     {
         this.gambler = gambler;
@@ -203,24 +192,25 @@ public class MyGamblerService : JsonRpcService
         float oddsA = float.MinValue;
         float oddsB = float.MinValue;
         float oddsDraw = float.MinValue;
-        float limit = float.MinValue;  
+        float limit = float.MinValue;
+        Gambler.Controller.FunctionController f = Gambler.Controller.FunctionController.getInstance();
         foreach (string s in array)
         {
             if (s.StartsWith("bookieID"))
                 bookieID = s.Split(':')[1];
-            else if (s.StartsWith("id"))
-                id = int.Parse(s.Split(':')[1]);
+            else if (s.StartsWith("id") && !f.isInt(s.Split(':')[1], out id))
+                throw new Exception("Match ID is not in an integer format");
             else if (s.StartsWith("teamA"))
                 teamA = s.Split(':')[1];
             else if (s.StartsWith("teamB"))
                 teamB = s.Split(':')[1];
-            else if (s.StartsWith("oddsA") && !Gambler.Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out oddsA))
+            else if (s.StartsWith("oddsA") && !f.isFloat(s.Split(':')[1], out oddsA))
                 throw new Exception("Odds A was not a valid float value");
-            else if (s.StartsWith("oddsB") && !Gambler.Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out oddsB))
+            else if (s.StartsWith("oddsB") && !f.isFloat(s.Split(':')[1], out oddsB))
                 throw new Exception("Odds B was not a valid float value");
-            else if (s.StartsWith("limit") && !Gambler.Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out limit))
+            else if (s.StartsWith("limit") && !f.isFloat(s.Split(':')[1], out limit))
                 throw new Exception("The limit was not a valid float value");
-            else if (s.StartsWith("oddsDraw") && !Gambler.Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out oddsDraw))
+            else if (s.StartsWith("oddsDraw") && !f.isFloat(s.Split(':')[1], out oddsDraw))
                 throw new Exception("Odds draw was not a valid float value");
         }
         if (teamA != string.Empty && teamB != string.Empty && bookieID != string.Empty)

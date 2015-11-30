@@ -17,7 +17,10 @@ namespace Gambler.Controller
         public Model.Gambler gmblr { get; private set; }
         public void fillWallet(double amountToAdd)
         {
-            gmblr.addMoney(Math.Round(amountToAdd, 2));
+            double amountToAddRounded = Math.Round(amountToAdd, 2);
+            if (gmblr.Money + amountToAddRounded < 0)
+                throw new WalletCantGoBelowZero(amountToAddRounded, gmblr.Money);
+            gmblr.addMoney(amountToAddRounded);
         }
         public double getMoney()
         {

@@ -59,12 +59,12 @@ namespace Gambler.View
             if (txtbxAmnt.Text.Trim() != string.Empty)
             {
                 float value;
-                if (Controller.FunctionController.getInstance().isFloat(txtbxAmnt.Text, out value))
+                if (Controller.FunctionController.getInstance().isFloat(txtbxAmnt.Text, out value) && value > 0)
                     this.Amount = value;
                 else
                 {
                     success = false;
-                    sb.Append("\nPlease enter a decimal value for the bet");
+                    sb.Append("\nPlease enter a positive decimal value for the bet");
                 }
                 
             }
@@ -100,13 +100,12 @@ namespace Gambler.View
             rdBttnDraw.Enabled = true;
             bttnOK.Enabled = true;
         }
-
         private void txtbxAmnt_TextChanged(object sender, EventArgs e)
         {
             float value;
-            if (!Controller.FunctionController.getInstance().isFloat(txtbxAmnt.Text, out value))
+            if (!Controller.FunctionController.getInstance().isFloat(txtbxAmnt.Text, out value) && !txtbxAmnt.Text.Equals(string.Empty))
                 txtbxAmnt.Text = Amount.ToString();
-            else
+            else if (!txtbxAmnt.Text.Equals(string.Empty))
                 Amount = value;
             updateExpectedOutCome();
         }
@@ -122,7 +121,6 @@ namespace Gambler.View
                     txtbxAmountIfWon.Text = (((Model.Match)cmbxMatch.SelectedItem).OddsDraw * Amount).ToString();
             }
         }
-
         private void rdbttn_Click(object sender, EventArgs e)
         {
             updateExpectedOutCome();

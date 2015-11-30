@@ -48,11 +48,18 @@ namespace Gambler.View
         }
         private void fillToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AddMoney money = new AddMoney();
-            money.ShowDialog();
-            if (money.DialogResult == System.Windows.Forms.DialogResult.OK)
-                gmblrController.fillWallet(money.fundsToAdd);
-            txtbxGmblrFnds.Text = "€" + gmblrController.getMoney().ToString();
+            try
+            {
+                AddMoney money = new AddMoney();
+                money.ShowDialog();
+                if (money.DialogResult == System.Windows.Forms.DialogResult.OK)
+                    gmblrController.fillWallet(money.FundsToAdd);
+                txtbxGmblrFnds.Text = "€" + gmblrController.getMoney().ToString();
+            }
+            catch (Exception ex)
+            {
+                handleException(ex);
+            }
         }
         private void GamblerView_Shown(object sender, EventArgs e)
         {
@@ -111,6 +118,7 @@ namespace Gambler.View
         {
             if (bkController.ListOfMatches.Count > 0)
             {
+                //Have to clone the matches, to prevent us sending the updated odds. The system was being too live before!
                 PlaceBet frm = new PlaceBet(bkController.getCloneOfMatches());
                 frm.ShowDialog();
                 if (frm.DialogResult == System.Windows.Forms.DialogResult.OK)
@@ -120,6 +128,7 @@ namespace Gambler.View
                         if (gmblrController.gmblr.Money >= frm.Amount)
                         {
                             bkController.placeBet(frm.Match, frm.TeamName, frm.Amount, frm.Odds);
+                            //If we reach here, no exception was thrown, bet was placed and we can take the funds from the user's wallet
                             gmblrController.fillWallet(-frm.Amount);
                         }
                         else

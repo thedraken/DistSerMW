@@ -94,8 +94,9 @@ namespace Gambler.Model.RPC
             };
             string messageID = this._gambler.getNextMessageID();
             JsonResponse response = handleJsonRpcRequest("placeBet", parameter, messageID);
-            while (response == null)
+            while (response == null || response.Result.ToString().Equals(PlaceBetResult.LOST_CONNECTION.ToString()))
             {
+                //Will rety up to 3 times (As set in _maxRetries). We don't mind sending a duplicate message, as the bookie will handle it and reply back with the previous response
                 if (_retry > _maxRetries)
                     return PlaceBetResult.LOST_CONNECTION.ToString();
                 _retry++;
@@ -121,9 +122,9 @@ namespace Gambler.Model.RPC
             {
                 string[] array = responseToStringArray(response);
                 List<Match> listOfMatches = new List<Match>();
-                foreach (string s in array)
+                foreach (string str in array)
                 {
-                    if (s.Contains(","))
+                    if (str.Contains(","))
                     {
                         string bookieID = string.Empty;
                         int id = int.MinValue;
@@ -133,24 +134,25 @@ namespace Gambler.Model.RPC
                         float oddsB = float.MinValue;
                         float oddsDraw = float.MinValue;
                         float limit = float.MinValue;
-                        string[] matchData = s.Split(',');
+                        string[] matchData = str.Split(',');
+                        Controller.FunctionController f = Controller.FunctionController.getInstance();
                         foreach (string m in matchData)
                         {
                             if (m.StartsWith("bookieID"))
                                 bookieID = m.Split(':')[1];
-                            else if (m.StartsWith("id"))
-                                id = int.Parse(m.Split(':')[1]);
+                            else if (m.StartsWith("id") && !f.isInt(m.Split(':')[1], out id))
+                                throw new Exception("Match ID is not in an integer format");
                             else if (m.StartsWith("teamA"))
                                 teamA = m.Split(':')[1];
                             else if (m.StartsWith("teamB"))
                                 teamB = m.Split(':')[1];
-                            else if (s.StartsWith("oddsA") && !Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out oddsA))
+                            else if (m.StartsWith("oddsA") && !f.isFloat(m.Split(':')[1], out oddsA))
                                 throw new Exception("Odds A was not a valid float value");
-                            else if (s.StartsWith("oddsB") && !Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out oddsB))
+                            else if (m.StartsWith("oddsB") && !f.isFloat(m.Split(':')[1], out oddsB))
                                 throw new Exception("Odds B was not a valid float value");
-                            else if (s.StartsWith("limit") && !Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out limit))
+                            else if (m.StartsWith("limit") && !f.isFloat(m.Split(':')[1], out limit))
                                 throw new Exception("Stake was not a valid float value");
-                            else if (s.StartsWith("oddsDraw") && !Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out oddsDraw))
+                            else if (m.StartsWith("oddsDraw") && !f.isFloat(m.Split(':')[1], out oddsDraw))
                                 throw new Exception("Odds draw was not a valid float value");
                         }
                         if (teamA != string.Empty && teamB != string.Empty && bookieID != string.Empty && bookieID == requestingB.ID)
@@ -161,11 +163,6 @@ namespace Gambler.Model.RPC
             }
             return new List<Match>();
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="response"></param>
-        /// <returns></returns>
         private static string[] responseToStringArray(JsonResponse response)
         {
             string data = response.Result.ToString();
@@ -175,6 +172,11 @@ namespace Gambler.Model.RPC
             string[] array = data.Split(new char[] { '{', '}' }, StringSplitOptions.RemoveEmptyEntries);
             return array;
         }
+        /// <summary>
+        /// Asks the bookies for a list of bets that have been placed against a specific match ID, this allows for better knowledge for the gambler to place wise bets
+        /// </summary>
+        /// <param name="m">The match to get the list of bets for</param>
+        /// <returns>A list of bets returned by the bookie</returns>
         public List<Bet> getOtherBetsPlaced(Match m)
         {
             List<Bet> listOfBets = new List<Bet>();
@@ -197,17 +199,18 @@ namespace Gambler.Model.RPC
                         string teamID = string.Empty;
                         float stake = float.MinValue;
                         float odds = float.MinValue;
+                        Controller.FunctionController f = Controller.FunctionController.getInstance();
                         foreach (string b in betData)
                         {
                             if (b.StartsWith("bookieID"))
                                 bookieID = b.Split(':')[1];
-                            else if (b.StartsWith("matchID"))
-                                matchID = int.Parse(b.Split(':')[1]);
-                            else if (s.StartsWith("amount") && !Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out stake))
+                            else if (b.StartsWith("matchID") && !f.isInt(b.Split(':')[1], out matchID))
+                                throw new Exception("Match ID is not in an integer format");
+                            else if (s.StartsWith("amount") && !f.isFloat(s.Split(':')[1], out stake))
                                 throw new Exception("Stake was not a valid float value");
                             else if (b.StartsWith("team"))
                                 teamID = b.Split(':')[1];
-                            else if (s.StartsWith("odds") && !Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out odds))
+                            else if (s.StartsWith("odds") && !f.isFloat(s.Split(':')[1], out odds))
                                 throw new Exception("Odds was not a valid float value");
                         }
                         if (bookieID != string.Empty && matchID != int.MinValue)
@@ -217,6 +220,10 @@ namespace Gambler.Model.RPC
             }
             return listOfBets;
         }
+        /// <summary>
+        /// Requests any previous winnings the gambler didn't recieve before he disconnected
+        /// </summary>
+        /// <returns>A float amount of any winnings, this could be zero</returns>
         public float getPreviousWinnings()
         {
             object[] parameter = new object[]{
