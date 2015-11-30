@@ -118,7 +118,7 @@ class SampleInterceptor : JSON_RPC_Server.Interceptor
     {
         String request = JsonConvert.SerializeObject(jsonRequest);
         String response = JsonConvert.SerializeObject(jsonResponse);
-        //We haven't had the message before from the request, let's add it to the list of processed messages
+        //Check if we haven't had the message before from the request, and if so let's add it to the list of processed messages
         if (_listOfResponsesAndRequest.Where(t => t.Request.Id.ToString().Equals(jsonRequest.Id.ToString())).Count() == 0)
             _listOfResponsesAndRequest.Add(new RequestResponse(jsonRequest, jsonResponse));
         Console.WriteLine("intercepted response: " + response + " for request: " + request);
@@ -191,23 +191,23 @@ public class MyGamblerService : JsonRpcService
         float oddsDraw = float.MinValue;
         float limit = float.MinValue;
         Gambler.Controller.FunctionController f = Gambler.Controller.FunctionController.getInstance();
-        foreach (string s in array)
+        foreach (string str in array)
         {
-            if (s.StartsWith("bookieID"))
-                bookieID = s.Split(':')[1];
-            else if (s.StartsWith("id") && !f.isInt(s.Split(':')[1], out id))
+            if (str.StartsWith("bookieID"))
+                bookieID = str.Split(':')[1];
+            else if (str.StartsWith("id") && !f.isInt(str.Split(':')[1], out id))
                 throw new Exception("Match ID is not in an integer format");
-            else if (s.StartsWith("teamA"))
-                teamA = s.Split(':')[1];
-            else if (s.StartsWith("teamB"))
-                teamB = s.Split(':')[1];
-            else if (s.StartsWith("oddsA") && !f.isFloat(s.Split(':')[1], out oddsA))
+            else if (str.StartsWith("teamA"))
+                teamA = str.Split(':')[1];
+            else if (str.StartsWith("teamB"))
+                teamB = str.Split(':')[1];
+            else if (str.StartsWith("oddsA") && !f.isFloat(str.Split(':')[1], out oddsA))
                 throw new Exception("Odds A was not a valid float value");
-            else if (s.StartsWith("oddsB") && !f.isFloat(s.Split(':')[1], out oddsB))
+            else if (str.StartsWith("oddsB") && !f.isFloat(str.Split(':')[1], out oddsB))
                 throw new Exception("Odds B was not a valid float value");
-            else if (s.StartsWith("limit") && !f.isFloat(s.Split(':')[1], out limit))
+            else if (str.StartsWith("limit") && !f.isFloat(str.Split(':')[1], out limit))
                 throw new Exception("The limit was not a valid float value");
-            else if (s.StartsWith("oddsDraw") && !f.isFloat(s.Split(':')[1], out oddsDraw))
+            else if (str.StartsWith("oddsDraw") && !f.isFloat(str.Split(':')[1], out oddsDraw))
                 throw new Exception("Odds draw was not a valid float value");
         }
         if (teamA != string.Empty && teamB != string.Empty && bookieID != string.Empty)

@@ -87,43 +87,62 @@ namespace Gambler.Controller
                 b.refreshMatches();
         }
         /// <summary>
-        /// 
+        /// Places a bet for the match specified, with the teamname, amount, and odds
         /// </summary>
-        /// <param name="m"></param>
-        /// <param name="teamName"></param>
-        /// <param name="amount"></param>
-        /// <param name="odds"></param>
+        /// <param name="m">The match to place the bet against</param>
+        /// <param name="teamName">The teamname to bet on</param>
+        /// <param name="amount">The amount to bet</param>
+        /// <param name="odds">The odds that the gambler wishes to bet with</param>
         public void placeBet(Model.Match m, string teamName, float amount, float odds)
         {
             Model.Bet b = new Model.Bet(m.OwningBookieID, m.ID, teamName, amount, odds);
             Model.Bookie bookie = ListOfBookies.Where(t => t.ID.Equals(m.OwningBookieID)).FirstOrDefault();
             bookie.addBet(b);
         }
+        /// <summary>
+        /// Gets a list of all bets that have been placed against a match
+        /// </summary>
+        /// <param name="m">The match to get the bets placed</param>
+        /// <returns>A list of bets placed against a match</returns>
         public List<Model.Bet> getMatchBets(Model.Match m)
         {
             Model.Bookie bookie = ListOfBookies.Where(t => t.ID.Equals(m.OwningBookieID)).FirstOrDefault();
             return bookie.getBetsPlacedForMatch(m);
         }
+        /// <summary>
+        /// Closes the connection with all bookies, called when the form is shutting down
+        /// </summary>
         public void closeConnection()
         {
             foreach (Model.Bookie bk in ListOfBookies)
                 bk.closeConnection();
         }
+        /// <summary>
+        /// A method that subscribes to a list of new match messages and updates the list of matches
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void handleNewMatch(object sender, NotifyCollectionChangedEventArgs e)
         {
             updateMatches();
         }
+        /// <summary>
+        /// Clears the matches and redownloads them from the bookie
+        /// </summary>
         public void updateMatches()
         {
             ListOfMatches.Clear();
             foreach (Model.Bookie b in ListOfBookies.Where(t => t.Connected))
             {
                 foreach (Model.Match m in b.ListOfMatches.Where(t => t.OpenMatch))
-                {
                     ListOfMatches.Add(m);
-                }
             }
         }
+        /// <summary>
+        /// A method to subsribes to a list of new bets and updates the list of bets if one is recieved
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void handleNewBet(object sender, NotifyCollectionChangedEventArgs e)
         {
             ListOfAllBets.Clear();
@@ -137,22 +156,38 @@ namespace Gambler.Controller
                 }
             }
         }
+        /// <summary>
+        /// A method to subsribes to a list of new winnings and updates the list of bets if one is recieved
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void handleNewWinnings(object sender, NotifyCollectionChangedEventArgs e)
         {
             foreach(var ni in e.NewItems)
                 ListOfAllWinnings.Add((Model.Winnings)ni);
         }
+        /// <summary>
+        /// Sets the mode of the bookie name provided
+        /// </summary>
+        /// <param name="bookieName">The name of the bookie to change the mode of</param>
+        /// <param name="mode">The mode to set the bookie to</param>
         public void setMode(string bookieName, JSON_RPC_Server.ServiceMode mode)
         {
             foreach (Model.Bookie b in ListOfBookies.Where(t => t.ID.Equals(bookieName)))
                 b.setMode(mode);
         }
+        /// <summary>
+        /// Removes bookie from list if they have disconnected
+        /// </summary>
         public void removeClosedBookies()
         {
             lock(lockObj)
             {
                 for (int i = _listOfBookies.Count - 1; i >= 0; i--)
-                    _listOfBookies.RemoveAt(i);
+                {
+                    if (!_listOfBookies[i].Connected)
+                        _listOfBookies.RemoveAt(i);
+                }
             }
         }
     }
