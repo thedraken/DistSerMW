@@ -19,6 +19,9 @@ namespace Gambler.Model
         private int _messageID = 0;
         public Model.RPC.GamblerServer Connection { get; private set; }
         private double _money;
+        /// <summary>
+        /// The amount of money currently in the gambler's wallet
+        /// </summary>
         public double Money
         {
             get
@@ -29,6 +32,10 @@ namespace Gambler.Model
                 }
             }
         }
+        /// <summary>
+        /// Add money to the wallet of the gambler (It can be a negative amount)
+        /// </summary>
+        /// <param name="amountToAdd">The amount of money to add</param>
         public void addMoney(double amountToAdd)
         {
             lock (lockObj)
@@ -36,10 +43,17 @@ namespace Gambler.Model
                 this._money += amountToAdd;
             }
         }
+        /// <summary>
+        /// Gets the next message ID for this gambler, we only ever create one gambler per executable, so this is a good place to store it
+        /// </summary>
+        /// <returns>A string of the next message ID which consists of gambler name and message number</returns>
         public string getNextMessageID()
         {
             return this.ID + (++_messageID);
         }
+        /// <summary>
+        /// Tells the gambler to close all RPC connections
+        /// </summary>
         public void destroyConnection()
         {
             Connection.destroyGamblerServerInterface();

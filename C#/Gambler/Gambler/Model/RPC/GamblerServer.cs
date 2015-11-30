@@ -74,6 +74,9 @@ namespace Gambler.Model.RPC
         {
             try
             {
+                //Destroy the service object
+                Service = null;
+                //Stop the socket listener
                 gamblerSocketListener.stop();
             }
             catch

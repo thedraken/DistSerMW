@@ -100,6 +100,11 @@ namespace JSON_RPC_Server
         private Interceptor interceptor;
         private TcpListener server;
         private bool continueThread = true;
+        private ManagementService managementService;
+        private TcpClient client;
+        private List<Thread> listOfThreads = new List<Thread>();
+        private List<ClientConnectionHandler> listOfConnectionHandlers = new List<ClientConnectionHandler>();
+
 
         /// <summary>
         /// Create a socket listener. Listens for incoming connection
@@ -113,13 +118,13 @@ namespace JSON_RPC_Server
             this.listenPort = listenPort;
             this.interceptor = interceptor;
         }
-        List<Thread> listOfThreads = new List<Thread>();
+        
         /// <summary>
         /// Main loop of this connection listener.
         /// </summary>
         public void start()
         {
-            Object managementService = new JSON_RPC_Server.ManagementService();
+            managementService = new JSON_RPC_Server.ManagementService();
             server = new TcpListener(IPAddress.Any, listenPort);
             server.Start();
             Trace.TraceInformation("listening for connections at: " + listenPort);
@@ -127,8 +132,9 @@ namespace JSON_RPC_Server
             {
                 try
                 {
-                    TcpClient client = server.AcceptTcpClient();
+                    client = server.AcceptTcpClient();
                     ClientConnectionHandler clientConnectionHandler = new ClientConnectionHandler(client, interceptor);
+                    listOfConnectionHandlers.Add(clientConnectionHandler);
                     Thread thread = new Thread(new ThreadStart(clientConnectionHandler.handleConnection));
                     listOfThreads.Add(thread);
                     thread.Start();
@@ -142,7 +148,9 @@ namespace JSON_RPC_Server
         public void stop()
         {
             continueThread = false;
-            Thread.Sleep(10000);
+            client.Close();
+            listOfConnectionHandlers.ForEach(t => t.ContinueConnection = false);
+            Thread.Sleep(5000);
             listOfThreads.ForEach(t => t.Abort());
             server.Stop();
         }
@@ -153,10 +161,10 @@ namespace JSON_RPC_Server
         /// </summary>
         class ClientConnectionHandler
         {
-
             private TcpClient tcpClient;
             private Interceptor interceptor;
             private Random rnd = new Random();
+            public bool ContinueConnection { get; set; }
 
             /// <summary>
             /// Constructs a connection handler for the given client.
@@ -167,6 +175,7 @@ namespace JSON_RPC_Server
             {
                 this.tcpClient = client;
                 this.interceptor = interceptor;
+                ContinueConnection = true;
             }
 
             /// <summary>
@@ -200,7 +209,7 @@ namespace JSON_RPC_Server
                     JsonSerializer jsonSerializer = new JsonSerializer();
 
                     // main request processing loop
-                    while (true)
+                    while (ContinueConnection)
                     {
                         JsonRequest jsonRequest = (JsonRequest) jsonSerializer.Deserialize(reader, typeof(JsonRequest));
 

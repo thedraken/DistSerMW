@@ -21,21 +21,29 @@ namespace Gambler.Model
             this._connectingGambler = connectingGambler;
             Mode = JSON_RPC_Server.ServiceMode.RELIABLE;
             Connection = new RPC.BookieConnection(connectingGambler, address.ToString(), portNo);
+            //Subscribe to the collection, so any new messages are processed
             this._connectingGambler.Connection.Service.getList().CollectionChanged += handleUpdates;
             Connection.establishSocketConnection();
             this.ID = Connection.sendConnect();
             if (this.ID == string.Empty)
                 throw new Controller.ConnectionFailed();
             Connected = true;
+            //We'll retrieve data from the bookie, let's make sure we're up to date and collect any previous winnings
             this.refreshMatches();
             this._connectingGambler.addMoney(this.Connection.getPreviousWinnings());
         }
         private Gambler _connectingGambler;
+        /// <summary>
+        /// Is the bookie in a connected state or not?
+        /// </summary>
         public bool Connected { get; private set; }
         private object lockObj = new object();
         private ObservableCollection<Bet> _listOfBets;
         private ObservableCollection<Match> _listOfMatches;
         private ObservableCollection<Winnings> _listOfWinnings;
+        /// <summary>
+        /// Gets a list of matches associated with this Bookie
+        /// </summary>
         public ObservableCollection<Match> ListOfMatches
         {
             get
@@ -46,6 +54,9 @@ namespace Gambler.Model
                 }
             }
         }
+        /// <summary>
+        /// Gets a list of bets associated with matchs that this Bookie owns
+        /// </summary>
         public ObservableCollection<Bet> ListOfBets
         {
             get
@@ -56,6 +67,9 @@ namespace Gambler.Model
                 }
             }
         }
+        /// <summary>
+        /// Gets a list of any winnings that a gambler may have won from this Bookie
+        /// </summary>
         public ObservableCollection<Winnings> ListOfWinnings
         {
             get
@@ -66,6 +80,11 @@ namespace Gambler.Model
                 }
             }
         }
+        /// <summary>
+        /// Attempts to place a bet against this bookie
+        /// If it fails, an exception is thrown with the reason for failure
+        /// </summary>
+        /// <param name="bet">The bet to place</param>
         public void addBet(Bet bet)
         {
             if (this.Connected)
@@ -95,6 +114,11 @@ namespace Gambler.Model
                 }
             }
         }
+        /// <summary>
+        /// Handles any updates to the recieved message list, this is tied to the Observable collection in the Gambler server
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void handleUpdates(object sender, NotifyCollectionChangedEventArgs e)
         {
             foreach (var ni in e.NewItems)
@@ -165,11 +189,17 @@ namespace Gambler.Model
             }
         }
         public Model.RPC.BookieConnection Connection { get; private set; }
+        /// <summary>
+        /// Say hello to the bookie
+        /// </summary>
         public void sayHello()
         {
             if (this.Connected)
                 Connection.sayHello();
         }
+        /// <summary>
+        /// Get an updated list of matches from the bookie
+        /// </summary>
         public void refreshMatches()
         {
             if (this.Connected)
@@ -192,12 +222,22 @@ namespace Gambler.Model
                 }
             }
         }
+        /// <summary>
+        /// Close the connection with the bookie
+        /// </summary>
         public void closeConnection()
         {
             if (this.Connected)
                 this.Connection.closeConnection();
         }
+        /// <summary>
+        /// Get the Bookie's currently set mode
+        /// </summary>
         public JSON_RPC_Server.ServiceMode Mode { get; private set; }
+        /// <summary>
+        /// Set the bookie's mode of connection
+        /// </summary>
+        /// <param name="mode">The mode to set it to</param>
         public void setMode(JSON_RPC_Server.ServiceMode mode)
         {
             if (this.Connected)
@@ -206,10 +246,19 @@ namespace Gambler.Model
                 this.Mode = mode;
             }
         }
+        /// <summary>
+        /// Get the bookie's ID
+        /// </summary>
+        /// <returns>The bookie's ID</returns>
         public override string ToString()
         {
             return this.ID;
         }
+        /// <summary>
+        /// Get any bets placed for an open match, allows the gambler to try and bet more wisely
+        /// </summary>
+        /// <param name="m">The match of which you want the current bets set</param>
+        /// <returns>A list of bets that have been placed agains the match (It can be empty)</returns>
         public List<Bet> getBetsPlacedForMatch(Match m)
         {
             return Connection.getOtherBetsPlaced(m);
