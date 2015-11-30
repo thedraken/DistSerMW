@@ -87,6 +87,11 @@ namespace Gambler.View
 
             }
         }
+        /// <summary>
+        /// The timer that upon tick will refresh the form with the latest data
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tmrRefreshBets_Tick(object sender, EventArgs e)
         {
             bkController.updateMatches();
