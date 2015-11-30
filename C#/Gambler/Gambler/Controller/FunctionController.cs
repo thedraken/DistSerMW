@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,26 +25,24 @@ namespace Gambler.Controller
             }
             return instance;
         }
-        public bool isDouble(string value)
+        public bool isDouble(string value, out double ret)
         {
-            double ret;
             if (Double.TryParse(value, out ret))
                 return true;
             return false;
         }
-        public bool isFloat(string value)
+        public bool isFloat(string value, out float ret)
         {
-            float ret;
-            if (float.TryParse(value, out ret))
+            if (float.TryParse(value, System.Globalization.NumberStyles.Float, CultureInfo.InvariantCulture, out ret))
                 return true;
             return false;
         }
-        public bool isInt(string value)
+        public bool isInt(string value, out int ret)
         {
-            int ret;
             if (Int32.TryParse(value, out ret))
                 return true;
             return false;
         }
+
     }
 }

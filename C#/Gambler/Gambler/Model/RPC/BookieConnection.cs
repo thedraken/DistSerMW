@@ -144,14 +144,14 @@ namespace Gambler.Model.RPC
                                 teamA = m.Split(':')[1];
                             else if (m.StartsWith("teamB"))
                                 teamB = m.Split(':')[1];
-                            else if (m.StartsWith("oddsA"))
-                                oddsA = float.Parse(m.Split(':')[1], CultureInfo.InvariantCulture);
-                            else if (m.StartsWith("oddsB"))
-                                oddsB = float.Parse(m.Split(':')[1], CultureInfo.InvariantCulture);
-                            else if (m.StartsWith("limit"))
-                                limit = float.Parse(m.Split(':')[1], CultureInfo.InvariantCulture);
-                            else if (m.StartsWith("oddsDraw"))
-                                oddsDraw = float.Parse(m.Split(':')[1], CultureInfo.InvariantCulture);
+                            else if (s.StartsWith("oddsA") && !Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out oddsA))
+                                throw new Exception("Odds A was not a valid float value");
+                            else if (s.StartsWith("oddsB") && !Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out oddsB))
+                                throw new Exception("Odds B was not a valid float value");
+                            else if (s.StartsWith("limit") && !Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out limit))
+                                throw new Exception("Stake was not a valid float value");
+                            else if (s.StartsWith("oddsDraw") && !Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out oddsDraw))
+                                throw new Exception("Odds draw was not a valid float value");
                         }
                         if (teamA != string.Empty && teamB != string.Empty && bookieID != string.Empty && bookieID == requestingB.ID)
                             listOfMatches.Add(new Match(id, teamA, oddsA, teamB, oddsB, oddsDraw, limit, requestingB));
@@ -203,12 +203,12 @@ namespace Gambler.Model.RPC
                                 bookieID = b.Split(':')[1];
                             else if (b.StartsWith("matchID"))
                                 matchID = int.Parse(b.Split(':')[1]);
-                            else if (b.StartsWith("amount"))
-                                stake = float.Parse(b.Split(':')[1], CultureInfo.InvariantCulture);
+                            else if (s.StartsWith("amount") && !Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out stake))
+                                throw new Exception("Stake was not a valid float value");
                             else if (b.StartsWith("team"))
                                 teamID = b.Split(':')[1];
-                            else if (b.StartsWith("odds"))
-                                odds = float.Parse(b.Split(':')[1], CultureInfo.InvariantCulture);
+                            else if (s.StartsWith("odds") && !Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out odds))
+                                throw new Exception("Odds was not a valid float value");
                         }
                         if (bookieID != string.Empty && matchID != int.MinValue)
                             listOfBets.Add(new Bet(bookieID, matchID, teamID, stake, odds));
@@ -227,7 +227,7 @@ namespace Gambler.Model.RPC
             if (response != null)
             {
                 float ret = 0;
-                if (float.TryParse(response.Result.ToString(), out ret))
+                if (Controller.FunctionController.getInstance().isFloat(response.Result.ToString(), out ret))
                     return ret;
             }
             return 0;

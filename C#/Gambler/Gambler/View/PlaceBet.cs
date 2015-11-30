@@ -58,8 +58,9 @@ namespace Gambler.View
             }
             if (txtbxAmnt.Text.Trim() != string.Empty)
             {
-                if (Controller.FunctionController.getInstance().isFloat(txtbxAmnt.Text))
-                    this.Amount = float.Parse(txtbxAmnt.Text);
+                float value;
+                if (Controller.FunctionController.getInstance().isFloat(txtbxAmnt.Text, out value))
+                    this.Amount = value;
                 else
                 {
                     success = false;
@@ -102,10 +103,11 @@ namespace Gambler.View
 
         private void txtbxAmnt_TextChanged(object sender, EventArgs e)
         {
-            if (!Controller.FunctionController.getInstance().isFloat(txtbxAmnt.Text))
+            float value;
+            if (!Controller.FunctionController.getInstance().isFloat(txtbxAmnt.Text, out value))
                 txtbxAmnt.Text = Amount.ToString();
             else
-                Amount = float.Parse(txtbxAmnt.Text);
+                Amount = value;
             updateExpectedOutCome();
         }
         private void updateExpectedOutCome()

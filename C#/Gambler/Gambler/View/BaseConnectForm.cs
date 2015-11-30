@@ -24,17 +24,19 @@ namespace Gambler.View
         {
             foreach (ComboBox cmbx in listOfCombos)
             {
-                if (!FunctionController.getInstance().isInt(cmbx.Text))
+                int value;
+                if (!FunctionController.getInstance().isInt(cmbx.Text, out value))
                     return false;
-                if (int.Parse(cmbx.Text) > 255 || int.Parse(cmbx.Text) < 0)
+                if (value > 255 || value < 0)
                     return false;
             }
             return true;
         }
         protected void checkValidPortNo(string text)
         {
-            if (FunctionController.getInstance().isInt(text))
-                PortNumber = int.Parse(text);
+            int value;
+            if (FunctionController.getInstance().isInt(text, out value))
+                PortNumber = value;
             else
                 PortNumber = int.MinValue;
         }
@@ -69,7 +71,8 @@ namespace Gambler.View
                 listOfCombos.ForEach(t => t.Items.Add(i));
             for (int i = 0; i < split.Count(); i++)
             {
-                if (FunctionController.getInstance().isInt(split[i]))
+                int value;
+                if (FunctionController.getInstance().isInt(split[i], out value))
                     listOfCombos.Where(t => t.Name.Contains((i + 1).ToString())).First().Text = split[i];
             }
         }

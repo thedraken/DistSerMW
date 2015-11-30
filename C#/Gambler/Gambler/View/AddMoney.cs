@@ -19,9 +19,9 @@ namespace Gambler.View
 
         private void bttnOK_Click(object sender, EventArgs e)
         {
-            if (txtbxFundsToAdd.Text.Length > 0 && Controller.FunctionController.getInstance().isFloat(txtbxFundsToAdd.Text))
+            float fundsToAdd;
+            if (txtbxFundsToAdd.Text.Length > 0 && Controller.FunctionController.getInstance().isFloat(txtbxFundsToAdd.Text, out fundsToAdd))
             {
-                fundsToAdd = float.Parse(txtbxFundsToAdd.Text);
                 this.DialogResult = System.Windows.Forms.DialogResult.OK;
                 this.Close();
             }

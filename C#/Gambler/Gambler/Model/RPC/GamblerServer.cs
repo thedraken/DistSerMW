@@ -214,14 +214,14 @@ public class MyGamblerService : JsonRpcService
                 teamA = s.Split(':')[1];
             else if (s.StartsWith("teamB"))
                 teamB = s.Split(':')[1];
-            else if (s.StartsWith("oddsA"))
-                oddsA = float.Parse(s.Split(':')[1], CultureInfo.InvariantCulture);
-            else if (s.StartsWith("oddsB"))
-                oddsB = float.Parse(s.Split(':')[1], CultureInfo.InvariantCulture);
-            else if (s.StartsWith("limit"))
-                limit = float.Parse(s.Split(':')[1], CultureInfo.InvariantCulture);
-            else if (s.StartsWith("oddsDraw"))
-                oddsDraw = float.Parse(s.Split(':')[1], CultureInfo.InvariantCulture);
+            else if (s.StartsWith("oddsA") && !Gambler.Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out oddsA))
+                throw new Exception("Odds A was not a valid float value");
+            else if (s.StartsWith("oddsB") && !Gambler.Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out oddsB))
+                throw new Exception("Odds B was not a valid float value");
+            else if (s.StartsWith("limit") && !Gambler.Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out limit))
+                throw new Exception("The limit was not a valid float value");
+            else if (s.StartsWith("oddsDraw") && !Gambler.Controller.FunctionController.getInstance().isFloat(s.Split(':')[1], out oddsDraw))
+                throw new Exception("Odds draw was not a valid float value");
         }
         if (teamA != string.Empty && teamB != string.Empty && bookieID != string.Empty)
         {
