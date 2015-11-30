@@ -411,7 +411,7 @@ public class MatchStartedResult : Result
         this.OddsA = oddsA;
         this.OddsB = oddsB;
         this.Limit = limit;
-        this.OddsDraw = OddsDraw;
+        this.OddsDraw = oddsDraw;
     }
     
     public string TeamA { get; private set; }
