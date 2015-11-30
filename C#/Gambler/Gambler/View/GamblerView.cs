@@ -94,10 +94,15 @@ namespace Gambler.View
         /// <param name="e"></param>
         private void tmrRefreshBets_Tick(object sender, EventArgs e)
         {
+
             bkController.updateMatches();
-            var dataSource = new BindingSource();
-            dataSource.DataSource = bkController.ListOfMatches;
-            dtgrdvwBets.DataSource = dataSource;
+            if (bkController.MatchUpdate)
+            {
+                var dataSource = new BindingSource();
+                dataSource.DataSource = bkController.ListOfMatches;
+                dtgrdvwBets.DataSource = dataSource;
+                bkController.MatchUpdate = false;
+            }
             txtbxGmblrFnds.Text = "€" + this.gmblrController.getMoney().ToString();
             int countOfWinningsNow = bkController.ListOfAllWinnings.Where(t=> t.Amount > 0).ToList().Count;
             if (countOfWinnings < countOfWinningsNow)
@@ -105,7 +110,7 @@ namespace Gambler.View
                 countOfWinnings = countOfWinningsNow;
                 MessageBox.Show("You've won some money, it has been credited to your account", "Winner", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            int countOfLosesNow = bkController.ListOfAllWinnings.Where(t => t.Amount == 0).ToList().Count;
+            int countOfLosesNow = bkController.ListOfAllWinnings.Where(t => t.Amount == 0 && t.BetPlaced).ToList().Count;
             if (countOfLoses < countOfLosesNow)
             {
                 countOfLoses = countOfLosesNow;

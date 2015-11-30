@@ -16,8 +16,10 @@ namespace Gambler.Controller
             ListOfMatches = new ObservableCollection<Model.Match>();
             ListOfAllBets = new ObservableCollection<Model.Bet>();
             ListOfAllWinnings = new ObservableCollection<Model.Winnings>();
+            MatchUpdate = false;
         }
         private object lockObj = new object();
+        public bool MatchUpdate { get; set; }
         private ObservableCollection<Model.Bookie> _listOfBookies = new ObservableCollection<Model.Bookie>();
         /// <summary>
         /// Observable list of bookies, if this list changes, will fire the list updated event
@@ -131,12 +133,25 @@ namespace Gambler.Controller
         /// </summary>
         public void updateMatches()
         {
-            ListOfMatches.Clear();
+            bool update = false;
             foreach (Model.Bookie b in ListOfBookies.Where(t => t.Connected))
             {
-                foreach (Model.Match m in b.ListOfMatches.Where(t => t.OpenMatch))
+                foreach (Model.Match m in b.ListOfMatches.Where(t => t.OpenMatch && !this.ListOfMatches.Contains(t)))
+                {
                     ListOfMatches.Add(m);
+                    update = true;
+                }
+                foreach (Model.Match m in b.ListOfMatches.Where(t => !t.OpenMatch))
+                {
+                    if (ListOfMatches.Contains(m))
+                    {
+                        ListOfMatches.Remove(m);
+                        update = true;
+                    }
+                }
             }
+            if (update)
+                MatchUpdate = true;
         }
         /// <summary>
         /// A method to subsribes to a list of new bets and updates the list of bets if one is recieved
@@ -155,6 +170,7 @@ namespace Gambler.Controller
                         m.placeBet(bet);
                 }
             }
+            MatchUpdate = true;
         }
         /// <summary>
         /// A method to subsribes to a list of new winnings and updates the list of bets if one is recieved

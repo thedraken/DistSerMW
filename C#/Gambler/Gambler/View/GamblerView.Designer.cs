@@ -36,8 +36,6 @@
             this.walletToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fillToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tblLytPnl = new System.Windows.Forms.TableLayoutPanel();
-            this.statusStrp = new System.Windows.Forms.StatusStrip();
-            this.tlstrpStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.bttnRefresh = new System.Windows.Forms.Button();
             this.txtbxGmblrFnds = new System.Windows.Forms.TextBox();
@@ -51,17 +49,21 @@
             this.Port = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bookieSayHello = new System.Windows.Forms.DataGridViewButtonColumn();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.bttnPlcBet = new System.Windows.Forms.Button();
-            this.dtgrdvwBets = new System.Windows.Forms.DataGridView();
             this.tmrRefreshBets = new System.Windows.Forms.Timer(this.components);
+            this.statusStrp = new System.Windows.Forms.StatusStrip();
+            this.tlstrpStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.dtgrdvwBets = new System.Windows.Forms.DataGridView();
+            this.bttnPlcBet = new System.Windows.Forms.Button();
             this.bttnCheckBets = new System.Windows.Forms.Button();
             this.mnStrp.SuspendLayout();
             this.tblLytPnl.SuspendLayout();
-            this.statusStrp.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgrdvwBookies)).BeginInit();
             this.groupBox3.SuspendLayout();
+            this.statusStrp.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgrdvwBets)).BeginInit();
             this.SuspendLayout();
             // 
@@ -118,7 +120,6 @@
             // 
             this.tblLytPnl.ColumnCount = 1;
             this.tblLytPnl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tblLytPnl.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tblLytPnl.Controls.Add(this.statusStrp, 0, 3);
             this.tblLytPnl.Controls.Add(this.groupBox1, 0, 0);
             this.tblLytPnl.Controls.Add(this.groupBox2, 0, 1);
@@ -127,29 +128,12 @@
             this.tblLytPnl.Location = new System.Drawing.Point(0, 24);
             this.tblLytPnl.Name = "tblLytPnl";
             this.tblLytPnl.RowCount = 4;
-            this.tblLytPnl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 29.81818F));
-            this.tblLytPnl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70.18182F));
-            this.tblLytPnl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 215F));
-            this.tblLytPnl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tblLytPnl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.tblLytPnl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 35F));
+            this.tblLytPnl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tblLytPnl.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tblLytPnl.Size = new System.Drawing.Size(976, 494);
             this.tblLytPnl.TabIndex = 1;
-            // 
-            // statusStrp
-            // 
-            this.statusStrp.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tlstrpStatusLabel});
-            this.statusStrp.Location = new System.Drawing.Point(0, 473);
-            this.statusStrp.Name = "statusStrp";
-            this.statusStrp.Size = new System.Drawing.Size(976, 21);
-            this.statusStrp.TabIndex = 5;
-            this.statusStrp.Text = "statusStrip1";
-            // 
-            // tlstrpStatusLabel
-            // 
-            this.tlstrpStatusLabel.Name = "tlstrpStatusLabel";
-            this.tlstrpStatusLabel.Size = new System.Drawing.Size(74, 16);
-            this.tlstrpStatusLabel.Text = "Status: None";
             // 
             // groupBox1
             // 
@@ -161,7 +145,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(970, 71);
+            this.groupBox1.Size = new System.Drawing.Size(970, 65);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Gambler details";
@@ -171,7 +155,7 @@
             this.bttnRefresh.Dock = System.Windows.Forms.DockStyle.Right;
             this.bttnRefresh.Location = new System.Drawing.Point(892, 16);
             this.bttnRefresh.Name = "bttnRefresh";
-            this.bttnRefresh.Size = new System.Drawing.Size(75, 52);
+            this.bttnRefresh.Size = new System.Drawing.Size(75, 46);
             this.bttnRefresh.TabIndex = 7;
             this.bttnRefresh.Text = "Refresh";
             this.bttnRefresh.UseVisualStyleBackColor = true;
@@ -215,9 +199,9 @@
             // 
             this.groupBox2.Controls.Add(this.dtgrdvwBookies);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(3, 80);
+            this.groupBox2.Location = new System.Drawing.Point(3, 74);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(970, 175);
+            this.groupBox2.Size = new System.Drawing.Size(970, 159);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Connected Bookies";
@@ -236,7 +220,7 @@
             this.dtgrdvwBookies.Location = new System.Drawing.Point(3, 16);
             this.dtgrdvwBookies.Name = "dtgrdvwBookies";
             this.dtgrdvwBookies.ReadOnly = true;
-            this.dtgrdvwBookies.Size = new System.Drawing.Size(964, 156);
+            this.dtgrdvwBookies.Size = new System.Drawing.Size(964, 140);
             this.dtgrdvwBookies.TabIndex = 0;
             this.dtgrdvwBookies.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtgrdvwBookies_CellClick);
             // 
@@ -266,52 +250,84 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.bttnCheckBets);
-            this.groupBox3.Controls.Add(this.bttnPlcBet);
-            this.groupBox3.Controls.Add(this.dtgrdvwBets);
+            this.groupBox3.Controls.Add(this.tableLayoutPanel1);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(3, 261);
+            this.groupBox3.Location = new System.Drawing.Point(3, 239);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(970, 209);
+            this.groupBox3.Size = new System.Drawing.Size(970, 231);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Open Matches";
-            // 
-            // bttnPlcBet
-            // 
-            this.bttnPlcBet.Dock = System.Windows.Forms.DockStyle.Right;
-            this.bttnPlcBet.Location = new System.Drawing.Point(892, 170);
-            this.bttnPlcBet.Name = "bttnPlcBet";
-            this.bttnPlcBet.Size = new System.Drawing.Size(75, 36);
-            this.bttnPlcBet.TabIndex = 4;
-            this.bttnPlcBet.Text = "Place bet";
-            this.bttnPlcBet.UseVisualStyleBackColor = true;
-            this.bttnPlcBet.Click += new System.EventHandler(this.bttnPlcBet_Click);
-            // 
-            // dtgrdvwBets
-            // 
-            this.dtgrdvwBets.AllowUserToAddRows = false;
-            this.dtgrdvwBets.AllowUserToDeleteRows = false;
-            this.dtgrdvwBets.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtgrdvwBets.Dock = System.Windows.Forms.DockStyle.Top;
-            this.dtgrdvwBets.Location = new System.Drawing.Point(3, 16);
-            this.dtgrdvwBets.Name = "dtgrdvwBets";
-            this.dtgrdvwBets.ReadOnly = true;
-            this.dtgrdvwBets.Size = new System.Drawing.Size(964, 154);
-            this.dtgrdvwBets.TabIndex = 3;
             // 
             // tmrRefreshBets
             // 
             this.tmrRefreshBets.Interval = 1000;
             this.tmrRefreshBets.Tick += new System.EventHandler(this.tmrRefreshBets_Tick);
             // 
+            // statusStrp
+            // 
+            this.statusStrp.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tlstrpStatusLabel});
+            this.statusStrp.Location = new System.Drawing.Point(0, 473);
+            this.statusStrp.Name = "statusStrp";
+            this.statusStrp.Size = new System.Drawing.Size(976, 21);
+            this.statusStrp.TabIndex = 6;
+            this.statusStrp.Text = "statusStrip1";
+            // 
+            // tlstrpStatusLabel
+            // 
+            this.tlstrpStatusLabel.Name = "tlstrpStatusLabel";
+            this.tlstrpStatusLabel.Size = new System.Drawing.Size(74, 16);
+            this.tlstrpStatusLabel.Text = "Status: None";
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Controls.Add(this.bttnCheckBets, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.bttnPlcBet, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.dtgrdvwBets, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(964, 212);
+            this.tableLayoutPanel1.TabIndex = 6;
+            // 
+            // dtgrdvwBets
+            // 
+            this.dtgrdvwBets.AllowUserToAddRows = false;
+            this.dtgrdvwBets.AllowUserToDeleteRows = false;
+            this.dtgrdvwBets.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.tableLayoutPanel1.SetColumnSpan(this.dtgrdvwBets, 2);
+            this.dtgrdvwBets.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dtgrdvwBets.Location = new System.Drawing.Point(3, 3);
+            this.dtgrdvwBets.Name = "dtgrdvwBets";
+            this.dtgrdvwBets.ReadOnly = true;
+            this.dtgrdvwBets.Size = new System.Drawing.Size(958, 176);
+            this.dtgrdvwBets.TabIndex = 4;
+            // 
+            // bttnPlcBet
+            // 
+            this.bttnPlcBet.Dock = System.Windows.Forms.DockStyle.Right;
+            this.bttnPlcBet.Location = new System.Drawing.Point(886, 185);
+            this.bttnPlcBet.Name = "bttnPlcBet";
+            this.bttnPlcBet.Size = new System.Drawing.Size(75, 24);
+            this.bttnPlcBet.TabIndex = 7;
+            this.bttnPlcBet.Text = "Place bet";
+            this.bttnPlcBet.UseVisualStyleBackColor = true;
+            this.bttnPlcBet.Click += new System.EventHandler(this.bttnPlcBet_Click);
+            // 
             // bttnCheckBets
             // 
             this.bttnCheckBets.Dock = System.Windows.Forms.DockStyle.Left;
-            this.bttnCheckBets.Location = new System.Drawing.Point(3, 170);
+            this.bttnCheckBets.Location = new System.Drawing.Point(3, 185);
             this.bttnCheckBets.Name = "bttnCheckBets";
-            this.bttnCheckBets.Size = new System.Drawing.Size(75, 36);
-            this.bttnCheckBets.TabIndex = 5;
+            this.bttnCheckBets.Size = new System.Drawing.Size(75, 24);
+            this.bttnCheckBets.TabIndex = 8;
             this.bttnCheckBets.Text = "Check Bets";
             this.bttnCheckBets.UseVisualStyleBackColor = true;
             this.bttnCheckBets.Click += new System.EventHandler(this.bttnCheckBets_Click);
@@ -332,13 +348,14 @@
             this.mnStrp.PerformLayout();
             this.tblLytPnl.ResumeLayout(false);
             this.tblLytPnl.PerformLayout();
-            this.statusStrp.ResumeLayout(false);
-            this.statusStrp.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dtgrdvwBookies)).EndInit();
             this.groupBox3.ResumeLayout(false);
+            this.statusStrp.ResumeLayout(false);
+            this.statusStrp.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dtgrdvwBets)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -360,19 +377,20 @@
         private System.Windows.Forms.TextBox txtbxGmblrFnds;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.DataGridView dtgrdvwBets;
         private System.Windows.Forms.DataGridView dtgrdvwBookies;
-        private System.Windows.Forms.StatusStrip statusStrp;
         private System.Windows.Forms.Button bttnRefresh;
-        private System.Windows.Forms.ToolStripStatusLabel tlstrpStatusLabel;
         private System.Windows.Forms.DataGridViewTextBoxColumn BookieID;
         private System.Windows.Forms.DataGridViewTextBoxColumn IPAddress;
         private System.Windows.Forms.DataGridViewTextBoxColumn Port;
         private System.Windows.Forms.DataGridViewButtonColumn bookieSayHello;
         private System.Windows.Forms.Timer tmrRefreshBets;
-        private System.Windows.Forms.Button bttnPlcBet;
         private System.Windows.Forms.ToolStripMenuItem setModeToolStripMenuItem;
+        private System.Windows.Forms.StatusStrip statusStrp;
+        private System.Windows.Forms.ToolStripStatusLabel tlstrpStatusLabel;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button bttnCheckBets;
+        private System.Windows.Forms.Button bttnPlcBet;
+        private System.Windows.Forms.DataGridView dtgrdvwBets;
     }
 }
 

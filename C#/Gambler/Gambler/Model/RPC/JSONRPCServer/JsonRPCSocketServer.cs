@@ -148,9 +148,9 @@ namespace JSON_RPC_Server
         public void stop()
         {
             continueThread = false;
-            client.Close();
             listOfConnectionHandlers.ForEach(t => t.ContinueConnection = false);
             Thread.Sleep(5000);
+            client.Close();
             listOfThreads.ForEach(t => t.Abort());
             server.Stop();
         }
@@ -275,9 +275,6 @@ namespace JSON_RPC_Server
                                     sequentialiser.Release();
                                 });
 
-                            //TODO deal with duplicates
-
-
                             var async = new JsonRpcStateAsync(rpcResultHandler, writer) { JsonRpc = requestString };
                             JsonRpcProcessor.Process(async, writer);
 
@@ -310,20 +307,16 @@ namespace JSON_RPC_Server
                 catch (IOException)
                 {
                     Trace.TraceInformation("closing connection with: " + remoteEndPoint);
-                    //TODO
                 }
                 catch (Exception e)
                 {
                     Trace.TraceError("RPCServer exception " + e);
-                    //TODO
                 }
                 finally
                 {
                     tcpClient.Close();
                 }
-
             }
-
         }
 
     }

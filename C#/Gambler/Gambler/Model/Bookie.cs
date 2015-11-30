@@ -167,13 +167,23 @@ namespace Gambler.Model
             lock (lockObj)
             {
                 var data = _listOfMatches.Where(t => t.ID.Equals(ebr.MatchID));
-                Match matchToUpdate = data.First();
-                matchToUpdate.closeMatch();
+                try
+                {
+                    Match matchToUpdate = data.First();
+                    matchToUpdate.closeMatch();
+                    Model.Winnings winnings = new Winnings(ebr.AmountWon, ebr.BookieID, ebr.MatchID, matchToUpdate.BetPlaced);
+                    this._listOfWinnings.Add(winnings);
+                }
+                catch
+                {
+                    Console.WriteLine("Closing match - Unable to find match of ID " + ebr.MatchID + " for the bookie " + ebr.BookieID);
+                    Model.Winnings winnings = new Winnings(ebr.AmountWon, ebr.BookieID, ebr.MatchID, false);
+                    this._listOfWinnings.Add(winnings);
+                }
                 var listOfBetsToUpdate = _listOfBets.Where(t => t.MatchID.Equals(ebr.MatchID) && t.BookieID.Equals(this.ID));
                 foreach(var betToUpdate in listOfBetsToUpdate)
                     betToUpdate.closeBet();
-                Model.Winnings winnings = new Winnings(ebr.AmountWon);
-                this._listOfWinnings.Add(winnings);
+                
             }
         }
         private void recievedMessageToMatch(RecievedMessage rm)
