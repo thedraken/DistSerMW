@@ -126,7 +126,11 @@ namespace Gambler.Model
                         case RecievedMessage.MessageType.bookieExiting:
                             BookieExitingResult ber = (BookieExitingResult)rm.Result;
                             if (this.ID.Equals(ber.BookieID))
+                            {
                                 this.Connected = false;
+                                foreach (Match m in this.ListOfMatches)
+                                    m.closeMatch();
+                            }
                             break;
                     }
                 }

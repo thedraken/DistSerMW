@@ -204,7 +204,7 @@ namespace Gambler.Model.RPC
                             else if (b.StartsWith("matchID"))
                                 matchID = int.Parse(b.Split(':')[1]);
                             else if (b.StartsWith("amount"))
-                                stake = float.Parse(b.Split(':')[1]);
+                                stake = float.Parse(b.Split(':')[1], CultureInfo.InvariantCulture);
                             else if (b.StartsWith("team"))
                                 teamID = b.Split(':')[1];
                             else if (b.StartsWith("odds"))

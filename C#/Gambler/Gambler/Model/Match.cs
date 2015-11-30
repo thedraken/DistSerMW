@@ -27,6 +27,8 @@ namespace Gambler.Model
                 OddsA = odds;
             else if (TeamB.Equals(teamName))
                 OddsB = odds;
+            else if (teamName.ToLower().Equals("draw"))
+                OddsDraw = odds;
         }
         public string OwningBookieID
         {

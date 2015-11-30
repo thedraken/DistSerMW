@@ -167,6 +167,11 @@ public class MyGamblerService : JsonRpcService
         this.gambler = gambler;
     }
     private object _lock = new object();
+    /// <summary>
+    /// Recieves a message to the gambler asking for a hello to be sent back
+    /// </summary>
+    /// <param name="bookieName">The bookie that sent the request</param>
+    /// <returns>The message returned by the gambler, this is the bookie ID with added flair</returns>
     [JsonRpcMethod]
     public String sayHelloToGambler(String bookieName)
     {
@@ -176,6 +181,12 @@ public class MyGamblerService : JsonRpcService
         Console.WriteLine("sayHelloToGambler(" + bookieName + ")");
         return "Gambler says: Hello, bookie " + bookieName;
     }
+    /// <summary>
+    /// A message recieved saying a match has been started by the bookie
+    /// </summary>
+    /// <param name="bookieName">The name of the bookie starting the match</param>
+    /// <param name="recievedMatch">The JSON object recieved</param>
+    /// <returns>A boolean confirming if the match was processed correctly or not</returns>
     [JsonRpcMethod]
     public bool matchStarted(String bookieName, object recievedMatch)
     {
@@ -221,6 +232,14 @@ public class MyGamblerService : JsonRpcService
         else
             return false;
     }
+    /// <summary>
+    /// A message recieved saying there has been an update to the match odds
+    /// </summary>
+    /// <param name="bookieName">The name of the bookie sending the update</param>
+    /// <param name="matchID">The match ID to update</param>
+    /// <param name="team">The team odds to update</param>
+    /// <param name="newOdds">The new float value to update the odds to</param>
+    /// <returns>A boolean confirming if the update was processed correctly or not</returns>
     [JsonRpcMethod]
     public bool setOdds(String bookieName, int matchID, string team, float newOdds)
     {
@@ -228,6 +247,14 @@ public class MyGamblerService : JsonRpcService
         RecievedMessage rm = new RecievedMessage(sor, RecievedMessage.MessageType.setOdds);
         return addUpdate(rm);
     }
+    /// <summary>
+    /// A message recieved saying the match has ended and any winnings recieved
+    /// </summary>
+    /// <param name="bookieName">The name of the bookie sending the message</param>
+    /// <param name="matchID">The match ID that has ended</param>
+    /// <param name="winningTeam">The team that won the match</param>
+    /// <param name="amountWon">The amount won by the user, this can be 0</param>
+    /// <returns>A boolean confirming if the update was processed correctly or not</returns>
     [JsonRpcMethod]
     public bool endBet(String bookieName, int matchID, string winningTeam, float amountWon)
     {
@@ -235,6 +262,11 @@ public class MyGamblerService : JsonRpcService
         RecievedMessage rm = new RecievedMessage(ebr, RecievedMessage.MessageType.endBet);
         return addUpdate(rm);
     }
+    /// <summary>
+    /// A message recieved that states a bookie is closing their connection
+    /// </summary>
+    /// <param name="bookieName">The bookie's name that is closing their connection</param>
+    /// <returns>A boolean confirming if the update was processed correctly or not</returns>
     [JsonRpcMethod]
     public bool bookieExiting(String bookieName)
     {
@@ -255,6 +287,10 @@ public class MyGamblerService : JsonRpcService
         }
     }
     private ObservableCollection<RecievedMessage> _listOfUpdates = new ObservableCollection<RecievedMessage>();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public ObservableCollection<RecievedMessage> getList()
     {
         lock (_lock)
@@ -263,10 +299,17 @@ public class MyGamblerService : JsonRpcService
         }
     }
 }
-
+/// <summary>
+/// Creates a class that stores the data that has been previously recieved
+/// </summary>
 public class RecievedMessage
 {
     private static int _id = 0;
+    /// <summary>
+    /// Creates a class of the result recieved and the type of method that was called
+    /// </summary>
+    /// <param name="result"></param>
+    /// <param name="type"></param>
     public RecievedMessage(Result result, MessageType type)
     {
         this.Result = result;
