@@ -46,6 +46,9 @@ namespace Gambler.Model
         public float Limit { get; private set; }
         public bool OpenMatch { get; private set; }
         private Bet _betPlaced;
+        /// <summary>
+        /// Returns true if the gambler has placed a bet against this match
+        /// </summary>
         public bool BetPlaced
         {
             get
@@ -53,18 +56,34 @@ namespace Gambler.Model
                 return _betPlaced != null;
             }
         }
+        /// <summary>
+        /// Updates the match to state that it is closed
+        /// </summary>
         public void closeMatch()
         {
             this.OpenMatch = false;
         }
+        /// <summary>
+        /// Places a bet against the match
+        /// </summary>
+        /// <param name="b">The bet to place</param>
         public void placeBet(Bet b)
         {
             this._betPlaced = b;
         }
+        /// <summary>
+        /// Returns a string of the bookie ID and the match ID
+        /// </summary>
+        /// <returns>The string result of the bookie ID and match ID</returns>
         public override string ToString()
         {
             return this.OwningBookieID + " - " + this.ID;
         }
+        /// <summary>
+        /// Considered equal if the match ID and owning bookie ID give the same result
+        /// </summary>
+        /// <param name="obj">Object to compare against</param>
+        /// <returns>If true, they are equal</returns>
         public override bool Equals(object obj)
         {
             if (!this.GetType().Equals(obj.GetType()))

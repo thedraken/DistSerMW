@@ -165,7 +165,6 @@ namespace JSON_RPC_Server
             private Interceptor interceptor;
             private Random rnd = new Random();
             public bool ContinueConnection { get; set; }
-
             /// <summary>
             /// Constructs a connection handler for the given client.
             /// </summary>
@@ -177,7 +176,6 @@ namespace JSON_RPC_Server
                 this.interceptor = interceptor;
                 ContinueConnection = true;
             }
-
             /// <summary>
             /// Main loop of this connection handler, performing request handling as follows:
             /// Receive a JSON-RPC request via the socket connection. Close the connection

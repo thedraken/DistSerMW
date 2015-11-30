@@ -19,21 +19,16 @@ namespace Gambler.Model.RPC
 {
     public class GamblerServer
     {
-        // the enclosing gambler
         private Gambler gambler;
-
         private Thread socketListeningThread;
-
         private JsonSerializer jsonSerializer;
         private SocketListener gamblerSocketListener;
-
         public GamblerServer(Gambler gambler)
         {
             this.gambler = gambler;
             jsonSerializer = new JsonSerializer();
         }
         public MyGamblerService Service { get; private set; }
-
         public void createGamblerServerInterface()
         {
             // create an instance of the service
@@ -85,7 +80,6 @@ namespace Gambler.Model.RPC
             }
         }
     }
-
 }
 
 

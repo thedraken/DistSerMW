@@ -19,8 +19,18 @@ namespace Gambler.Controller
         }
         private object lockObj = new object();
         private ObservableCollection<Model.Bookie> _listOfBookies = new ObservableCollection<Model.Bookie>();
+        /// <summary>
+        /// Observable list of bookies, if this list changes, will fire the list updated event
+        /// </summary>
         public ObservableCollection<Model.Bookie> ListOfBookies { get { lock(lockObj){return this._listOfBookies;}} }
+        /// <summary>
+        /// Observable list of mathces, if this list changes, will fire the list updated event
+        /// </summary>
         public ObservableCollection<Model.Match> ListOfMatches { get; private set; }
+        /// <summary>
+        /// Returns a clone of the list of matches, this will prevent the system using the latest updates pushed up by messages recieved and allows testing of certain functions
+        /// </summary>
+        /// <returns>A clone list of the matches</returns>
         public List<Model.Match> getCloneOfMatches()
         {
             List<Model.Match> retList = new List<Model.Match>();
@@ -34,13 +44,29 @@ namespace Gambler.Controller
             }
             return retList;
         }
+        /// <summary>
+        /// Observable list of bets, if this list changes, will fire the list updated event
+        /// </summary>
         public ObservableCollection<Model.Bet> ListOfAllBets { get; private set; }
+        /// <summary>
+        /// Observable list of winnings, if this list changes, will fire the list updated event
+        /// </summary>
         public ObservableCollection<Model.Winnings> ListOfAllWinnings { get; private set; }
+        /// <summary>
+        /// Runs the hellow function against the bookie specified
+        /// </summary>
+        /// <param name="bookieName">The name of the bookie to whom we wish to say hello</param>
         public void sayHello(string bookieName)
         {
             foreach (Model.Bookie b in ListOfBookies.Where(t => t.ID == bookieName))
                 b.sayHello();
         }
+        /// <summary>
+        /// Connects to the bookie with the address and port number specified
+        /// </summary>
+        /// <param name="gambler">The connecting gambler</param>
+        /// <param name="address">The address of the bookie to connect to</param>
+        /// <param name="portNo">The port number of the bookie to connect to</param>
         public void connectBookie(Model.Gambler gambler, IPAddress address, int portNo)
         {
             Model.Bookie b = new Model.Bookie(gambler, address, portNo);
@@ -52,11 +78,21 @@ namespace Gambler.Controller
             b.ListOfBets.CollectionChanged += handleNewBet;
             b.ListOfWinnings.CollectionChanged += handleNewWinnings;
         }
+        /// <summary>
+        /// Gets an update of all matches currently open on each bookie
+        /// </summary>
         public void refreshMatches()
         {
             foreach (Model.Bookie b in ListOfBookies)
                 b.refreshMatches();
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="teamName"></param>
+        /// <param name="amount"></param>
+        /// <param name="odds"></param>
         public void placeBet(Model.Match m, string teamName, float amount, float odds)
         {
             Model.Bet b = new Model.Bet(m.OwningBookieID, m.ID, teamName, amount, odds);

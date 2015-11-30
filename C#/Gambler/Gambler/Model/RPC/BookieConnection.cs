@@ -189,11 +189,11 @@ namespace Gambler.Model.RPC
             if (response != null)
             {
                 string[] array = responseToStringArray(response);
-                foreach (string s in array)
+                foreach (string str in array)
                 {
-                    if (s.Contains(","))
+                    if (str.Contains(","))
                     {
-                        string[] betData = s.Split(',');
+                        string[] betData = str.Split(',');
                         string bookieID = string.Empty;
                         int matchID = int.MinValue;
                         string teamID = string.Empty;
@@ -206,11 +206,11 @@ namespace Gambler.Model.RPC
                                 bookieID = b.Split(':')[1];
                             else if (b.StartsWith("matchID") && !f.isInt(b.Split(':')[1], out matchID))
                                 throw new Exception("Match ID is not in an integer format");
-                            else if (s.StartsWith("amount") && !f.isFloat(s.Split(':')[1], out stake))
+                            else if (b.StartsWith("amount") && !f.isFloat(b.Split(':')[1], out stake))
                                 throw new Exception("Stake was not a valid float value");
                             else if (b.StartsWith("team"))
                                 teamID = b.Split(':')[1];
-                            else if (s.StartsWith("odds") && !f.isFloat(s.Split(':')[1], out odds))
+                            else if (b.StartsWith("odds") && !f.isFloat(b.Split(':')[1], out odds))
                                 throw new Exception("Odds was not a valid float value");
                         }
                         if (bookieID != string.Empty && matchID != int.MinValue)
